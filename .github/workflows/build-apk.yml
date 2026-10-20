@@ -37,8 +37,13 @@ jobs:
         run: |
           sed -i '/<application/i \    <uses-permission android:name="android.permission.INTERNET" />\n    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />' android/app/src/main/AndroidManifest.xml
 
-      - name: Force Modern Kotlin Resolution
+      - name: Auto-Increment Version Code & Fix Kotlin Resolution
         run: |
+          # 1. Dynamically bump versionCode using GitHub run number so updates overwrite cleanly
+          sed -i 's/versionCode 1/versionCode '${{ github.run_number }}'/g' android/app/build.gradle
+          sed -i 's/versionName "1.0"/versionName "1.0.'${{ github.run_number }}'"/g' android/app/build.gradle
+
+          # 2. Exclude conflicting legacy Kotlin stdlib modules
           cat << 'EOF' >> android/app/build.gradle
 
           configurations.all {
