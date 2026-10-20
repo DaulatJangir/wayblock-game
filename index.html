@@ -4,83 +4,235 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Way Block - Quoridor Arena</title>
+<script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
 <style>
   :root {
-    --bg-main: #070b14;
+    --bg-main: #060913;
     --card-bg: #0f172a;
+    --card-border: #1e293b;
     --p1-cyan: #38bdf8;
     --p2-pink: #f43f5e;
     --p3-green: #10b981;
     --wall-gold: #f59e0b;
+    --text-muted: #94a3b8;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
   body {
     background: var(--bg-main);
     color: #f8fafc;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    min-height: 100vh;
-    padding: 12px;
-    position: relative;
-    overflow: hidden;
+    overflow-x: hidden;
   }
 
-  /* Header & Back Button */
+  .view-container {
+    width: 100%;
+    max-width: 420px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    padding: 18px;
+    position: relative;
+  }
+  .hidden { display: none !important; }
+
+  /* Universal Top Bar */
   .top-bar {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    width: 360px;
-    margin-bottom: 8px;
+    width: 100%;
+    margin-bottom: 24px;
   }
-  .back-btn {
-    background: #1e293b;
-    border: 1px solid #334155;
-    color: #94a3b8;
-    font-size: 0.8rem;
-    font-weight: 600;
-    padding: 6px 12px;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.15s ease;
-  }
-  .back-btn:hover {
-    background: #334155;
-    color: #f8fafc;
-  }
-  h1 {
+  .brand-title {
     font-size: 1.4rem;
-    font-weight: 800;
-    letter-spacing: 2px;
+    font-weight: 900;
+    letter-spacing: 2.5px;
     color: var(--p1-cyan);
-    text-shadow: 0 0 16px rgba(56, 189, 248, 0.4);
-    margin: 0;
+    text-shadow: 0 0 16px rgba(56, 189, 248, 0.45);
+  }
+  .user-badge {
+    background: #0f172a;
+    border: 1px solid var(--p1-cyan);
+    color: var(--p1-cyan);
+    font-size: 0.85rem;
+    font-weight: 700;
+    padding: 8px 14px;
+    border-radius: 20px;
+    cursor: pointer;
+    box-shadow: 0 0 10px rgba(56, 189, 248, 0.2);
+    max-width: 130px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
+  /* HOME PAGE (Full Screen) */
+  #homeView {
+    justify-content: space-between;
+  }
+  .hero-section {
+    text-align: center;
+    margin: 40px 0 30px;
+  }
+  .hero-section h2 {
+    font-size: 2.4rem;
+    font-weight: 900;
+    letter-spacing: 2px;
+    color: #ffffff;
+    margin-bottom: 6px;
+  }
+  .hero-section p {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+  }
+  .menu-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 40px;
+  }
+  .action-btn {
+    width: 100%;
+    padding: 16px;
+    background: #0f172a;
+    border: 1px solid var(--card-border);
+    color: #f8fafc;
+    font-size: 1rem;
+    font-weight: 700;
+    border-radius: 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: all 0.2s ease;
+  }
+  .action-btn:hover {
+    background: #1e293b;
+    border-color: #334155;
+    transform: translateY(-2px);
+  }
+  .action-btn.primary {
+    background: linear-gradient(135deg, #0284c7, #0369a1);
+    border-color: var(--p1-cyan);
+    box-shadow: 0 0 20px rgba(56, 189, 248, 0.35);
+  }
+
+  /* LOBBY / HOST / JOIN SCREENS */
+  .lobby-card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+  .code-banner {
+    text-align: center;
+    padding: 14px;
+    background: #070b14;
+    border: 2px dashed var(--wall-gold);
+    border-radius: 12px;
+    margin-bottom: 18px;
+  }
+  .code-text {
+    font-family: monospace;
+    font-size: 2rem;
+    font-weight: 800;
+    letter-spacing: 6px;
+    color: var(--wall-gold);
+  }
+  .lobby-section-title {
+    font-size: 0.85rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--text-muted);
+    margin-bottom: 10px;
+  }
+  .players-box {
+    min-height: 150px;
+    background: #070b14;
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .player-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 14px;
+    border-radius: 8px;
+    background: #0f172a;
+    font-weight: 600;
+    font-size: 0.95rem;
+  }
+  .tag {
+    font-size: 0.75rem;
+    padding: 3px 8px;
+    border-radius: 6px;
+    font-weight: 700;
+  }
+  .tag-host { background: rgba(56, 189, 248, 0.2); color: var(--p1-cyan); border: 1px solid var(--p1-cyan); }
+  .tag-guest { background: rgba(244, 63, 94, 0.2); color: var(--p2-pink); border: 1px solid var(--p2-pink); }
+
+  .incoming-request {
+    margin-top: 14px;
+    background: rgba(245, 158, 11, 0.12);
+    border: 1px solid var(--wall-gold);
+    border-radius: 12px;
+    padding: 12px;
+    animation: pulse 1.5s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { border-color: var(--wall-gold); }
+    50% { border-color: #ffffff; }
+  }
+
+  /* INPUTS */
+  .custom-input {
+    width: 100%;
+    padding: 14px;
+    background: #070b14;
+    border: 1px solid var(--card-border);
+    color: #ffffff;
+    border-radius: 10px;
+    font-size: 1.1rem;
+    text-align: center;
+    margin-bottom: 14px;
+    outline: none;
+  }
+  .custom-input:focus { border-color: var(--p1-cyan); }
+
+  /* GAME ARENA VIEW */
   .hud {
     display: flex;
     justify-content: space-between;
     width: 360px;
     padding: 8px 12px;
     background: var(--card-bg);
-    border: 1px solid #1e293b;
+    border: 1px solid var(--card-border);
     border-radius: 10px;
-    margin-bottom: 8px;
+    margin: 0 auto 8px;
   }
   .p-stat { flex: 1; text-align: center; opacity: 0.35; transition: opacity 0.2s; }
   .p-stat.active { opacity: 1; filter: drop-shadow(0 0 6px currentColor); }
   .p-stat strong { display: block; font-size: 0.85rem; }
-  .p-stat span { font-size: 0.75rem; color: #94a3b8; }
+  .p-stat span { font-size: 0.75rem; color: var(--text-muted); }
   .p1 { color: var(--p1-cyan); }
   .p2 { color: var(--p2-pink); }
   .p3 { color: var(--p3-green); }
-  
+
   .status-text {
     font-size: 0.85rem;
-    color: #94a3b8;
+    color: var(--text-muted);
     margin-bottom: 8px;
     height: 18px;
     text-align: center;
@@ -89,6 +241,7 @@
     position: relative;
     width: 360px;
     height: 360px;
+    margin: 0 auto;
   }
   canvas {
     background: #0f172a;
@@ -100,7 +253,7 @@
   .controls {
     display: flex;
     gap: 8px;
-    margin-top: 12px;
+    margin: 12px auto 0;
     width: 360px;
   }
   .controls button {
@@ -113,7 +266,6 @@
     font-weight: 600;
     border-radius: 8px;
     cursor: pointer;
-    transition: all 0.15s ease;
   }
   .controls button.active {
     background: #0284c7;
@@ -122,165 +274,389 @@
     box-shadow: 0 0 10px rgba(56, 189, 248, 0.35);
   }
 
-  /* Modals */
+  /* NAME MODAL */
   .modal-overlay {
-    position: absolute;
+    position: fixed;
     inset: 0;
-    background: rgba(3, 7, 18, 0.82);
+    background: rgba(3, 7, 18, 0.85);
     backdrop-filter: blur(6px);
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 100;
+    z-index: 200;
   }
-  .hidden { display: none !important; }
-  
-  .menu-card {
-    background: #0f172a;
-    border: 2px solid #334155;
+  .modal-box {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
     padding: 24px 20px;
     border-radius: 16px;
     text-align: center;
     width: 310px;
     box-shadow: 0 0 32px rgba(0, 0, 0, 0.8);
   }
-  .menu-card h2 {
-    font-size: 1.4rem;
-    margin-bottom: 6px;
-    color: #f8fafc;
-  }
-  .menu-card p {
-    font-size: 0.85rem;
-    color: #94a3b8;
-    margin-bottom: 20px;
-  }
-  .menu-btn {
-    width: 100%;
-    margin-bottom: 10px;
-    padding: 12px 0;
-    font-size: 0.95rem;
-    background: #1e293b;
-    border: 1px solid #334155;
-    color: #f8fafc;
-    border-radius: 8px;
-    font-weight: 600;
-    cursor: pointer;
-  }
-  .menu-btn:hover {
-    background: #0284c7;
-    border-color: var(--p1-cyan);
-  }
-
-  /* Leaderboard Modal */
-  .win-card {
-    background: #0f172a;
-    border: 2px solid var(--wall-gold);
-    padding: 24px;
-    border-radius: 16px;
-    text-align: center;
-    width: 320px;
-    box-shadow: 0 0 32px rgba(245, 158, 11, 0.4);
-    animation: popIn 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-  }
-  @keyframes popIn {
-    from { transform: scale(0.7) translateY(20px); opacity: 0; }
-    to { transform: scale(1) translateY(0); opacity: 1; }
-  }
-  .win-card h2 {
-    font-size: 1.8rem;
-    color: var(--wall-gold);
-    margin-bottom: 4px;
-  }
-  .podium-list {
-    margin: 16px 0;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-  .podium-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 8px 12px;
-    border-radius: 8px;
-    background: #1e293b;
-    font-size: 0.9rem;
-    font-weight: 600;
-  }
-  .podium-item.first {
-    border: 1px solid var(--wall-gold);
-    background: rgba(245, 158, 11, 0.15);
-  }
 </style>
 </head>
 <body>
 
-<div class="top-bar">
-  <button class="back-btn" onclick="returnToMenu()">← Modes</button>
-  <h1>WAY BLOCK</h1>
-  <div style="width: 65px;"></div>
-</div>
-
-<div class="hud" id="hudBar">
-  <div class="p-stat p1 active" id="p1Box">
-    <strong id="p1Label">Player 1</strong>
-    <span id="p1Count">Walls: 10</span>
+<!-- ================= 1. HOME VIEW (Full Screen) ================= -->
+<div class="view-container" id="homeView">
+  <div class="top-bar">
+    <div class="brand-title">WAY BLOCK</div>
+    <div class="user-badge" id="homeUserBadge" onclick="openNameModal()">Player</div>
   </div>
-  <div class="p-stat p2" id="p2Box">
-    <strong id="p2Label">Player 2</strong>
-    <span id="p2Count">Walls: 10</span>
+
+  <div class="hero-section">
+    <h2>ARENA</h2>
+    <p>Block routes. Outmaneuver opponents.</p>
   </div>
-  <div class="p-stat p3 hidden" id="p3Box">
-    <strong>Player 3</strong>
-    <span id="p3Count">Walls: 10</span>
+
+  <div class="menu-actions">
+    <button class="action-btn primary" onclick="goToLobbyChoice()">🌐 Play Together (Multi-Device)</button>
+    <button class="action-btn" onclick="startLocalGame('ai')">🤖 Play with Computer</button>
+    <button class="action-btn" onclick="startLocalGame('2p')">👥 2 Players (Pass & Play)</button>
+    <button class="action-btn" onclick="startLocalGame('3p')">🏆 3 Players (Race to Center)</button>
+  </div>
+  <div></div>
+</div>
+
+<!-- ================= 2. LOBBY CHOICE VIEW ================= -->
+<div class="view-container hidden" id="lobbyChoiceView">
+  <div class="top-bar">
+    <button class="action-btn" style="width:auto; padding:6px 14px;" onclick="switchView('homeView')">← Back</button>
+    <div class="brand-title">MULTIPLAYER</div>
+    <div style="width:65px;"></div>
+  </div>
+
+  <div class="hero-section">
+    <h2>CONNECT</h2>
+    <p>Host a match or join a friend's arena</p>
+  </div>
+
+  <div class="menu-actions">
+    <button class="action-btn primary" onclick="initHostView()">📡 Host Game</button>
+    <button class="action-btn" onclick="initJoinView()">🔗 Join Game</button>
+  </div>
+  <div></div>
+</div>
+
+<!-- ================= 3. HOST LOBBY VIEW ================= -->
+<div class="view-container hidden" id="hostLobbyView">
+  <div class="top-bar">
+    <button class="action-btn" style="width:auto; padding:6px 14px;" onclick="cancelNetworkSession()">← Cancel</button>
+    <div class="brand-title">HOST LOBBY</div>
+    <div style="width:65px;"></div>
+  </div>
+
+  <div class="lobby-card">
+    <div class="code-banner">
+      <div style="font-size:0.8rem; color:var(--text-muted); margin-bottom:4px;">ROOM CODE</div>
+      <div class="code-text" id="hostCodeDisplay">------</div>
+    </div>
+
+    <div class="lobby-section-title">Players Roster</div>
+    <div class="players-box" id="hostRosterBox">
+      <div class="player-row">
+        <span id="hostNameTag">Player (Host)</span>
+        <span class="tag tag-host">HOST</span>
+      </div>
+    </div>
+
+    <!-- Request incoming alert box -->
+    <div class="incoming-request hidden" id="incomingReqBox">
+      <div style="font-size:0.9rem; margin-bottom:10px; color:#ffffff;">
+        <strong id="candidateName">Player</strong> wants to join!
+      </div>
+      <div style="display:flex; gap:10px;">
+        <button class="action-btn primary" style="padding:10px;" onclick="acceptCandidate()">Accept</button>
+        <button class="action-btn" style="padding:10px;" onclick="rejectCandidate()">Decline</button>
+      </div>
+    </div>
+  </div>
+
+  <button class="action-btn primary hidden" id="btnStartOnline" onclick="launchOnlineMatch()">Start Match</button>
+</div>
+
+<!-- ================= 4. JOIN LOBBY VIEW ================= -->
+<div class="view-container hidden" id="joinLobbyView">
+  <div class="top-bar">
+    <button class="action-btn" style="width:auto; padding:6px 14px;" onclick="switchView('lobbyChoiceView')">← Back</button>
+    <div class="brand-title">JOIN MATCH</div>
+    <div style="width:65px;"></div>
+  </div>
+
+  <div class="lobby-card" style="margin-top:20px;">
+    <div class="lobby-section-title">Enter Host Code</div>
+    <input type="text" id="joinInputCode" class="custom-input" placeholder="e.g. 58219" maxlength="6" />
+    <button class="action-btn primary" onclick="sendJoinRequest()">Send Join Request</button>
+    <div id="joinStatusNotice" style="margin-top:14px; text-align:center; font-size:0.9rem; color:var(--text-muted);"></div>
   </div>
 </div>
 
-<div class="status-text" id="statusMsg">Select an option to begin.</div>
+<!-- ================= 5. GAMEPLAY ARENA VIEW ================= -->
+<div class="view-container hidden" id="gameArenaView">
+  <div class="top-bar" style="margin-bottom:8px;">
+    <button class="action-btn" style="width:auto; padding:6px 12px; font-size:0.8rem;" onclick="exitToHome()">← Exit</button>
+    <div class="brand-title" style="font-size:1.1rem;">WAY BLOCK</div>
+    <div class="user-badge" id="arenaUserBadge" onclick="openNameModal()">Player</div>
+  </div>
 
-<div class="board-wrapper">
-  <canvas id="gameCanvas" width="360" height="360"></canvas>
-</div>
+  <div class="hud" id="hudBar">
+    <div class="p-stat p1 active" id="p1Box">
+      <strong id="p1Label">Player 1</strong>
+      <span id="p1Count">Walls: 10</span>
+    </div>
+    <div class="p-stat p2" id="p2Box">
+      <strong id="p2Label">Player 2</strong>
+      <span id="p2Count">Walls: 10</span>
+    </div>
+    <div class="p-stat p3 hidden" id="p3Box">
+      <strong>Player 3</strong>
+      <span id="p3Count">Walls: 10</span>
+    </div>
+  </div>
 
-<div class="controls">
-  <button id="btnMove" class="active" onclick="setMode('move')">Move</button>
-  <button id="btnWallH" onclick="setMode('wall-h')">Wall [—]</button>
-  <button id="btnWallV" onclick="setMode('wall-v')">Wall [ | ]</button>
-</div>
+  <div class="status-text" id="statusMsg">Your turn.</div>
 
-<!-- Mode Selection Modal -->
-<div class="modal-overlay" id="startModal">
-  <div class="menu-card">
-    <h2>CHOOSE GAME MODE</h2>
-    <p>Select your Quoridor battle setup</p>
-    <button class="menu-btn" onclick="startGame('ai')">🤖 Play with Computer</button>
-    <button class="menu-btn" onclick="startGame('2p')">👥 2 Players (Pass & Play)</button>
-    <button class="menu-btn" onclick="startGame('3p')">🏆 3 Players (Race to Center)</button>
+  <div class="board-wrapper">
+    <canvas id="gameCanvas" width="360" height="360"></canvas>
+  </div>
+
+  <div class="controls">
+    <button id="btnMove" class="active" onclick="setMode('move')">Move</button>
+    <button id="btnWallH" onclick="setMode('wall-h')">Wall [—]</button>
+    <button id="btnWallV" onclick="setMode('wall-v')">Wall [ | ]</button>
   </div>
 </div>
 
-<!-- Victory Modal -->
+<!-- ================= NAME CHANGE MODAL ================= -->
+<div class="modal-overlay hidden" id="nameModal">
+  <div class="modal-box">
+    <h3 style="margin-bottom:6px;">PLAYER HANDLE</h3>
+    <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:16px;">Visible to all opponents</p>
+    <input type="text" id="nameField" class="custom-input" maxlength="12" placeholder="Your name" />
+    <button class="action-btn primary" onclick="saveName()">Save & Continue</button>
+  </div>
+</div>
+
+<!-- ================= VICTORY MODAL ================= -->
 <div class="modal-overlay hidden" id="winModal">
-  <div class="win-card">
-    <h2>CHAMPION!</h2>
-    <p id="winSub">Game Finished</p>
-    <div class="podium-list" id="podiumList"></div>
-    <button class="menu-btn" style="background:#0284c7; border:none; color:#fff;" onclick="returnToMenu()">Change Mode</button>
+  <div class="modal-box" style="border-color:var(--wall-gold); box-shadow:0 0 32px rgba(245,158,11,0.35);">
+    <h2 style="color:var(--wall-gold); margin-bottom:4px;">CHAMPION!</h2>
+    <p id="winSub" style="color:var(--text-muted); margin-bottom:14px;">Match Completed</p>
+    <div id="podiumList" style="margin-bottom:16px;"></div>
+    <button class="action-btn primary" onclick="exitToHome()">Return to Home</button>
   </div>
 </div>
 
 <script>
+// --- Navigation Controller ---
+function switchView(viewId) {
+  ['homeView', 'lobbyChoiceView', 'hostLobbyView', 'joinLobbyView', 'gameArenaView'].forEach(id => {
+    document.getElementById(id).classList.add('hidden');
+  });
+  document.getElementById(viewId).classList.remove('hidden');
+}
+
+// --- Player Profile Handling ---
+let playerName = localStorage.getItem('wayblock_username') || "";
+
+function initProfile() {
+  if (!playerName) {
+    document.getElementById('nameModal').classList.remove('hidden');
+  } else {
+    updateBadgeDisplays();
+  }
+}
+
+function openNameModal() {
+  document.getElementById('nameField').value = playerName;
+  document.getElementById('nameModal').classList.remove('hidden');
+}
+
+function saveName() {
+  const val = document.getElementById('nameField').value.trim();
+  if (!val) return;
+  playerName = val;
+  localStorage.setItem('wayblock_username', playerName);
+  updateBadgeDisplays();
+  document.getElementById('nameModal').classList.add('hidden');
+}
+
+function updateBadgeDisplays() {
+  document.getElementById('homeUserBadge').innerText = playerName;
+  document.getElementById('arenaUserBadge').innerText = playerName;
+}
+
+function goToLobbyChoice() {
+  switchView('lobbyChoiceView');
+}
+
+// --- Networking & P2P Rooms ---
+let peer = null;
+let conn = null;
+let myRole = 1; // 1 = Host, 2 = Guest
+let candidateGuest = null;
+let guestInfo = null;
+
+function cancelNetworkSession() {
+  if (conn) { conn.close(); conn = null; }
+  if (peer) { peer.destroy(); peer = null; }
+  candidateGuest = null;
+  guestInfo = null;
+  switchView('lobbyChoiceView');
+}
+
+function initHostView() {
+  switchView('hostLobbyView');
+  document.getElementById('hostNameTag').innerText = `${playerName} (You)`;
+  document.getElementById('incomingReqBox').classList.add('hidden');
+  document.getElementById('btnStartOnline').classList.add('hidden');
+
+  // Reset roster to host only
+  document.getElementById('hostRosterBox').innerHTML = `
+    <div class="player-row">
+      <span>${playerName} (You)</span>
+      <span class="tag tag-host">HOST</span>
+    </div>
+  `;
+
+  const roomCode = Math.floor(10000 + Math.random() * 90000).toString();
+  document.getElementById('hostCodeDisplay').innerText = roomCode;
+
+  if (peer) peer.destroy();
+  peer = new Peer(`wayblock-room-${roomCode}`);
+
+  peer.on('connection', (c) => {
+    c.on('data', (data) => {
+      if (data.type === 'join_request') {
+        candidateGuest = { conn: c, name: data.senderName };
+        document.getElementById('candidateName').innerText = data.senderName;
+        document.getElementById('incomingReqBox').classList.remove('hidden');
+      } else if (data.type === 'sync_action') {
+        handleRemoteAction(data);
+      }
+    });
+  });
+}
+
+function acceptCandidate() {
+  if (!candidateGuest) return;
+  conn = candidateGuest.conn;
+  guestInfo = { name: candidateGuest.name };
+  conn.send({ type: 'join_accepted', hostName: playerName });
+
+  // Update Roster Box
+  const guestRow = document.createElement('div');
+  guestRow.className = 'player-row';
+  guestRow.innerHTML = `
+    <span>${guestInfo.name}</span>
+    <span class="tag tag-guest">GUEST</span>
+  `;
+  document.getElementById('hostRosterBox').appendChild(guestRow);
+  document.getElementById('incomingReqBox').classList.add('hidden');
+  document.getElementById('btnStartOnline').classList.remove('hidden');
+}
+
+function rejectCandidate() {
+  if (candidateGuest) {
+    candidateGuest.conn.send({ type: 'join_rejected' });
+    candidateGuest.conn.close();
+    candidateGuest = null;
+  }
+  document.getElementById('incomingReqBox').classList.add('hidden');
+}
+
+function launchOnlineMatch() {
+  if (!conn) return;
+  conn.send({ type: 'start_game' });
+  myRole = 1;
+  p1.name = playerName;
+  p2.name = guestInfo.name;
+  bootGame('online');
+}
+
+function initJoinView() {
+  switchView('joinLobbyView');
+  document.getElementById('joinInputCode').value = '';
+  document.getElementById('joinStatusNotice').innerText = '';
+}
+
+function sendJoinRequest() {
+  const code = document.getElementById('joinInputCode').value.trim();
+  if (code.length < 5) {
+    document.getElementById('joinStatusNotice').innerText = 'Please enter a valid 5-digit code.';
+    return;
+  }
+
+  document.getElementById('joinStatusNotice').innerText = 'Connecting to host...';
+  if (peer) peer.destroy();
+  peer = new Peer();
+
+  peer.on('open', () => {
+    conn = peer.connect(`wayblock-room-${code}`);
+    conn.on('open', () => {
+      document.getElementById('joinStatusNotice').innerText = 'Request sent! Awaiting host response...';
+      conn.send({ type: 'join_request', senderName: playerName });
+    });
+
+    conn.on('data', (data) => {
+      if (data.type === 'join_accepted') {
+        document.getElementById('joinStatusNotice').innerText = 'Accepted! Waiting for host to launch match...';
+        p1.name = data.hostName;
+        p2.name = playerName;
+        myRole = 2;
+      } else if (data.type === 'join_rejected') {
+        document.getElementById('joinStatusNotice').innerText = 'Host declined your request.';
+      } else if (data.type === 'start_game') {
+        bootGame('online');
+      } else if (data.type === 'sync_action') {
+        handleRemoteAction(data);
+      }
+    });
+  });
+}
+
+function broadcastAction(payload) {
+  if (conn && conn.open) {
+    conn.send({ type: 'sync_action', ...payload });
+  }
+}
+
+function handleRemoteAction(data) {
+  if (data.action === 'move') {
+    const targetP = data.player === 1 ? p1 : p2;
+    targetP.x = data.x;
+    targetP.y = data.y;
+    draw();
+    if (checkWin()) return;
+    switchTurn(false);
+  } else if (data.action === 'wall') {
+    const targetP = data.player === 1 ? p1 : p2;
+    if (data.isH) {
+      segH.add(data.key1);
+      if (data.key2) segH.add(data.key2);
+    } else {
+      segV.add(data.key1);
+      if (data.key2) segV.add(data.key2);
+    }
+    targetP.walls--;
+    draw();
+    switchTurn(false);
+  }
+}
+
+// --- Gameplay Engine ---
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
 
 const N = 9;
 const BOARD_PADDING = 8;
 const GAP = 6;
-const CELL_SIZE = (360 - (BOARD_PADDING * 2) - (GAP * (N - 1))) / N; // ~32.88px
+const CELL_SIZE = (360 - (BOARD_PADDING * 2) - (GAP * (N - 1))) / N;
 const STEP = CELL_SIZE + GAP;
 const CENTER_X = 4, CENTER_Y = 4;
 
-let gameMode = 'ai'; // 'ai', '2p', '3p'
+let gameMode = 'ai';
 let mode = 'move';
 let turn = 1;
 let gameOver = false;
@@ -289,17 +665,17 @@ let p1 = { x: 4, y: 8, walls: 10, name: "Player 1", color: "#38bdf8" };
 let p2 = { x: 4, y: 0, walls: 10, name: "Player 2", color: "#f43f5e" };
 let p3 = { x: 0, y: 4, walls: 10, name: "Player 3", color: "#10b981" };
 
-// Edge segment sets: stores individual 1-unit segments
-// Horizontal segment between row y and y+1 for column x: "x,y"
 let segH = new Set();
-// Vertical segment between col x and x+1 for row y: "x,y"
 let segV = new Set();
-
 let hoverDot = null;
 
-function startGame(selectedMode) {
+function startLocalGame(selectedMode) {
+  bootGame(selectedMode);
+}
+
+function bootGame(selectedMode) {
   gameMode = selectedMode;
-  document.getElementById('startModal').classList.add('hidden');
+  switchView('gameArenaView');
   document.getElementById('winModal').classList.add('hidden');
 
   segH.clear();
@@ -308,39 +684,43 @@ function startGame(selectedMode) {
   gameOver = false;
   mode = 'move';
 
-  p1 = { x: 4, y: 8, walls: 10, name: "Player 1", color: "#38bdf8" };
+  p1 = { x: 4, y: 8, walls: 10, name: (gameMode === 'online' ? p1.name : playerName), color: "#38bdf8" };
 
   if (gameMode === '3p') {
     p2 = { x: 4, y: 0, walls: 10, name: "Player 2", color: "#f43f5e" };
     p3 = { x: 0, y: 4, walls: 10, name: "Player 3", color: "#10b981" };
     document.getElementById('p2Label').innerText = "Player 2";
     document.getElementById('p3Box').classList.remove('hidden');
-    document.getElementById('statusMsg').innerText = "3-Player Arena: First to reach the Center Trophy wins!";
+    document.getElementById('statusMsg').innerText = "Race to the Center Trophy 🏆!";
   } else {
     document.getElementById('p3Box').classList.add('hidden');
     if (gameMode === 'ai') {
       p2 = { x: 4, y: 0, walls: 10, name: "AI Computer", color: "#f43f5e" };
       document.getElementById('p2Label').innerText = "Computer";
-      document.getElementById('statusMsg').innerText = "Reach the top row before the AI!";
+      document.getElementById('statusMsg').innerText = "Reach top row before AI!";
     } else {
-      p2 = { x: 4, y: 0, walls: 10, name: "Player 2", color: "#f43f5e" };
-      document.getElementById('p2Label').innerText = "Player 2";
-      document.getElementById('statusMsg').innerText = "Player 1's turn: move or build wall.";
+      document.getElementById('p2Label').innerText = p2.name;
+      document.getElementById('statusMsg').innerText = `${p1.name}'s turn.`;
     }
   }
 
+  document.getElementById('p1Label').innerText = p1.name;
   setMode('move');
   draw();
 }
 
-function returnToMenu() {
+function exitToHome() {
+  if (conn) { conn.close(); conn = null; }
+  if (peer) { peer.destroy(); peer = null; }
   document.getElementById('winModal').classList.add('hidden');
-  document.getElementById('startModal').classList.remove('hidden');
+  switchView('homeView');
 }
 
 function setMode(newMode) {
   if (gameOver) return;
   if (gameMode === 'ai' && turn === 2) return;
+  if (gameMode === 'online' && turn !== myRole) return;
+
   mode = newMode;
   document.getElementById('btnMove').classList.toggle('active', mode === 'move');
   document.getElementById('btnWallH').classList.toggle('active', mode === 'wall-h');
@@ -355,10 +735,10 @@ function getCurrentPlayer() {
 }
 
 function isBlocked(fromX, fromY, toX, toY) {
-  if (fromX === toX) { // Vertical move across a horizontal boundary
+  if (fromX === toX) {
     const minY = Math.min(fromY, toY);
     if (segH.has(`${fromX},${minY}`)) return true;
-  } else if (fromY === toY) { // Horizontal move across a vertical boundary
+  } else if (fromY === toY) {
     const minX = Math.min(fromX, toX);
     if (segV.has(`${minX},${fromY}`)) return true;
   }
@@ -387,7 +767,6 @@ function getValidMoves(player) {
 
     const blockingOpp = others.find(o => o.x === nx && o.y === ny);
     if (blockingOpp) {
-      // Jump
       const jx = nx + d.x;
       const jy = ny + d.y;
       if (jx >= 0 && jx < N && jy >= 0 && jy < N && !isBlocked(nx, ny, jx, jy) && !others.some(o => o.x === jx && o.y === jy)) {
@@ -428,15 +807,12 @@ function hasPath(start, targetCheckFn) {
   return getShortestDistance(start, targetCheckFn) !== -1;
 }
 
-// Partial segment placement & overlap support
 function getProposedSegments(dotX, dotY, isH) {
   const segs = [];
   if (isH) {
-    // Spans cell columns dotX and dotX + 1 along horizontal boundary dotY
     if (dotX >= 0 && dotX < N) segs.push({ type: 'H', key: `${dotX},${dotY}` });
     if (dotX + 1 >= 0 && dotX + 1 < N) segs.push({ type: 'H', key: `${dotX + 1},${dotY}` });
   } else {
-    // Spans cell rows dotY and dotY + 1 along vertical boundary dotX
     if (dotY >= 0 && dotY < N) segs.push({ type: 'V', key: `${dotX},${dotY}` });
     if (dotY + 1 >= 0 && dotY + 1 < N) segs.push({ type: 'V', key: `${dotX},${dotY + 1}` });
   }
@@ -445,29 +821,17 @@ function getProposedSegments(dotX, dotY, isH) {
 
 function tryPlaceWall(dotX, dotY, isH) {
   const proposed = getProposedSegments(dotX, dotY, isH);
-  
-  // Filter only new segments (this naturally supports overriding / partial extensions)
   const newlyAdded = [];
   for (let s of proposed) {
     if (s.type === 'H') {
-      if (!segH.has(s.key)) {
-        segH.add(s.key);
-        newlyAdded.push(s);
-      }
+      if (!segH.has(s.key)) { segH.add(s.key); newlyAdded.push(s); }
     } else {
-      if (!segV.has(s.key)) {
-        segV.add(s.key);
-        newlyAdded.push(s);
-      }
+      if (!segV.has(s.key)) { segV.add(s.key); newlyAdded.push(s); }
     }
   }
 
-  // If already completely occupied by identical segments
-  if (newlyAdded.length === 0) {
-    return false;
-  }
+  if (newlyAdded.length === 0) return null;
 
-  // Verify that all players still have a valid path
   let pathValid = false;
   if (gameMode === '3p') {
     const target = (cx, cy) => cx === CENTER_X && cy === CENTER_Y;
@@ -477,20 +841,19 @@ function tryPlaceWall(dotX, dotY, isH) {
   }
 
   if (!pathValid) {
-    // Rollback
     for (let s of newlyAdded) {
       if (s.type === 'H') segH.delete(s.key);
       else segV.delete(s.key);
     }
-    return false;
+    return null;
   }
-
-  return true;
+  return proposed;
 }
 
 function handlePointer(clientX, clientY, isClick) {
   if (gameOver) return;
   if (gameMode === 'ai' && turn === 2) return;
+  if (gameMode === 'online' && turn !== myRole) return;
 
   const rect = canvas.getBoundingClientRect();
   const mx = clientX - rect.left;
@@ -506,9 +869,14 @@ function handlePointer(clientX, clientY, isClick) {
       if (mx >= cx && mx <= cx + CELL_SIZE && my >= cy && my <= cy + CELL_SIZE) {
         currentP.x = m.x;
         currentP.y = m.y;
+        
+        if (gameMode === 'online') {
+          broadcastAction({ action: 'move', player: myRole, x: m.x, y: m.y });
+        }
+
         draw();
         if (checkWin()) return;
-        switchTurn();
+        switchTurn(true);
         return;
       }
     }
@@ -533,17 +901,29 @@ function handlePointer(clientX, clientY, isClick) {
       hoverDot = targetDot;
       if (isClick) {
         if (currentP.walls <= 0) {
-          document.getElementById('statusMsg').innerText = `${currentP.name} has no walls remaining!`;
+          document.getElementById('statusMsg').innerText = "No walls left!";
           return;
         }
         const isH = (mode === 'wall-h');
-        if (tryPlaceWall(targetDot.x, targetDot.y, isH)) {
+        const placed = tryPlaceWall(targetDot.x, targetDot.y, isH);
+        if (placed) {
           currentP.walls--;
+
+          if (gameMode === 'online') {
+            broadcastAction({ 
+              action: 'wall', 
+              player: myRole, 
+              isH, 
+              key1: placed[0] ? placed[0].key : null,
+              key2: placed[1] ? placed[1].key : null
+            });
+          }
+
           setMode('move');
-          switchTurn();
+          switchTurn(true);
           return;
         } else {
-          document.getElementById('statusMsg').innerText = "Blocked or traps player path!";
+          document.getElementById('statusMsg').innerText = "Illegal placement or traps route!";
         }
       }
     }
@@ -591,25 +971,24 @@ function showWinScreen(winner) {
   players.forEach(p => {
     p.remainingSteps = (p === winner) ? 0 : getShortestDistance(p, targetFn);
   });
-
   players.sort((a, b) => a.remainingSteps - b.remainingSteps);
 
   const medals = ["🥇 1st Place", "🥈 2nd Place", "🥉 3rd Place"];
   players.forEach((p, idx) => {
     const item = document.createElement('div');
-    item.className = `podium-item ${idx === 0 ? 'first' : ''}`;
+    item.style.cssText = "display:flex; justify-content:space-between; padding:8px 12px; background:#1e293b; border-radius:8px; margin-bottom:6px; font-weight:600; font-size:0.85rem;";
     item.innerHTML = `
       <span>${medals[idx]} - <span style="color:${p.color}">${p.name}</span></span>
-      <span style="color:#94a3b8; font-size:0.8rem;">${idx === 0 ? 'WINNER' : p.remainingSteps + ' steps left'}</span>
+      <span style="color:#94a3b8;">${idx === 0 ? 'WINNER' : p.remainingSteps + ' steps left'}</span>
     `;
     podiumList.appendChild(item);
   });
 
-  document.getElementById('winSub').innerText = `${winner.name} crowned champion!`;
+  document.getElementById('winSub').innerText = `${winner.name} won!`;
   modal.classList.remove('hidden');
 }
 
-function switchTurn() {
+function switchTurn(localTriggered = false) {
   if (gameMode === '3p') {
     turn = (turn % 3) + 1;
   } else {
@@ -620,10 +999,14 @@ function switchTurn() {
 
   const currentP = getCurrentPlayer();
   if (gameMode === 'ai' && turn === 2 && !gameOver) {
-    document.getElementById('statusMsg').innerText = "AI calculating route...";
+    document.getElementById('statusMsg').innerText = "AI thinking...";
     setTimeout(aiTurn, 400);
+  } else if (gameMode === 'online') {
+    document.getElementById('statusMsg').innerText = (turn === myRole) 
+      ? "Your turn! Make a move." 
+      : `Waiting for ${currentP.name}...`;
   } else if (!gameOver) {
-    document.getElementById('statusMsg').innerText = `${currentP.name}'s turn: move or wall.`;
+    document.getElementById('statusMsg').innerText = `${currentP.name}'s turn.`;
   }
 }
 
@@ -636,7 +1019,7 @@ function aiTurn() {
   }
   draw();
   if (checkWin()) return;
-  switchTurn();
+  switchTurn(true);
 }
 
 function draw() {
@@ -651,10 +1034,12 @@ function draw() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 
   const currentP = getCurrentPlayer();
-  const validMoves = (!gameOver && !(gameMode === 'ai' && turn === 2) && mode === 'move') 
-    ? getValidMoves(currentP) : [];
+  const canMove = (!gameOver && 
+                  !(gameMode === 'ai' && turn === 2) && 
+                  !(gameMode === 'online' && turn !== myRole) && 
+                  mode === 'move');
+  const validMoves = canMove ? getValidMoves(currentP) : [];
 
-  // Draw 9x9 Grid Cells
   for (let y = 0; y < N; y++) {
     for (let x = 0; x < N; x++) {
       const cx = BOARD_PADDING + x * STEP;
@@ -707,7 +1092,6 @@ function draw() {
     }
   }
 
-  // Draw 🏆 icon in center for 3P mode
   if (gameMode === '3p') {
     const centerPxX = BOARD_PADDING + CENTER_X * STEP + CELL_SIZE / 2;
     const centerPxY = BOARD_PADDING + CENTER_Y * STEP + CELL_SIZE / 2 + 5;
@@ -716,7 +1100,7 @@ function draw() {
     ctx.fillText("🏆", centerPxX, centerPxY);
   }
 
-  // Draw Wall Segments
+  // Draw Walls
   ctx.fillStyle = "#f59e0b";
   ctx.shadowColor = "#f59e0b";
   ctx.shadowBlur = 8;
@@ -726,7 +1110,6 @@ function draw() {
     const wx = BOARD_PADDING + x * STEP;
     const wy = BOARD_PADDING + (y + 1) * STEP - (GAP / 2) - 3;
     ctx.beginPath();
-    // Seamless overlap across grid intersections
     ctx.roundRect(wx - 2, wy, CELL_SIZE + 4, 6, 2);
     ctx.fill();
   });
@@ -742,13 +1125,16 @@ function draw() {
 
   ctx.shadowBlur = 0;
 
-  // Draw Corner Dots in Wall Placement Mode
-  if (mode !== 'move' && !gameOver && !(gameMode === 'ai' && turn === 2)) {
+  // Corner dots in Wall Mode
+  const canPlace = (!gameOver && 
+                    !(gameMode === 'ai' && turn === 2) && 
+                    !(gameMode === 'online' && turn !== myRole) && 
+                    mode !== 'move');
+  if (canPlace) {
     for (let y = 0; y < N - 1; y++) {
       for (let x = 0; x < N - 1; x++) {
         const dotX = BOARD_PADDING + (x + 1) * STEP - (GAP / 2);
         const dotY = BOARD_PADDING + (y + 1) * STEP - (GAP / 2);
-
         const isHovered = hoverDot && hoverDot.x === x && hoverDot.y === y;
 
         ctx.fillStyle = isHovered ? "#f59e0b" : "#475569";
@@ -759,7 +1145,6 @@ function draw() {
     }
   }
 
-  // Draw Pawns
   function drawPawn(p) {
     const px = BOARD_PADDING + p.x * STEP + CELL_SIZE / 2;
     const py = BOARD_PADDING + p.y * STEP + CELL_SIZE / 2;
@@ -776,6 +1161,8 @@ function draw() {
   if (gameMode === '3p') drawPawn(p3);
   ctx.shadowBlur = 0;
 }
+
+initProfile();
 </script>
 </body>
 </html>
