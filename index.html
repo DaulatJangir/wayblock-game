@@ -1045,11 +1045,12 @@ function draw() {
     ctx.fillText("🏆", centerPxX, centerPxY);
   }
 
-  // Draw Walls
+  // Draw Walls (Horizontal & Vertical)
   ctx.fillStyle = "#f59e0b";
   ctx.shadowColor = "#f59e0b";
   ctx.shadowBlur = 8;
 
+  // Horizontal wall segments
   segH.forEach(coord => {
     const [x, y] = coord.split(',').map(Number);
     const wx = BOARD_PADDING + x * STEP;
@@ -1059,12 +1060,13 @@ function draw() {
     ctx.fill();
   });
 
+  // Vertical wall segments (FIXED: correct coordinates and dimensions)
   segV.forEach(coord => {
     const [x, y] = coord.split(',').map(Number);
     const wx = BOARD_PADDING + (x + 1) * STEP - (GAP / 2) - 3;
     const wy = BOARD_PADDING + y * STEP;
     ctx.beginPath();
-    ctx.roundRect(wx - 2, 6, CELL_SIZE + 4, 2);
+    ctx.roundRect(wx, wy - 2, 6, CELL_SIZE + 4, 2);
     ctx.fill();
   });
 
