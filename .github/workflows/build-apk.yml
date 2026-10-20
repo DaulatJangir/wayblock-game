@@ -33,7 +33,11 @@ jobs:
           npx cap add android
           npx cap sync android
 
-      - name: Force Modern Kotlin Resolution (Fix Duplicate Class)
+      - name: Add Android Network Permissions
+        run: |
+          sed -i '/<application/i \    <uses-permission android:name="android.permission.INTERNET" />\n    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />' android/app/src/main/AndroidManifest.xml
+
+      - name: Force Modern Kotlin Resolution
         run: |
           cat << 'EOF' >> android/app/build.gradle
 
