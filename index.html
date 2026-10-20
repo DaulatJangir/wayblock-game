@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Way Block - Quoridor Arena</title>
-<script src="https://unpkg.com/peerjs@1.5.2/dist/peerjs.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/peerjs/1.5.4/peerjs.min.js"></script>
 <style>
   :root {
     --bg-main: #060913;
@@ -28,30 +28,29 @@
     justify-content: center;
     overflow-x: hidden;
   }
-
   .view-container {
     width: 100%;
     max-width: 420px;
     min-height: 100vh;
     display: flex;
     flex-direction: column;
-    padding: 18px;
+    padding: 16px;
     position: relative;
   }
   .hidden { display: none !important; }
 
-  /* Universal Top Bar */
+  /* Top Bar */
   .top-bar {
     display: flex;
     align-items: center;
     justify-content: space-between;
     width: 100%;
-    margin-bottom: 24px;
+    margin-bottom: 20px;
   }
   .brand-title {
-    font-size: 1.4rem;
+    font-size: 1.35rem;
     font-weight: 900;
-    letter-spacing: 2.5px;
+    letter-spacing: 2px;
     color: var(--p1-cyan);
     text-shadow: 0 0 16px rgba(56, 189, 248, 0.45);
   }
@@ -61,7 +60,7 @@
     color: var(--p1-cyan);
     font-size: 0.85rem;
     font-weight: 700;
-    padding: 8px 14px;
+    padding: 6px 12px;
     border-radius: 20px;
     cursor: pointer;
     box-shadow: 0 0 10px rgba(56, 189, 248, 0.2);
@@ -71,59 +70,36 @@
     text-overflow: ellipsis;
   }
 
-  /* HOME PAGE (Full Screen) */
-  #homeView {
-    justify-content: space-between;
-  }
-  .hero-section {
-    text-align: center;
-    margin: 40px 0 30px;
-  }
-  .hero-section h2 {
-    font-size: 2.4rem;
-    font-weight: 900;
-    letter-spacing: 2px;
-    color: #ffffff;
-    margin-bottom: 6px;
-  }
-  .hero-section p {
-    color: var(--text-muted);
-    font-size: 0.95rem;
-  }
-  .menu-actions {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    margin-bottom: 40px;
-  }
+  /* Full Screen Home View */
+  #homeView { justify-content: space-between; }
+  .hero-section { text-align: center; margin: 30px 0; }
+  .hero-section h2 { font-size: 2.2rem; font-weight: 900; letter-spacing: 2px; color: #ffffff; margin-bottom: 6px; }
+  .hero-section p { color: var(--text-muted); font-size: 0.95rem; }
+  .menu-actions { display: flex; flex-direction: column; gap: 12px; margin-bottom: 30px; }
   .action-btn {
     width: 100%;
-    padding: 16px;
+    padding: 15px;
     background: #0f172a;
     border: 1px solid var(--card-border);
     color: #f8fafc;
-    font-size: 1rem;
+    font-size: 0.95rem;
     font-weight: 700;
     border-radius: 12px;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 10px;
-    transition: all 0.2s ease;
+    gap: 8px;
+    transition: all 0.15s ease;
   }
-  .action-btn:hover {
-    background: #1e293b;
-    border-color: #334155;
-    transform: translateY(-2px);
-  }
+  .action-btn:active { transform: scale(0.98); }
   .action-btn.primary {
     background: linear-gradient(135deg, #0284c7, #0369a1);
     border-color: var(--p1-cyan);
     box-shadow: 0 0 20px rgba(56, 189, 248, 0.35);
   }
 
-  /* LOBBY / HOST / JOIN SCREENS */
+  /* Lobby Cards */
   .lobby-card {
     background: var(--card-bg);
     border: 1px solid var(--card-border);
@@ -133,11 +109,11 @@
   }
   .code-banner {
     text-align: center;
-    padding: 14px;
+    padding: 12px;
     background: #070b14;
     border: 2px dashed var(--wall-gold);
     border-radius: 12px;
-    margin-bottom: 18px;
+    margin-bottom: 16px;
   }
   .code-text {
     font-family: monospace;
@@ -147,15 +123,15 @@
     color: var(--wall-gold);
   }
   .lobby-section-title {
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 1.5px;
     color: var(--text-muted);
-    margin-bottom: 10px;
+    margin-bottom: 8px;
   }
   .players-box {
-    min-height: 150px;
+    min-height: 120px;
     background: #070b14;
     border: 1px solid var(--card-border);
     border-radius: 12px;
@@ -168,18 +144,13 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px 14px;
+    padding: 10px 12px;
     border-radius: 8px;
     background: #0f172a;
     font-weight: 600;
-    font-size: 0.95rem;
+    font-size: 0.9rem;
   }
-  .tag {
-    font-size: 0.75rem;
-    padding: 3px 8px;
-    border-radius: 6px;
-    font-weight: 700;
-  }
+  .tag { font-size: 0.75rem; padding: 2px 8px; border-radius: 6px; font-weight: 700; }
   .tag-host { background: rgba(56, 189, 248, 0.2); color: var(--p1-cyan); border: 1px solid var(--p1-cyan); }
   .tag-guest { background: rgba(244, 63, 94, 0.2); color: var(--p2-pink); border: 1px solid var(--p2-pink); }
 
@@ -189,14 +160,7 @@
     border: 1px solid var(--wall-gold);
     border-radius: 12px;
     padding: 12px;
-    animation: pulse 1.5s infinite;
   }
-  @keyframes pulse {
-    0%, 100% { border-color: var(--wall-gold); }
-    50% { border-color: #ffffff; }
-  }
-
-  /* INPUTS */
   .custom-input {
     width: 100%;
     padding: 14px;
@@ -209,9 +173,8 @@
     margin-bottom: 14px;
     outline: none;
   }
-  .custom-input:focus { border-color: var(--p1-cyan); }
 
-  /* GAME ARENA VIEW */
+  /* Game Canvas & HUD */
   .hud {
     display: flex;
     justify-content: space-between;
@@ -237,12 +200,7 @@
     height: 18px;
     text-align: center;
   }
-  .board-wrapper {
-    position: relative;
-    width: 360px;
-    height: 360px;
-    margin: 0 auto;
-  }
+  .board-wrapper { position: relative; width: 360px; height: 360px; margin: 0 auto; }
   canvas {
     background: #0f172a;
     border: 2px solid #334155;
@@ -250,12 +208,7 @@
     box-shadow: 0 0 24px rgba(0, 0, 0, 0.8);
     cursor: pointer;
   }
-  .controls {
-    display: flex;
-    gap: 8px;
-    margin: 12px auto 0;
-    width: 360px;
-  }
+  .controls { display: flex; gap: 8px; margin: 12px auto 0; width: 360px; }
   .controls button {
     flex: 1;
     padding: 10px 0;
@@ -274,7 +227,7 @@
     box-shadow: 0 0 10px rgba(56, 189, 248, 0.35);
   }
 
-  /* NAME MODAL */
+  /* Modals */
   .modal-overlay {
     position: fixed;
     inset: 0;
@@ -298,7 +251,7 @@
 </head>
 <body>
 
-<!-- ================= 1. HOME VIEW (Full Screen) ================= -->
+<!-- 1. HOME VIEW -->
 <div class="view-container" id="homeView">
   <div class="top-bar">
     <div class="brand-title">WAY BLOCK</div>
@@ -319,7 +272,7 @@
   <div></div>
 </div>
 
-<!-- ================= 2. LOBBY CHOICE VIEW ================= -->
+<!-- 2. LOBBY SELECTION -->
 <div class="view-container hidden" id="lobbyChoiceView">
   <div class="top-bar">
     <button class="action-btn" style="width:auto; padding:6px 14px;" onclick="switchView('homeView')">← Back</button>
@@ -329,7 +282,7 @@
 
   <div class="hero-section">
     <h2>CONNECT</h2>
-    <p>Host a match or join a friend's arena</p>
+    <p>Both phones must be on the same Wi-Fi / Hotspot</p>
   </div>
 
   <div class="menu-actions">
@@ -339,7 +292,7 @@
   <div></div>
 </div>
 
-<!-- ================= 3. HOST LOBBY VIEW ================= -->
+<!-- 3. HOST LOBBY -->
 <div class="view-container hidden" id="hostLobbyView">
   <div class="top-bar">
     <button class="action-btn" style="width:auto; padding:6px 14px;" onclick="cancelNetworkSession()">← Cancel</button>
@@ -353,18 +306,17 @@
       <div class="code-text" id="hostCodeDisplay">------</div>
     </div>
 
-    <div class="lobby-section-title">Players Roster</div>
+    <div class="lobby-section-title">Connected Players</div>
     <div class="players-box" id="hostRosterBox">
       <div class="player-row">
-        <span id="hostNameTag">Player (Host)</span>
+        <span id="hostNameTag">Host</span>
         <span class="tag tag-host">HOST</span>
       </div>
     </div>
 
-    <!-- Request incoming alert box -->
     <div class="incoming-request hidden" id="incomingReqBox">
       <div style="font-size:0.9rem; margin-bottom:10px; color:#ffffff;">
-        <strong id="candidateName">Player</strong> wants to join!
+        <strong id="candidateName">Player</strong> requests to join!
       </div>
       <div style="display:flex; gap:10px;">
         <button class="action-btn primary" style="padding:10px;" onclick="acceptCandidate()">Accept</button>
@@ -376,7 +328,7 @@
   <button class="action-btn primary hidden" id="btnStartOnline" onclick="launchOnlineMatch()">Start Match</button>
 </div>
 
-<!-- ================= 4. JOIN LOBBY VIEW ================= -->
+<!-- 4. JOIN LOBBY -->
 <div class="view-container hidden" id="joinLobbyView">
   <div class="top-bar">
     <button class="action-btn" style="width:auto; padding:6px 14px;" onclick="switchView('lobbyChoiceView')">← Back</button>
@@ -385,14 +337,14 @@
   </div>
 
   <div class="lobby-card" style="margin-top:20px;">
-    <div class="lobby-section-title">Enter Host Code</div>
-    <input type="text" id="joinInputCode" class="custom-input" placeholder="e.g. 58219" maxlength="6" />
+    <div class="lobby-section-title">Enter Host 5-Digit Code</div>
+    <input type="number" pattern="[0-9]*" id="joinInputCode" class="custom-input" placeholder="e.g. 58219" />
     <button class="action-btn primary" onclick="sendJoinRequest()">Send Join Request</button>
-    <div id="joinStatusNotice" style="margin-top:14px; text-align:center; font-size:0.9rem; color:var(--text-muted);"></div>
+    <div id="joinStatusNotice" style="margin-top:14px; text-align:center; font-size:0.85rem; color:var(--text-muted);"></div>
   </div>
 </div>
 
-<!-- ================= 5. GAMEPLAY ARENA VIEW ================= -->
+<!-- 5. GAME ARENA -->
 <div class="view-container hidden" id="gameArenaView">
   <div class="top-bar" style="margin-bottom:8px;">
     <button class="action-btn" style="width:auto; padding:6px 12px; font-size:0.8rem;" onclick="exitToHome()">← Exit</button>
@@ -428,17 +380,17 @@
   </div>
 </div>
 
-<!-- ================= NAME CHANGE MODAL ================= -->
+<!-- NAME CHANGE MODAL -->
 <div class="modal-overlay hidden" id="nameModal">
   <div class="modal-box">
-    <h3 style="margin-bottom:6px;">PLAYER HANDLE</h3>
-    <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:16px;">Visible to all opponents</p>
+    <h3 style="margin-bottom:6px;">ENTER YOUR NAME</h3>
+    <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:16px;">This name appears to your opponents.</p>
     <input type="text" id="nameField" class="custom-input" maxlength="12" placeholder="Your name" />
-    <button class="action-btn primary" onclick="saveName()">Save & Continue</button>
+    <button class="action-btn primary" onclick="saveName()">Save Handle</button>
   </div>
 </div>
 
-<!-- ================= VICTORY MODAL ================= -->
+<!-- WINNER MODAL -->
 <div class="modal-overlay hidden" id="winModal">
   <div class="modal-box" style="border-color:var(--wall-gold); box-shadow:0 0 32px rgba(245,158,11,0.35);">
     <h2 style="color:var(--wall-gold); margin-bottom:4px;">CHAMPION!</h2>
@@ -449,7 +401,6 @@
 </div>
 
 <script>
-// --- Navigation Controller ---
 function switchView(viewId) {
   ['homeView', 'lobbyChoiceView', 'hostLobbyView', 'joinLobbyView', 'gameArenaView'].forEach(id => {
     document.getElementById(id).classList.add('hidden');
@@ -457,14 +408,13 @@ function switchView(viewId) {
   document.getElementById(viewId).classList.remove('hidden');
 }
 
-// --- Player Profile Handling ---
-let playerName = localStorage.getItem('wayblock_username') || "";
+let playerName = localStorage.getItem('wayblock_username') || "Player_" + Math.floor(100 + Math.random() * 900);
 
 function initProfile() {
-  if (!playerName) {
+  document.getElementById('nameField').value = playerName;
+  updateBadgeDisplays();
+  if (!localStorage.getItem('wayblock_username')) {
     document.getElementById('nameModal').classList.remove('hidden');
-  } else {
-    updateBadgeDisplays();
   }
 }
 
@@ -487,14 +437,12 @@ function updateBadgeDisplays() {
   document.getElementById('arenaUserBadge').innerText = playerName;
 }
 
-function goToLobbyChoice() {
-  switchView('lobbyChoiceView');
-}
+function goToLobbyChoice() { switchView('lobbyChoiceView'); }
 
-// --- Networking & P2P Rooms ---
+// Networking
 let peer = null;
 let conn = null;
-let myRole = 1; // 1 = Host, 2 = Guest
+let myRole = 1;
 let candidateGuest = null;
 let guestInfo = null;
 
@@ -512,7 +460,6 @@ function initHostView() {
   document.getElementById('incomingReqBox').classList.add('hidden');
   document.getElementById('btnStartOnline').classList.add('hidden');
 
-  // Reset roster to host only
   document.getElementById('hostRosterBox').innerHTML = `
     <div class="player-row">
       <span>${playerName} (You)</span>
@@ -524,7 +471,7 @@ function initHostView() {
   document.getElementById('hostCodeDisplay').innerText = roomCode;
 
   if (peer) peer.destroy();
-  peer = new Peer(`wayblock-room-${roomCode}`);
+  peer = new Peer(`wb-${roomCode}`, { debug: 1 });
 
   peer.on('connection', (c) => {
     c.on('data', (data) => {
@@ -537,6 +484,10 @@ function initHostView() {
       }
     });
   });
+
+  peer.on('error', (err) => {
+    alert("Connection error: Ensure device is connected to Wi-Fi.");
+  });
 }
 
 function acceptCandidate() {
@@ -545,14 +496,11 @@ function acceptCandidate() {
   guestInfo = { name: candidateGuest.name };
   conn.send({ type: 'join_accepted', hostName: playerName });
 
-  // Update Roster Box
   const guestRow = document.createElement('div');
   guestRow.className = 'player-row';
-  guestRow.innerHTML = `
-    <span>${guestInfo.name}</span>
-    <span class="tag tag-guest">GUEST</span>
-  `;
+  guestRow.innerHTML = `<span>${guestInfo.name}</span><span class="tag tag-guest">GUEST</span>`;
   document.getElementById('hostRosterBox').appendChild(guestRow);
+
   document.getElementById('incomingReqBox').classList.add('hidden');
   document.getElementById('btnStartOnline').classList.remove('hidden');
 }
@@ -584,24 +532,25 @@ function initJoinView() {
 function sendJoinRequest() {
   const code = document.getElementById('joinInputCode').value.trim();
   if (code.length < 5) {
-    document.getElementById('joinStatusNotice').innerText = 'Please enter a valid 5-digit code.';
+    document.getElementById('joinStatusNotice').innerText = 'Please enter a 5-digit code.';
     return;
   }
 
-  document.getElementById('joinStatusNotice').innerText = 'Connecting to host...';
+  document.getElementById('joinStatusNotice').innerText = 'Locating Host on local network...';
   if (peer) peer.destroy();
-  peer = new Peer();
+  peer = new Peer({ debug: 1 });
 
   peer.on('open', () => {
-    conn = peer.connect(`wayblock-room-${code}`);
+    conn = peer.connect(`wb-${code}`, { reliable: true });
+    
     conn.on('open', () => {
-      document.getElementById('joinStatusNotice').innerText = 'Request sent! Awaiting host response...';
+      document.getElementById('joinStatusNotice').innerText = 'Request sent! Waiting for Host approval...';
       conn.send({ type: 'join_request', senderName: playerName });
     });
 
     conn.on('data', (data) => {
       if (data.type === 'join_accepted') {
-        document.getElementById('joinStatusNotice').innerText = 'Accepted! Waiting for host to launch match...';
+        document.getElementById('joinStatusNotice').innerText = 'Accepted! Host will start match soon.';
         p1.name = data.hostName;
         p2.name = playerName;
         myRole = 2;
@@ -614,29 +563,31 @@ function sendJoinRequest() {
       }
     });
   });
+
+  peer.on('error', () => {
+    document.getElementById('joinStatusNotice').innerText = 'Failed to locate host. Check code and Wi-Fi.';
+  });
 }
 
 function broadcastAction(payload) {
-  if (conn && conn.open) {
-    conn.send({ type: 'sync_action', ...payload });
-  }
+  if (conn && conn.open) conn.send({ type: 'sync_action', ...payload });
 }
 
 function handleRemoteAction(data) {
   if (data.action === 'move') {
-    const targetP = data.player === 1 ? p1 : p2;
+    const targetP = (data.player === 1) ? p1 : p2;
     targetP.x = data.x;
     targetP.y = data.y;
     draw();
     if (checkWin()) return;
     switchTurn(false);
   } else if (data.action === 'wall') {
-    const targetP = data.player === 1 ? p1 : p2;
+    const targetP = (data.player === 1) ? p1 : p2;
     if (data.isH) {
-      segH.add(data.key1);
+      if (data.key1) segH.add(data.key1);
       if (data.key2) segH.add(data.key2);
     } else {
-      segV.add(data.key1);
+      if (data.key1) segV.add(data.key1);
       if (data.key2) segV.add(data.key2);
     }
     targetP.walls--;
@@ -645,10 +596,9 @@ function handleRemoteAction(data) {
   }
 }
 
-// --- Gameplay Engine ---
+// Canvas Game Engine
 const canvas = document.getElementById('gameCanvas');
 const ctx = canvas.getContext('2d');
-
 const N = 9;
 const BOARD_PADDING = 8;
 const GAP = 6;
@@ -669,9 +619,7 @@ let segH = new Set();
 let segV = new Set();
 let hoverDot = null;
 
-function startLocalGame(selectedMode) {
-  bootGame(selectedMode);
-}
+function startLocalGame(selectedMode) { bootGame(selectedMode); }
 
 function bootGame(selectedMode) {
   gameMode = selectedMode;
@@ -751,7 +699,7 @@ function getOtherPlayers(player) {
     if (player === p2) return [p1, p3];
     return [p1, p2];
   }
-  return player === p1 ? [p2] : [p1];
+  return (player === p1) ? [p2] : [p1];
 }
 
 function getValidMoves(player) {
@@ -788,8 +736,7 @@ function getShortestDistance(start, targetCheckFn) {
     const curr = queue.shift();
     if (targetCheckFn(curr.x, curr.y)) return curr.dist;
 
-    const dirs = [{x: 0, y: 1}, {x: 0, y: -1}, {x: 1, y: 0}, {x: -1, y: 0}];
-    for (let d of dirs) {
+    for (let d of [{x: 0, y: 1}, {x: 0, y: -1}, {x: 1, y: 0}, {x: -1, y: 0}]) {
       const nx = curr.x + d.x;
       const ny = curr.y + d.y;
       if (nx >= 0 && nx < N && ny >= 0 && ny < N && !visited[ny][nx]) {
@@ -803,9 +750,7 @@ function getShortestDistance(start, targetCheckFn) {
   return -1;
 }
 
-function hasPath(start, targetCheckFn) {
-  return getShortestDistance(start, targetCheckFn) !== -1;
-}
+function hasPath(start, targetCheckFn) { return getShortestDistance(start, targetCheckFn) !== -1; }
 
 function getProposedSegments(dotX, dotY, isH) {
   const segs = [];
@@ -1119,13 +1064,13 @@ function draw() {
     const wx = BOARD_PADDING + (x + 1) * STEP - (GAP / 2) - 3;
     const wy = BOARD_PADDING + y * STEP;
     ctx.beginPath();
-    ctx.roundRect(wx, wy - 2, 6, CELL_SIZE + 4, 2);
+    ctx.roundRect(wx - 2, 6, CELL_SIZE + 4, 2);
     ctx.fill();
   });
 
   ctx.shadowBlur = 0;
 
-  // Corner dots in Wall Mode
+  // Dots
   const canPlace = (!gameOver && 
                     !(gameMode === 'ai' && turn === 2) && 
                     !(gameMode === 'online' && turn !== myRole) && 
