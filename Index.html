@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Way Block - Quoridor Arena</title>
+<style>
+  :root {
+    --bg-main: #070b14;
+    --card-bg: #0f172a;
+    --p1-cyan: #38bdf8;
+    --p2-pink: #f43f5e;
+    --p3-green: #10b981;
+    --wall-gold: #f59e0b;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
+  body {
+    background: var(--bg-main);
+    color: #f8fafc;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 12px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Header & Back Button */
+  .top-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 360px;
+    margin-bottom: 8px;
+  }
+  .back-btn {
+    background: #1e293b;
+    border: 1px solid #334155;
+    color: #94a3b8;
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 6px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+  .back-btn:hover {
+    background: #334155;
+    color: #f8fafc;
+  }
+  h1 {
+    font-size: 1.4rem;
+    font-weight: 800;
+    letter-spacing: 2px;
+    color: var(--p1-cyan);
+    text-shadow: 0 0 16px rgba(56, 189, 248, 0.4);
+    margin: 0;
+  }
+
+  .hud {
+    display: flex;
+    justify-content: space-between;
+    width: 360px;
+    padding: 8px 12px;
+    background: var(--card-bg);
+    border: 1px solid #1e293b;
+    border-radius: 10px;
+    margin-bottom: 8px;
+  }
+  .p-stat { flex: 1; text-align: center; opacity: 0.35; transition: opacity 0.2s; }
+  .p-stat.active { opacity: 1; filter: drop-shadow(0 0 6px currentColor); }
+  .p-stat strong { display: block; font-size: 0.85rem; }
+  .p-stat span { font-size: 0.75rem; color: #94a3b8; }
+  .p1 { color: var(--p1-cyan); }
+  .p2 { color: var(--p2-pink); }
+  .p3 { color: var(--p3-green); }
+  
+  .status-text {
+    font-size: 0.85rem;
+    color: #94a3b8;
+    margin-bottom: 8px;
+    height: 18px;
+    text-align: center;
+  }
+  .board-wrapper {
+    position: relative;
+    width: 360px;
+    height: 360px;
+  }
+  canvas {
+    background: #0f172a;
+    border: 2px solid #334155;
+    border-radius: 12px;
+    box-shadow: 0 0 24px rgba(0, 0, 0, 0.8);
+    cursor: pointer;
+  }
+  .controls {
+    display: flex;
+    gap: 8px;
+    margin-top: 12px;
+    width: 360px;
+  }
+  .controls button {
+    flex: 1;
+    padding: 10px 0;
+    border: 1px solid #334155;
+    background: #1e293b;
+    color: #e2e8f0;
+    font-size: 0.85rem;
+    font-weight: 600;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+  .controls button.active {
+    background: #0284c7;
+    border-color: var(--p1-cyan);
+    color: #ffffff;
+    box-shadow: 0 0 10px rgba(56, 189, 248, 0.35);
+  }
+
+  /* Modals */
+  .modal-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(3, 7, 18, 0.82);
+    backdrop-filter: blur(6px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+  }
+  .hidden { display: none !important; }
+  
+  .menu-card {
+    background: #0f172a;
+    border: 2px solid #334155;
+    padding: 24px 20px;
+    border-radius: 16px;
+    text-align: center;
+    width: 310px;
+    box-shadow: 0 0 32px rgba(0, 0, 0, 0.8);
+  }
+  .menu-card h2 {
+    font-size: 1.4rem;
+    margin-bottom: 6px;
+    color: #f8fafc;
+  }
+  .menu-card p {
+    font-size: 0.85rem;
+    color: #94a3b8;
+    margin-bottom: 20px;
+  }
+  .menu-btn {
+    width: 100%;
+    margin-bottom: 10px;
+    padding: 12px 0;
+    font-size: 0.95rem;
+    background: #1e293b;
+    border: 1px solid #334155;
+    color: #f8fafc;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .menu-btn:hover {
+    background: #0284c7;
+    border-color: var(--p1-cyan);
+  }
+
+  /* Leaderboard Modal */
+  .win-card {
+    background: #0f172a;
+    border: 2px solid var(--wall-gold);
+    padding: 24px;
+    border-radius: 16px;
+    text-align: center;
+    width: 320px;
+    box-shadow: 0 0 32px rgba(245, 158, 11, 0.4);
+    animation: popIn 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+  @keyframes popIn {
+    from { transform: scale(0.7) translateY(20px); opacity: 0; }
+    to { transform: scale(1) translateY(0); opacity: 1; }
+  }
+  .win-card h2 {
+    font-size: 1.8rem;
+    color: var(--wall-gold);
+    margin-bottom: 4px;
+  }
+  .podium-list {
+    margin: 16px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .podium-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 12px;
+    border-radius: 8px;
+    background: #1e293b;
+    font-size: 0.9rem;
+    font-weight: 600;
+  }
+  .podium-item.first {
+    border: 1px solid var(--wall-gold);
+    background: rgba(245, 158, 11, 0.15);
+  }
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <button class="back-btn" onclick="returnToMenu()">← Modes</button>
+  <h1>WAY BLOCK</h1>
+  <div style="width: 65px;"></div>
+</div>
+
+<div class="hud" id="hudBar">
+  <div class="p-stat p1 active" id="p1Box">
+    <strong id="p1Label">Player 1</strong>
+    <span id="p1Count">Walls: 10</span>
+  </div>
+  <div class="p-stat p2" id="p2Box">
+    <strong id="p2Label">Player 2</strong>
+    <span id="p2Count">Walls: 10</span>
+  </div>
+  <div class="p-stat p3 hidden" id="p3Box">
+    <strong>Player 3</strong>
+    <span id="p3Count">Walls: 10</span>
+  </div>
+</div>
+
+<div class="status-text" id="statusMsg">Select an option to begin.</div>
+
+<div class="board-wrapper">
+  <canvas id="gameCanvas" width="360" height="360"></canvas>
+</div>
+
+<div class="controls">
+  <button id="btnMove" class="active" onclick="setMode('move')">Move</button>
+  <button id="btnWallH" onclick="setMode('wall-h')">Wall [—]</button>
+  <button id="btnWallV" onclick="setMode('wall-v')">Wall [ | ]</button>
+</div>
+
+<!-- Mode Selection Modal -->
+<div class="modal-overlay" id="startModal">
+  <div class="menu-card">
+    <h2>CHOOSE GAME MODE</h2>
+    <p>Select your Quoridor battle setup</p>
+    <button class="menu-btn" onclick="startGame('ai')">🤖 Play with Computer</button>
+    <button class="menu-btn" onclick="startGame('2p')">👥 2 Players (Pass & Play)</button>
+    <button class="menu-btn" onclick="startGame('3p')">🏆 3 Players (Race to Center)</button>
+  </div>
+</div>
+
+<!-- Victory Modal -->
+<div class="modal-overlay hidden" id="winModal">
+  <div class="win-card">
+    <h2>CHAMPION!</h2>
+    <p id="winSub">Game Finished</p>
+    <div class="podium-list" id="podiumList"></div>
+    <button class="menu-btn" style="background:#0284c7; border:none; color:#fff;" onclick="returnToMenu()">Change Mode</button>
+  </div>
+</div>
+
+<script>
+const canvas = document.getElementById('gameCanvas');
+const ctx = canvas.getContext('2d');
+
+const N = 9;
+const BOARD_PADDING = 8;
+const GAP = 6;
+const CELL_SIZE = (360 - (BOARD_PADDING * 2) - (GAP * (N - 1))) / N; // ~32.88px
+const STEP = CELL_SIZE + GAP;
+const CENTER_X = 4, CENTER_Y = 4;
+
+let gameMode = 'ai'; // 'ai', '2p', '3p'
+let mode = 'move';
+let turn = 1;
+let gameOver = false;
+
+let p1 = { x: 4, y: 8, walls: 10, name: "Player 1", color: "#38bdf8" };
+let p2 = { x: 4, y: 0, walls: 10, name: "Player 2", color: "#f43f5e" };
+let p3 = { x: 0, y: 4, walls: 10, name: "Player 3", color: "#10b981" };
+
+// Edge segment sets: stores individual 1-unit segments
+// Horizontal segment between row y and y+1 for column x: "x,y"
+let segH = new Set();
+// Vertical segment between col x and x+1 for row y: "x,y"
+let segV = new Set();
+
+let hoverDot = null;
+
+function startGame(selectedMode) {
+  gameMode = selectedMode;
+  document.getElementById('startModal').classList.add('hidden');
+  document.getElementById('winModal').classList.add('hidden');
+
+  segH.clear();
+  segV.clear();
+  turn = 1;
+  gameOver = false;
+  mode = 'move';
+
+  p1 = { x: 4, y: 8, walls: 10, name: "Player 1", color: "#38bdf8" };
+
+  if (gameMode === '3p') {
+    p2 = { x: 4, y: 0, walls: 10, name: "Player 2", color: "#f43f5e" };
+    p3 = { x: 0, y: 4, walls: 10, name: "Player 3", color: "#10b981" };
+    document.getElementById('p2Label').innerText = "Player 2";
+    document.getElementById('p3Box').classList.remove('hidden');
+    document.getElementById('statusMsg').innerText = "3-Player Arena: First to reach the Center Trophy wins!";
+  } else {
+    document.getElementById('p3Box').classList.add('hidden');
+    if (gameMode === 'ai') {
+      p2 = { x: 4, y: 0, walls: 10, name: "AI Computer", color: "#f43f5e" };
+      document.getElementById('p2Label').innerText = "Computer";
+      document.getElementById('statusMsg').innerText = "Reach the top row before the AI!";
+    } else {
+      p2 = { x: 4, y: 0, walls: 10, name: "Player 2", color: "#f43f5e" };
+      document.getElementById('p2Label').innerText = "Player 2";
+      document.getElementById('statusMsg').innerText = "Player 1's turn: move or build wall.";
+    }
+  }
+
+  setMode('move');
+  draw();
+}
+
+function returnToMenu() {
+  document.getElementById('winModal').classList.add('hidden');
+  document.getElementById('startModal').classList.remove('hidden');
+}
+
+function setMode(newMode) {
+  if (gameOver) return;
+  if (gameMode === 'ai' && turn === 2) return;
+  mode = newMode;
+  document.getElementById('btnMove').classList.toggle('active', mode === 'move');
+  document.getElementById('btnWallH').classList.toggle('active', mode === 'wall-h');
+  document.getElementById('btnWallV').classList.toggle('active', mode === 'wall-v');
+  draw();
+}
+
+function getCurrentPlayer() {
+  if (turn === 1) return p1;
+  if (turn === 2) return p2;
+  return p3;
+}
+
+function isBlocked(fromX, fromY, toX, toY) {
+  if (fromX === toX) { // Vertical move across a horizontal boundary
+    const minY = Math.min(fromY, toY);
+    if (segH.has(`${fromX},${minY}`)) return true;
+  } else if (fromY === toY) { // Horizontal move across a vertical boundary
+    const minX = Math.min(fromX, toX);
+    if (segV.has(`${minX},${fromY}`)) return true;
+  }
+  return false;
+}
+
+function getOtherPlayers(player) {
+  if (gameMode === '3p') {
+    if (player === p1) return [p2, p3];
+    if (player === p2) return [p1, p3];
+    return [p1, p2];
+  }
+  return player === p1 ? [p2] : [p1];
+}
+
+function getValidMoves(player) {
+  const others = getOtherPlayers(player);
+  const dirs = [{x: 0, y: 1}, {x: 0, y: -1}, {x: 1, y: 0}, {x: -1, y: 0}];
+  const valid = [];
+
+  for (let d of dirs) {
+    const nx = player.x + d.x;
+    const ny = player.y + d.y;
+    if (nx < 0 || nx >= N || ny < 0 || ny >= N) continue;
+    if (isBlocked(player.x, player.y, nx, ny)) continue;
+
+    const blockingOpp = others.find(o => o.x === nx && o.y === ny);
+    if (blockingOpp) {
+      // Jump
+      const jx = nx + d.x;
+      const jy = ny + d.y;
+      if (jx >= 0 && jx < N && jy >= 0 && jy < N && !isBlocked(nx, ny, jx, jy) && !others.some(o => o.x === jx && o.y === jy)) {
+        valid.push({x: jx, y: jy});
+      }
+    } else {
+      valid.push({x: nx, y: ny});
+    }
+  }
+  return valid;
+}
+
+function getShortestDistance(start, targetCheckFn) {
+  const queue = [{x: start.x, y: start.y, dist: 0}];
+  const visited = Array.from({length: N}, () => Array(N).fill(false));
+  visited[start.y][start.x] = true;
+
+  while (queue.length > 0) {
+    const curr = queue.shift();
+    if (targetCheckFn(curr.x, curr.y)) return curr.dist;
+
+    const dirs = [{x: 0, y: 1}, {x: 0, y: -1}, {x: 1, y: 0}, {x: -1, y: 0}];
+    for (let d of dirs) {
+      const nx = curr.x + d.x;
+      const ny = curr.y + d.y;
+      if (nx >= 0 && nx < N && ny >= 0 && ny < N && !visited[ny][nx]) {
+        if (!isBlocked(curr.x, curr.y, nx, ny)) {
+          visited[ny][nx] = true;
+          queue.push({x: nx, y: ny, dist: curr.dist + 1});
+        }
+      }
+    }
+  }
+  return -1;
+}
+
+function hasPath(start, targetCheckFn) {
+  return getShortestDistance(start, targetCheckFn) !== -1;
+}
+
+// Partial segment placement & overlap support
+function getProposedSegments(dotX, dotY, isH) {
+  const segs = [];
+  if (isH) {
+    // Spans cell columns dotX and dotX + 1 along horizontal boundary dotY
+    if (dotX >= 0 && dotX < N) segs.push({ type: 'H', key: `${dotX},${dotY}` });
+    if (dotX + 1 >= 0 && dotX + 1 < N) segs.push({ type: 'H', key: `${dotX + 1},${dotY}` });
+  } else {
+    // Spans cell rows dotY and dotY + 1 along vertical boundary dotX
+    if (dotY >= 0 && dotY < N) segs.push({ type: 'V', key: `${dotX},${dotY}` });
+    if (dotY + 1 >= 0 && dotY + 1 < N) segs.push({ type: 'V', key: `${dotX},${dotY + 1}` });
+  }
+  return segs;
+}
+
+function tryPlaceWall(dotX, dotY, isH) {
+  const proposed = getProposedSegments(dotX, dotY, isH);
+  
+  // Filter only new segments (this naturally supports overriding / partial extensions)
+  const newlyAdded = [];
+  for (let s of proposed) {
+    if (s.type === 'H') {
+      if (!segH.has(s.key)) {
+        segH.add(s.key);
+        newlyAdded.push(s);
+      }
+    } else {
+      if (!segV.has(s.key)) {
+        segV.add(s.key);
+        newlyAdded.push(s);
+      }
+    }
+  }
+
+  // If already completely occupied by identical segments
+  if (newlyAdded.length === 0) {
+    return false;
+  }
+
+  // Verify that all players still have a valid path
+  let pathValid = false;
+  if (gameMode === '3p') {
+    const target = (cx, cy) => cx === CENTER_X && cy === CENTER_Y;
+    pathValid = hasPath(p1, target) && hasPath(p2, target) && hasPath(p3, target);
+  } else {
+    pathValid = hasPath(p1, (cx, cy) => cy === 0) && hasPath(p2, (cx, cy) => cy === 8);
+  }
+
+  if (!pathValid) {
+    // Rollback
+    for (let s of newlyAdded) {
+      if (s.type === 'H') segH.delete(s.key);
+      else segV.delete(s.key);
+    }
+    return false;
+  }
+
+  return true;
+}
+
+function handlePointer(clientX, clientY, isClick) {
+  if (gameOver) return;
+  if (gameMode === 'ai' && turn === 2) return;
+
+  const rect = canvas.getBoundingClientRect();
+  const mx = clientX - rect.left;
+  const my = clientY - rect.top;
+  const currentP = getCurrentPlayer();
+
+  if (mode === 'move') {
+    if (!isClick) return;
+    const validMoves = getValidMoves(currentP);
+    for (let m of validMoves) {
+      const cx = BOARD_PADDING + m.x * STEP;
+      const cy = BOARD_PADDING + m.y * STEP;
+      if (mx >= cx && mx <= cx + CELL_SIZE && my >= cy && my <= cy + CELL_SIZE) {
+        currentP.x = m.x;
+        currentP.y = m.y;
+        draw();
+        if (checkWin()) return;
+        switchTurn();
+        return;
+      }
+    }
+  } else {
+    hoverDot = null;
+    let closestDist = 24;
+    let targetDot = null;
+
+    for (let y = 0; y < N - 1; y++) {
+      for (let x = 0; x < N - 1; x++) {
+        const dotX = BOARD_PADDING + (x + 1) * STEP - (GAP / 2);
+        const dotY = BOARD_PADDING + (y + 1) * STEP - (GAP / 2);
+        const dist = Math.hypot(mx - dotX, my - dotY);
+        if (dist < closestDist) {
+          closestDist = dist;
+          targetDot = { x, y, dotX, dotY };
+        }
+      }
+    }
+
+    if (targetDot) {
+      hoverDot = targetDot;
+      if (isClick) {
+        if (currentP.walls <= 0) {
+          document.getElementById('statusMsg').innerText = `${currentP.name} has no walls remaining!`;
+          return;
+        }
+        const isH = (mode === 'wall-h');
+        if (tryPlaceWall(targetDot.x, targetDot.y, isH)) {
+          currentP.walls--;
+          setMode('move');
+          switchTurn();
+          return;
+        } else {
+          document.getElementById('statusMsg').innerText = "Blocked or traps player path!";
+        }
+      }
+    }
+    draw();
+  }
+}
+
+canvas.addEventListener('mousemove', (e) => handlePointer(e.clientX, e.clientY, false));
+canvas.addEventListener('click', (e) => handlePointer(e.clientX, e.clientY, true));
+canvas.addEventListener('touchstart', (e) => {
+  const touch = e.touches[0];
+  handlePointer(touch.clientX, touch.clientY, true);
+  e.preventDefault();
+}, { passive: false });
+
+function checkWin() {
+  let winner = null;
+  if (gameMode === '3p') {
+    if (p1.x === CENTER_X && p1.y === CENTER_Y) winner = p1;
+    else if (p2.x === CENTER_X && p2.y === CENTER_Y) winner = p2;
+    else if (p3.x === CENTER_X && p3.y === CENTER_Y) winner = p3;
+  } else {
+    if (p1.y === 0) winner = p1;
+    else if (p2.y === 8) winner = p2;
+  }
+
+  if (winner) {
+    gameOver = true;
+    showWinScreen(winner);
+    return true;
+  }
+  return false;
+}
+
+function showWinScreen(winner) {
+  const modal = document.getElementById('winModal');
+  const podiumList = document.getElementById('podiumList');
+  podiumList.innerHTML = '';
+
+  let players = (gameMode === '3p') ? [p1, p2, p3] : [p1, p2];
+  const targetFn = (gameMode === '3p') 
+    ? (x, y) => x === CENTER_X && y === CENTER_Y 
+    : (x, y) => (turn === 1 ? y === 0 : y === 8);
+
+  players.forEach(p => {
+    p.remainingSteps = (p === winner) ? 0 : getShortestDistance(p, targetFn);
+  });
+
+  players.sort((a, b) => a.remainingSteps - b.remainingSteps);
+
+  const medals = ["🥇 1st Place", "🥈 2nd Place", "🥉 3rd Place"];
+  players.forEach((p, idx) => {
+    const item = document.createElement('div');
+    item.className = `podium-item ${idx === 0 ? 'first' : ''}`;
+    item.innerHTML = `
+      <span>${medals[idx]} - <span style="color:${p.color}">${p.name}</span></span>
+      <span style="color:#94a3b8; font-size:0.8rem;">${idx === 0 ? 'WINNER' : p.remainingSteps + ' steps left'}</span>
+    `;
+    podiumList.appendChild(item);
+  });
+
+  document.getElementById('winSub').innerText = `${winner.name} crowned champion!`;
+  modal.classList.remove('hidden');
+}
+
+function switchTurn() {
+  if (gameMode === '3p') {
+    turn = (turn % 3) + 1;
+  } else {
+    turn = (turn === 1) ? 2 : 1;
+  }
+  
+  draw();
+
+  const currentP = getCurrentPlayer();
+  if (gameMode === 'ai' && turn === 2 && !gameOver) {
+    document.getElementById('statusMsg').innerText = "AI calculating route...";
+    setTimeout(aiTurn, 400);
+  } else if (!gameOver) {
+    document.getElementById('statusMsg').innerText = `${currentP.name}'s turn: move or wall.`;
+  }
+}
+
+function aiTurn() {
+  const moves = getValidMoves(p2);
+  moves.sort((a, b) => b.y - a.y);
+  if (moves.length > 0) {
+    p2.x = moves[0].x;
+    p2.y = moves[0].y;
+  }
+  draw();
+  if (checkWin()) return;
+  switchTurn();
+}
+
+function draw() {
+  document.getElementById('p1Count').innerText = `Walls: ${p1.walls}`;
+  document.getElementById('p2Count').innerText = `Walls: ${p2.walls}`;
+  document.getElementById('p3Count').innerText = `Walls: ${p3.walls}`;
+
+  document.getElementById('p1Box').classList.toggle('active', turn === 1);
+  document.getElementById('p2Box').classList.toggle('active', turn === 2);
+  document.getElementById('p3Box').classList.toggle('active', turn === 3);
+
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  const currentP = getCurrentPlayer();
+  const validMoves = (!gameOver && !(gameMode === 'ai' && turn === 2) && mode === 'move') 
+    ? getValidMoves(currentP) : [];
+
+  // Draw 9x9 Grid Cells
+  for (let y = 0; y < N; y++) {
+    for (let x = 0; x < N; x++) {
+      const cx = BOARD_PADDING + x * STEP;
+      const cy = BOARD_PADDING + y * STEP;
+      const isValid = validMoves.some(m => m.x === x && m.y === y);
+
+      if (gameMode === '3p') {
+        if (x === CENTER_X && y === CENTER_Y) {
+          ctx.fillStyle = "rgba(245, 158, 11, 0.22)";
+        } else {
+          ctx.fillStyle = isValid ? "rgba(56, 189, 248, 0.25)" : "#1e293b";
+        }
+      } else {
+        if (y === 0) {
+          ctx.fillStyle = isValid ? "rgba(56, 189, 248, 0.4)" : "rgba(56, 189, 248, 0.14)";
+        } else if (y === 8) {
+          ctx.fillStyle = isValid ? "rgba(56, 189, 248, 0.4)" : "rgba(244, 63, 94, 0.14)";
+        } else {
+          ctx.fillStyle = isValid ? "rgba(56, 189, 248, 0.25)" : "#1e293b";
+        }
+      }
+
+      ctx.beginPath();
+      ctx.roundRect(cx, cy, CELL_SIZE, CELL_SIZE, 4);
+      ctx.fill();
+
+      if (gameMode === '3p' && x === CENTER_X && y === CENTER_Y) {
+        ctx.strokeStyle = "#f59e0b";
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+      } else if (gameMode !== '3p') {
+        if (y === 0 && !isValid) {
+          ctx.strokeStyle = "rgba(56, 189, 248, 0.35)";
+          ctx.lineWidth = 1;
+          ctx.stroke();
+        } else if (y === 8 && !isValid) {
+          ctx.strokeStyle = "rgba(244, 63, 94, 0.35)";
+          ctx.lineWidth = 1;
+          ctx.stroke();
+        }
+      }
+
+      if (isValid) {
+        ctx.strokeStyle = currentP.color;
+        ctx.lineWidth = 1.5;
+        ctx.setLineDash([4, 4]);
+        ctx.stroke();
+        ctx.setLineDash([]);
+      }
+    }
+  }
+
+  // Draw 🏆 icon in center for 3P mode
+  if (gameMode === '3p') {
+    const centerPxX = BOARD_PADDING + CENTER_X * STEP + CELL_SIZE / 2;
+    const centerPxY = BOARD_PADDING + CENTER_Y * STEP + CELL_SIZE / 2 + 5;
+    ctx.font = "16px sans-serif";
+    ctx.textAlign = "center";
+    ctx.fillText("🏆", centerPxX, centerPxY);
+  }
+
+  // Draw Wall Segments
+  ctx.fillStyle = "#f59e0b";
+  ctx.shadowColor = "#f59e0b";
+  ctx.shadowBlur = 8;
+
+  segH.forEach(coord => {
+    const [x, y] = coord.split(',').map(Number);
+    const wx = BOARD_PADDING + x * STEP;
+    const wy = BOARD_PADDING + (y + 1) * STEP - (GAP / 2) - 3;
+    ctx.beginPath();
+    // Seamless overlap across grid intersections
+    ctx.roundRect(wx - 2, wy, CELL_SIZE + 4, 6, 2);
+    ctx.fill();
+  });
+
+  segV.forEach(coord => {
+    const [x, y] = coord.split(',').map(Number);
+    const wx = BOARD_PADDING + (x + 1) * STEP - (GAP / 2) - 3;
+    const wy = BOARD_PADDING + y * STEP;
+    ctx.beginPath();
+    ctx.roundRect(wx, wy - 2, 6, CELL_SIZE + 4, 2);
+    ctx.fill();
+  });
+
+  ctx.shadowBlur = 0;
+
+  // Draw Corner Dots in Wall Placement Mode
+  if (mode !== 'move' && !gameOver && !(gameMode === 'ai' && turn === 2)) {
+    for (let y = 0; y < N - 1; y++) {
+      for (let x = 0; x < N - 1; x++) {
+        const dotX = BOARD_PADDING + (x + 1) * STEP - (GAP / 2);
+        const dotY = BOARD_PADDING + (y + 1) * STEP - (GAP / 2);
+
+        const isHovered = hoverDot && hoverDot.x === x && hoverDot.y === y;
+
+        ctx.fillStyle = isHovered ? "#f59e0b" : "#475569";
+        ctx.beginPath();
+        ctx.arc(dotX, dotY, isHovered ? 5 : 3.5, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+  }
+
+  // Draw Pawns
+  function drawPawn(p) {
+    const px = BOARD_PADDING + p.x * STEP + CELL_SIZE / 2;
+    const py = BOARD_PADDING + p.y * STEP + CELL_SIZE / 2;
+    ctx.shadowColor = p.color;
+    ctx.shadowBlur = 10;
+    ctx.fillStyle = p.color;
+    ctx.beginPath();
+    ctx.arc(px, py, CELL_SIZE * 0.35, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  drawPawn(p1);
+  drawPawn(p2);
+  if (gameMode === '3p') drawPawn(p3);
+  ctx.shadowBlur = 0;
+}
+</script>
+</body>
+</html>
