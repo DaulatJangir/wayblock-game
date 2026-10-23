@@ -1011,6 +1011,94 @@
     height: 10px;
     border-radius: 50%;
   }
+  /* --- Play Online Redesigned Cards --- */
+  .online-play-hero-card {
+    background: linear-gradient(180deg, #101c36 0%, #0b1324 100%);
+    border: 1px solid var(--wb-border);
+    border-radius: 20px;
+    padding: 22px 18px;
+    text-align: center;
+    margin: 4px 0 16px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  }
+  .online-globe-beacon {
+    width: 48px;
+    height: 48px;
+    margin: 0 auto 10px;
+    background: rgba(0, 210, 255, 0.12);
+    border: 1.5px solid var(--wb-cyan);
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.6rem;
+    box-shadow: 0 0 16px rgba(0, 210, 255, 0.25);
+  }
+  .online-hero-title {
+    font-size: 1.35rem;
+    font-weight: 900;
+    letter-spacing: 1px;
+    color: #ffffff;
+    margin-bottom: 6px;
+  }
+  .online-hero-sub {
+    font-size: 0.8rem;
+    color: var(--wb-text-sub);
+    line-height: 1.45;
+    max-width: 300px;
+    margin: 0 auto;
+  }
+  .online-mode-card {
+    width: 100%;
+    padding: 16px 18px;
+    border-radius: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
+    transition: transform 0.12s ease;
+  }
+  .online-mode-card:active {
+    transform: scale(0.98);
+  }
+  .card-host {
+    background: linear-gradient(135deg, #0284c7 0%, #1d4ed8 100%);
+  }
+  .card-join {
+    background: linear-gradient(135deg, #7c3aed 0%, #4f46e5 100%);
+  }
+  .omc-left {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    text-align: left;
+  }
+  .omc-icon-badge {
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.18);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+  }
+  .omc-title {
+    font-size: 1.05rem;
+    font-weight: 800;
+    color: #ffffff;
+    margin-bottom: 2px;
+  }
+  .omc-desc {
+    font-size: 0.74rem;
+    color: rgba(255, 255, 255, 0.82);
+  }
+  .omc-chevron {
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: #ffffff;
+  }
   
 </style>
 </head>
@@ -1544,37 +1632,39 @@
 <div class="view-container hidden" id="lobbyChoiceView">
   <div class="top-bar">
     <div class="icon-circle-btn" onclick="switchNavTab('home')">←</div>
-    <div class="brand-header-text" style="font-size:1.1rem;">Online Mode</div>
+    <div class="brand-header-text" style="font-size:1.15rem;">Play Online</div>
     <div style="width:36px;"></div>
   </div>
 
-  <div class="home-hero-card" style="margin-top:10px;">
-    <div style="font-size:2.2rem; margin-bottom:8px;">📡</div>
-    <h3 style="margin-bottom:6px; font-size:1.3rem;">LOCAL NETWORK</h3>
-    <p class="home-hero-sub">Ensure all players are connected to the same Wi-Fi or mobile hotspot.</p>
+  <!-- Hero Header Card -->
+  <div class="online-play-hero-card">
+    <div class="online-globe-beacon">🌐</div>
+    <h2 class="online-hero-title">PLAY ONLINE</h2>
+    <p class="online-hero-sub">Ensure all players are connected with proper internet connection</p>
   </div>
 
+  <!-- Action Cards -->
   <div class="action-deck">
-    <div class="action-deck-card card-online" onclick="initHostView()">
-      <div class="adc-left">
-        <div class="adc-icon-box">⚡</div>
+    <div class="online-mode-card card-host" onclick="initHostView()">
+      <div class="omc-left">
+        <div class="omc-icon-badge">⚡</div>
         <div>
-          <div class="adc-title">Host Game</div>
-          <div class="adc-sub">Create room code & invite friends</div>
+          <div class="omc-title">Host Game</div>
+          <div class="omc-desc">Create room code & invite friends</div>
         </div>
       </div>
-      <div class="adc-chevron">›</div>
+      <div class="omc-chevron">›</div>
     </div>
 
-    <div class="action-deck-card card-ai" onclick="initJoinView()">
-      <div class="adc-left">
-        <div class="adc-icon-box">🔗</div>
+    <div class="online-mode-card card-join" onclick="initJoinView()">
+      <div class="omc-left">
+        <div class="omc-icon-badge">🔗</div>
         <div>
-          <div class="adc-title">Join Game</div>
-          <div class="adc-sub">Enter a host's 5-digit room code</div>
+          <div class="omc-title">Join Game</div>
+          <div class="omc-desc">Enter a host's 5-digit room code</div>
         </div>
       </div>
-      <div class="adc-chevron">›</div>
+      <div class="omc-chevron">›</div>
     </div>
   </div>
 </div>
