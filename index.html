@@ -797,6 +797,7 @@
   .wall-pill.p1 { color: #00d2ff; border-color: rgba(0, 210, 255, 0.4); }
   .wall-pill.p2 { color: var(--wb-orange); border-color: rgba(249, 115, 22, 0.4); }
   .wall-pill.p3 { color: var(--wb-green); border-color: rgba(16, 185, 129, 0.4); }
+  .wall-pill.p4 { color: #f43f5e; border-color: rgba(244, 63, 94, 0.4); }
 
   .canvas-stage-wrapper {
     position: relative;
@@ -1682,6 +1683,10 @@
           <span>┃</span>
           <span id="p3WallCount">10</span>
         </div>
+        <div class="wall-pill p4 hidden" id="p4WallBox">
+          <span>┃</span>
+          <span id="p4WallCount">10</span>
+        </div>
       </div>
     </div>
   </div>
@@ -2051,7 +2056,7 @@ function startConfiguredLocalGame() {
   if (localPlayerCount >= 3) {
     p3.name = document.getElementById('localPlayerName_3')?.value.trim() || "Player 3";
   }
-  if (localPlayerCount === 4 && typeof p4 !== 'undefined') {
+  if (localPlayerCount === 4) {
     p4.name = document.getElementById('localPlayerName_4')?.value.trim() || "Player 4";
   }
 
@@ -2085,28 +2090,39 @@ function setTotalRounds(rounds) {
 
 function updateScoreboardUI() {
   document.getElementById('roundDisplay').innerText = `${currentRound} / ${totalRounds}`;
-  if (gameMode === '3p') {
-    document.getElementById('scoreDisplay').innerText = `${playerScores.p1} - ${playerScores.p2} - ${playerScores.p3}`;
-  } else {
-    document.getElementById('scoreDisplay').innerText = `${playerScores.p1} - ${playerScores.p2}`;
-  }
+  const scoreEl = document.getElementById('scoreDisplay');
+  const stepsEl = document.getElementById('stepsDisplay');
 
-  const d1 = getShortestDistance(p1, (cx, cy) => (gameMode === '3p' ? (cx === 4 && cy === 4) : cy === 0));
-  const d2 = getShortestDistance(p2, (cx, cy) => (gameMode === '3p' ? (cx === 4 && cy === 4) : cy === 8));
-  if (gameMode === '3p') {
-    const d3 = getShortestDistance(p3, (cx, cy) => (cx === 4 && cy === 4));
-    document.getElementById('stepsDisplay').innerText = `${d1} vs ${d2} vs ${d3}`;
+  if (gameMode === '4p') {
+    if (scoreEl) scoreEl.innerText = `${playerScores.p1 || 0}-${playerScores.p2 || 0}-${playerScores.p3 || 0}-${playerScores.p4 || 0}`;
+    const target = (cx, cy) => cx === CENTER_X && cy === CENTER_Y;
+    const d1 = getShortestDistance(p1, target);
+    const d2 = getShortestDistance(p2, target);
+    const d3 = getShortestDistance(p3, target);
+    const d4 = getShortestDistance(p4, target);
+    if (stepsEl) stepsEl.innerText = `${d1} vs ${d2} vs ${d3} vs ${d4}`;
+  } else if (gameMode === '3p') {
+    if (scoreEl) scoreEl.innerText = `${playerScores.p1 || 0}-${playerScores.p2 || 0}-${playerScores.p3 || 0}`;
+    const target = (cx, cy) => cx === CENTER_X && cy === CENTER_Y;
+    const d1 = getShortestDistance(p1, target);
+    const d2 = getShortestDistance(p2, target);
+    const d3 = getShortestDistance(p3, target);
+    if (stepsEl) stepsEl.innerText = `${d1} vs ${d2} vs ${d3}`;
   } else {
-    document.getElementById('stepsDisplay').innerText = `${d1} vs ${d2}`;
+    if (scoreEl) scoreEl.innerText = `${playerScores.p1 || 0}-${playerScores.p2 || 0}`;
+    const d1 = getShortestDistance(p1, (cx, cy) => cy === 0);
+    const d2 = getShortestDistance(p2, (cx, cy) => cy === 8);
+    if (stepsEl) stepsEl.innerText = `${d1} vs ${d2}`;
   }
 }
-
 // Perspective View Transformation
 function toScreenCoord(absX, absY) {
   if (myRole === 2) {
     return { x: N - 1 - absX, y: N - 1 - absY };
   } else if (myRole === 3) {
     return { x: N - 1 - absY, y: absX };
+  } else if (myRole === 4) {
+    return { x: absY, y: N - 1 - absX };
   }
   return { x: absX, y: absY };
 }
@@ -2116,10 +2132,11 @@ function toAbsoluteCoord(screenX, screenY) {
     return { x: N - 1 - screenX, y: N - 1 - screenY };
   } else if (myRole === 3) {
     return { x: screenY, y: N - 1 - screenX };
+  } else if (myRole === 4) {
+    return { x: N - 1 - screenY, y: screenX };
   }
   return { x: screenX, y: screenY };
 }
-
 // Turn Timer
 let turnTimerInterval = null;
 let secondsRemaining = 30;
@@ -2282,12 +2299,13 @@ function rejectCandidate() {
 
 function launchOnlineMatch() {
   const totalPlayers = confirmedGuests.length + 1;
-  const targetMode = totalPlayers === 3 ? '3p' : '2p';
+  const targetMode = totalPlayers === 4 ? '4p' : (totalPlayers === 3 ? '3p' : '2p');
 
   const namesPayload = {
     p1: playerName,
     p2: confirmedGuests[0] ? confirmedGuests[0].name : "Player 2",
-    p3: confirmedGuests[1] ? confirmedGuests[1].name : "Player 3"
+    p3: confirmedGuests[1] ? confirmedGuests[1].name : "Player 3",
+    p4: confirmedGuests[2] ? confirmedGuests[2].name : "Player 4"
   };
 
   guestConnections.forEach(c => {
@@ -2369,6 +2387,7 @@ function handleRemoteAction(data) {
     let targetP = p1;
     if (data.player === 2) targetP = p2;
     else if (data.player === 3) targetP = p3;
+    else if (data.player === 4) targetP = p4;
     targetP.x = data.x;
     targetP.y = data.y;
     draw();
@@ -2415,6 +2434,7 @@ let gameOver = false;
 let p1 = { x: 4, y: 8, walls: 10, name: "Player 1", color: "#00d2ff" };
 let p2 = { x: 4, y: 0, walls: 10, name: "Player 2", color: "#f97316" };
 let p3 = { x: 0, y: 4, walls: 10, name: "Player 3", color: "#10b981" };
+let p4 = { x: 8, y: 4, walls: 10, name: "Player 4", color: "#f43f5e" };
 
 let segH = new Map();
 let segV = new Map();
@@ -2459,9 +2479,16 @@ function resetRoundBoard() {
   gameOver = false;
   mode = 'move';
 
-  p1.x = 4; p1.y = 8; p1.walls = 10; p1.color = "#00d2ff";
-  p2.x = 4; p2.y = 0; p2.walls = 10; p2.color = "#f97316";
-  p3.x = 0; p3.y = 4; p3.walls = 10; p3.color = "#10b981";
+  const startingWalls = (gameMode === '4p') ? 5 : 10;
+  p1.x = 4; p1.y = 8; p1.walls = startingWalls; p1.color = "#00d2ff";
+  p2.x = 4; p2.y = 0; p2.walls = startingWalls; p2.color = "#f97316";
+  p3.x = 0; p3.y = 4; p3.walls = startingWalls; p3.color = "#10b981";
+  p4.x = 8; p4.y = 4; p4.walls = startingWalls; p4.color = "#f43f5e";
+
+  const p3Box = document.getElementById('p3WallBox');
+  const p4Box = document.getElementById('p4WallBox');
+  if (p3Box) p3Box.classList.toggle('hidden', gameMode !== '3p' && gameMode !== '4p');
+  if (p4Box) p4Box.classList.toggle('hidden', gameMode !== '4p');
 
   updateScoreboardUI();
   setMode('move');
@@ -2492,7 +2519,8 @@ function setMode(newMode) {
 function getCurrentPlayer() {
   if (turn === 1) return p1;
   if (turn === 2) return p2;
-  return p3;
+  if (turn === 3) return p3;
+  return p4;
 }
 
 function isBlocked(fromX, fromY, toX, toY) {
@@ -2507,12 +2535,10 @@ function isBlocked(fromX, fromY, toX, toY) {
 }
 
 function getOtherPlayers(player) {
-  if (gameMode === '3p') {
-    if (player === p1) return [p2, p3];
-    if (player === p2) return [p1, p3];
-    return [p1, p2];
-  }
-  return (player === p1) ? [p2] : [p1];
+  const all = [p1, p2];
+  if (gameMode === '3p') all.push(p3);
+  if (gameMode === '4p') all.push(p3, p4);
+  return all.filter(p => p !== player);
 }
 
 function getValidMoves(player) {
@@ -2591,7 +2617,10 @@ function tryPlaceWall(dotX, dotY, isH, playerColor) {
   if (newlyAdded.length === 0) return null;
 
   let pathValid = false;
-  if (gameMode === '3p') {
+  if (gameMode === '4p') {
+    const target = (cx, cy) => cx === CENTER_X && cy === CENTER_Y;
+    pathValid = hasPath(p1, target) && hasPath(p2, target) && hasPath(p3, target) && hasPath(p4, target);
+  } else if (gameMode === '3p') {
     const target = (cx, cy) => cx === CENTER_X && cy === CENTER_Y;
     pathValid = hasPath(p1, target) && hasPath(p2, target) && hasPath(p3, target);
   } else {
@@ -2706,10 +2735,11 @@ function checkWin() {
   let roundWinner = null;
   let winnerKey = null;
 
-  if (gameMode === '3p') {
+  if (gameMode === '3p' || gameMode === '4p') {
     if (p1.x === CENTER_X && p1.y === CENTER_Y) { roundWinner = p1; winnerKey = 'p1'; }
     else if (p2.x === CENTER_X && p2.y === CENTER_Y) { roundWinner = p2; winnerKey = 'p2'; }
     else if (p3.x === CENTER_X && p3.y === CENTER_Y) { roundWinner = p3; winnerKey = 'p3'; }
+    else if (gameMode === '4p' && p4.x === CENTER_X && p4.y === CENTER_Y) { roundWinner = p4; winnerKey = 'p4'; }
   } else {
     if (p1.y === 0) { roundWinner = p1; winnerKey = 'p1'; }
     else if (p2.y === 8) { roundWinner = p2; winnerKey = 'p2'; }
@@ -2718,7 +2748,7 @@ function checkWin() {
   if (roundWinner) {
     gameOver = true;
     clearInterval(turnTimerInterval);
-    playerScores[winnerKey]++;
+    playerScores[winnerKey] = (playerScores[winnerKey] || 0) + 1;
     updateScoreboardUI();
 
     if (winnerKey === 'p1') {
@@ -2737,7 +2767,6 @@ function checkWin() {
   }
   return false;
 }
-
 function showRoundIntermission(winner) {
   const modal = document.getElementById('roundIntermissionModal');
   document.getElementById('roundWinnerText').innerText = `${winner.name} Wins Round ${currentRound}!`;
@@ -2808,7 +2837,9 @@ function showFinalTournamentWin() {
 }
 
 function switchTurn(localTriggered = false) {
-  if (gameMode === '3p') {
+  if (gameMode === '4p') {
+    turn = (turn % 4) + 1;
+  } else if (gameMode === '3p') {
     turn = (turn % 3) + 1;
   } else {
     turn = (turn === 1) ? 2 : 1;
@@ -2966,7 +2997,7 @@ function draw() {
     }
   }
 
-  if (gameMode === '3p') {
+  if (gameMode === '3p' || gameMode === '4p') {
     const sCenter = toScreenCoord(CENTER_X, CENTER_Y);
     ctx.font = "18px sans-serif";
     ctx.textAlign = "center";
@@ -3049,7 +3080,8 @@ function draw() {
 
   drawPerspectivePawn(p1);
   drawPerspectivePawn(p2);
-  if (gameMode === '3p') drawPerspectivePawn(p3);
+  if (gameMode === '3p' || gameMode === '4p') drawPerspectivePawn(p3);
+  if (gameMode === '4p') drawPerspectivePawn(p4);
 }
 
 initProfile();
