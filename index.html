@@ -946,6 +946,71 @@
     text-align: center;
     cursor: pointer;
   }
+  
+  /* --- Local Setup Player Selector & Profiles --- */
+  .players-count-row {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+  }
+  .player-count-btn {
+    flex: 1;
+    padding: 10px 0;
+    background: var(--wb-surface);
+    border: 1px solid var(--wb-border);
+    border-radius: 12px;
+    color: var(--wb-text-sub);
+    font-size: 0.85rem;
+    font-weight: 800;
+    cursor: pointer;
+    transition: all 0.15s ease;
+  }
+  .player-count-btn.active {
+    background: linear-gradient(90deg, #1d4ed8, #0284c7);
+    border-color: var(--wb-cyan);
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(0, 210, 255, 0.3);
+  }
+  .local-profile-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #090e1a;
+    border: 1px solid var(--wb-border);
+    border-radius: 12px;
+    padding: 10px 12px;
+    gap: 10px;
+  }
+  .local-profile-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid var(--wb-border);
+    color: #ffffff;
+    font-size: 0.9rem;
+    font-weight: 700;
+    padding: 4px 2px;
+    outline: none;
+  }
+  .local-profile-input:focus {
+    border-bottom-color: var(--wb-cyan);
+  }
+  .local-color-indicator {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.76rem;
+    font-weight: 800;
+    padding: 4px 8px;
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.05);
+  }
+  .color-dot-badge {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+  }
+  
 </style>
 </head>
 <body>
@@ -1011,7 +1076,8 @@
       <div class="adc-chevron">›</div>
     </div>
 
-    <div class="action-deck-card card-local" onclick="startLocalGame('2p')">
+    <!-- PLAY LOCAL -->
+    <div class="action-deck-card card-local" onclick="openLocalSetupView()">
       <div class="adc-left">
         <div class="adc-icon-box">👥</div>
         <div>
@@ -1065,6 +1131,39 @@
       </div>
     </div>
     <span style="color:var(--wb-text-sub); font-size:1.1rem; font-weight:800;">›</span>
+  </div>
+</div>
+
+<!-- ================= LOCAL PASS & PLAY SETUP VIEW ================= -->
+<div class="view-container hidden" id="localSetupView">
+  <div class="top-bar">
+    <div class="icon-circle-btn" onclick="switchNavTab('home')">←</div>
+    <div class="brand-header-text" style="font-size:1.15rem;">Local Match Setup</div>
+    <div style="width:36px;"></div>
+  </div>
+
+  <div class="match-dashboard-box" style="padding:16px;">
+    <!-- Players Count Row (2, 3, 4) -->
+    <div style="font-size:0.75rem; font-weight:800; color:var(--wb-text-sub); text-transform:uppercase; letter-spacing:0.8px; margin-bottom:8px;">
+      Select Players Count
+    </div>
+    <div class="players-count-row">
+      <button class="player-count-btn active" id="btnCount2" onclick="setLocalPlayerCount(2)">2 Players</button>
+      <button class="player-count-btn" id="btnCount3" onclick="setLocalPlayerCount(3)">3 Players</button>
+      <button class="player-count-btn" id="btnCount4" onclick="setLocalPlayerCount(4)">4 Players</button>
+    </div>
+
+    <!-- Dynamic Editable Player Profiles List -->
+    <div style="font-size:0.75rem; font-weight:800; color:var(--wb-text-sub); text-transform:uppercase; letter-spacing:0.8px; margin-bottom:8px;">
+      Player Profiles & Colors
+    </div>
+    <div id="localProfilesContainer" style="display:flex; flex-direction:column; gap:10px; margin-bottom:16px;">
+      <!-- Populated dynamically by JS -->
+    </div>
+
+    <button class="primary-action-btn" onclick="startConfiguredLocalGame()">
+      <span>🎮</span> Start Match
+    </button>
   </div>
 </div>
 
@@ -1795,7 +1894,7 @@ function updateLevelUI() {
 
 // --- Navigation Tab Controller ---
 function switchNavTab(tab) {
-  ['homeView', 'profileView', 'fullMasteryRoadView', 'fullSettingsView', 'fullReferralView', 'fullGuideView', 'fullSupportView', 'lobbyChoiceView', 'hostLobbyView', 'joinLobbyView', 'gameArenaView'].forEach(id => {
+  ['homeView', 'profileView', 'fullMasteryRoadView', 'fullSettingsView', 'fullReferralView', 'fullGuideView', 'fullSupportView', 'lobbyChoiceView', 'hostLobbyView', 'joinLobbyView', 'gameArenaView', 'localSetupView'].forEach(id => {
     document.getElementById(id).classList.add('hidden');
   });
 
@@ -1822,7 +1921,7 @@ function switchNavTab(tab) {
 }
 
 function switchView(viewId) {
-  ['homeView', 'profileView', 'fullMasteryRoadView', 'fullSettingsView', 'fullReferralView', 'fullGuideView', 'fullSupportView', 'lobbyChoiceView', 'hostLobbyView', 'joinLobbyView', 'gameArenaView'].forEach(id => {
+  ['homeView', 'profileView', 'fullMasteryRoadView', 'fullSettingsView', 'fullReferralView', 'fullGuideView', 'fullSupportView', 'lobbyChoiceView', 'hostLobbyView', 'joinLobbyView', 'gameArenaView', 'localSetupView'].forEach(id => {
     document.getElementById(id).classList.add('hidden');
   });
   document.getElementById(viewId).classList.remove('hidden');
@@ -1904,6 +2003,64 @@ function copyReferralCode() {
   displayToast("Referral", `Invite Code (${profileId}) copied! Share with friends.`);
 }
 
+// ==========================================
+// LOCAL PASS & PLAY CONFIGURATION
+// ==========================================
+let localPlayerCount = 2;
+const LOCAL_PLAYER_DEFAULTS = [
+  { id: 1, defaultName: "Player 1", color: "#00d2ff", label: "Cyan" },
+  { id: 2, defaultName: "Player 2", color: "#f97316", label: "Orange" },
+  { id: 3, defaultName: "Player 3", color: "#10b981", label: "Green" },
+  { id: 4, defaultName: "Player 4", color: "#e11d48", label: "Red" }
+];
+
+function openLocalSetupView() {
+  switchView('localSetupView');
+  setLocalPlayerCount(localPlayerCount);
+}
+
+function setLocalPlayerCount(count) {
+  localPlayerCount = count;
+  [2, 3, 4].forEach(c => {
+    const btn = document.getElementById(`btnCount${c}`);
+    if (btn) btn.classList.toggle('active', c === count);
+  });
+
+  const container = document.getElementById('localProfilesContainer');
+  if (!container) return;
+  container.innerHTML = '';
+
+  for (let i = 0; i < count; i++) {
+    const conf = LOCAL_PLAYER_DEFAULTS[i];
+    const row = document.createElement('div');
+    row.className = 'local-profile-card';
+    row.innerHTML = `
+      <input type="text" id="localPlayerName_${i+1}" class="local-profile-input" maxlength="12" value="${conf.defaultName}" placeholder="Player ${i+1}" />
+      <div class="local-color-indicator" style="color:${conf.color}; border: 1px solid ${conf.color}44;">
+        <span class="color-dot-badge" style="background:${conf.color};"></span>
+        <span>┃ Wall & Dot</span>
+      </div>
+    `;
+    container.appendChild(row);
+  }
+}
+
+function startConfiguredLocalGame() {
+  p1.name = document.getElementById('localPlayerName_1')?.value.trim() || "Player 1";
+  p2.name = document.getElementById('localPlayerName_2')?.value.trim() || "Player 2";
+  if (localPlayerCount >= 3) {
+    p3.name = document.getElementById('localPlayerName_3')?.value.trim() || "Player 3";
+  }
+  if (localPlayerCount === 4 && typeof p4 !== 'undefined') {
+    p4.name = document.getElementById('localPlayerName_4')?.value.trim() || "Player 4";
+  }
+
+  const mode = localPlayerCount === 2 ? '2p' : (localPlayerCount === 3 ? '3p' : '4p');
+  isOnline = false;
+  myRole = 1;
+  bootGame(mode, 1);
+}
+  
 // Delete Account Permanently
 function deleteAccountPermanently() {
   if (confirm("Are you sure you want to permanently delete this account? All your stats, wins, matches, and ID will be wiped forever.")) {
