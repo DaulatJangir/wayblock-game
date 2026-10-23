@@ -1845,11 +1845,18 @@
 </div>
 
 <!-- Name Change Modal -->
+<!-- Name Change Modal -->
 <div class="modal-overlay hidden" id="nameModal">
   <div class="modal-box">
-    <h3 style="margin-bottom:6px;">EDIT PLAYER NAME</h3>
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+      <h3 style="font-size:1rem; font-weight:800; color:#ffffff;">EDIT PLAYER NAME</h3>
+      <span style="font-size:1.2rem; cursor:pointer; color:var(--wb-text-sub);" onclick="closeNameModal()">✕</span>
+    </div>
     <input type="text" id="nameField" class="text-field" maxlength="12" placeholder="Your Name" />
-    <button class="primary-action-btn" onclick="saveName()">Save Name</button>
+    <div style="display:flex; gap:8px;">
+      <button class="primary-action-btn" onclick="saveName()">Save Name</button>
+      <button class="icon-circle-btn" style="width:auto; padding:0 16px; height:auto; border-radius:14px;" onclick="closeNameModal()">Cancel</button>
+    </div>
   </div>
 </div>
 
@@ -2068,25 +2075,42 @@ function initProfile() {
 }
 
 function updateProfileNamesUI() {
-  document.getElementById('homeDisplayName').innerText = playerName;
-  document.getElementById('homeDisplayId').innerText = `(${profileId})`;
-  document.getElementById('profileDisplayName').innerText = playerName;
-  document.getElementById('profileDisplayId').innerText = `(${profileId})`;
-  document.getElementById('profilePlayingSinceText').innerText = `${playingSince} • (${profileId})`;
+  const homeName = document.getElementById('homeDisplayName');
+  const homeId = document.getElementById('homeDisplayId');
+  const profName = document.getElementById('profileDisplayName');
+  const profSince = document.getElementById('profilePlayingSinceText');
+
+  if (homeName) homeName.innerText = playerName;
+  if (homeId) homeId.innerText = `(${profileId})`;
+  if (profName) profName.innerText = playerName;
+  if (profSince) profSince.innerText = `${playingSince} • (${profileId})`;
+
+  if (typeof p1 !== 'undefined') p1.name = playerName;
 }
 
 function openNameModal() {
-  document.getElementById('nameField').value = playerName;
-  document.getElementById('nameModal').classList.remove('hidden');
+  const field = document.getElementById('nameField');
+  if (field) field.value = playerName;
+  const modal = document.getElementById('nameModal');
+  if (modal) modal.classList.remove('hidden');
+}
+
+function closeNameModal() {
+  const modal = document.getElementById('nameModal');
+  if (modal) modal.classList.add('hidden');
 }
 
 function saveName() {
-  const val = document.getElementById('nameField').value.trim();
+  const field = document.getElementById('nameField');
+  if (!field) return;
+  const val = field.value.trim();
   if (!val) return;
+
   playerName = val;
   localStorage.setItem('wayblock_username', playerName);
   updateProfileNamesUI();
-  document.getElementById('nameModal').classList.add('hidden');
+  closeNameModal();
+  displayToast("Profile", "Name updated successfully!");
 }
 
 function copyReferralCode() {
