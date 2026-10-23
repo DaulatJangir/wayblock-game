@@ -1664,10 +1664,6 @@
           <span class="metric-label">SCORE</span>
           <span class="metric-val" id="scoreDisplay">0 - 0</span>
         </div>
-        <div class="metric-col">
-          <span class="metric-label">STEPS TO WIN</span>
-          <span class="metric-val" id="stepsDisplay" style="color:var(--wb-cyan);">8 vs 8</span>
-        </div>
       </div>
 
       <div class="wall-stock-inventory">
@@ -2089,33 +2085,21 @@ function setTotalRounds(rounds) {
 }
 
 function updateScoreboardUI() {
-  document.getElementById('roundDisplay').innerText = `${currentRound} / ${totalRounds}`;
+  const roundEl = document.getElementById('roundDisplay');
   const scoreEl = document.getElementById('scoreDisplay');
-  const stepsEl = document.getElementById('stepsDisplay');
 
-  if (gameMode === '4p') {
-    if (scoreEl) scoreEl.innerText = `${playerScores.p1 || 0}-${playerScores.p2 || 0}-${playerScores.p3 || 0}-${playerScores.p4 || 0}`;
-    const target = (cx, cy) => cx === CENTER_X && cy === CENTER_Y;
-    const d1 = getShortestDistance(p1, target);
-    const d2 = getShortestDistance(p2, target);
-    const d3 = getShortestDistance(p3, target);
-    const d4 = getShortestDistance(p4, target);
-    if (stepsEl) stepsEl.innerText = `${d1} vs ${d2} vs ${d3} vs ${d4}`;
-  } else if (gameMode === '3p') {
-    if (scoreEl) scoreEl.innerText = `${playerScores.p1 || 0}-${playerScores.p2 || 0}-${playerScores.p3 || 0}`;
-    const target = (cx, cy) => cx === CENTER_X && cy === CENTER_Y;
-    const d1 = getShortestDistance(p1, target);
-    const d2 = getShortestDistance(p2, target);
-    const d3 = getShortestDistance(p3, target);
-    if (stepsEl) stepsEl.innerText = `${d1} vs ${d2} vs ${d3}`;
-  } else {
-    if (scoreEl) scoreEl.innerText = `${playerScores.p1 || 0}-${playerScores.p2 || 0}`;
-    const d1 = getShortestDistance(p1, (cx, cy) => cy === 0);
-    const d2 = getShortestDistance(p2, (cx, cy) => cy === 8);
-    if (stepsEl) stepsEl.innerText = `${d1} vs ${d2}`;
+  if (roundEl) roundEl.innerText = `${currentRound} / ${totalRounds}`;
+
+  if (scoreEl) {
+    if (gameMode === '4p') {
+      scoreEl.innerText = `${playerScores.p1 || 0}-${playerScores.p2 || 0}-${playerScores.p3 || 0}-${playerScores.p4 || 0}`;
+    } else if (gameMode === '3p') {
+      scoreEl.innerText = `${playerScores.p1 || 0}-${playerScores.p2 || 0}-${playerScores.p3 || 0}`;
+    } else {
+      scoreEl.innerText = `${playerScores.p1 || 0}-${playerScores.p2 || 0}`;
+    }
   }
-}
-// Perspective View Transformation
+}// Perspective View Transformation
 function toScreenCoord(absX, absY) {
   if (myRole === 2) {
     return { x: N - 1 - absX, y: N - 1 - absY };
@@ -2479,7 +2463,7 @@ function resetRoundBoard() {
   gameOver = false;
   mode = 'move';
 
-  const startingWalls = (gameMode === '4p') ? 5 : 10;
+  const startingWalls = (gameMode === '4p') ? 8 : 10;
   p1.x = 4; p1.y = 8; p1.walls = startingWalls; p1.color = "#00d2ff";
   p2.x = 4; p2.y = 0; p2.walls = startingWalls; p2.color = "#f97316";
   p3.x = 0; p3.y = 4; p3.walls = startingWalls; p3.color = "#10b981";
@@ -2930,9 +2914,15 @@ function aiSmartTurn() {
 
 // Canvas Board Rendering
 function draw() {
-  document.getElementById('p1WallCount').innerText = p1.walls;
-  document.getElementById('p2WallCount').innerText = p2.walls;
-  document.getElementById('p3WallCount').innerText = p3.walls;
+  const p1W = document.getElementById('p1WallCount');
+  const p2W = document.getElementById('p2WallCount');
+  const p3W = document.getElementById('p3WallCount');
+  const p4W = document.getElementById('p4WallCount');
+
+  if (p1W) p1W.innerText = p1.walls;
+  if (p2W) p2W.innerText = p2.walls;
+  if (p3W) p3W.innerText = p3.walls;
+  if (p4W) p4W.innerText = p4.walls;
 
   updateScoreboardUI();
 
@@ -2967,14 +2957,13 @@ function draw() {
       const cy = BOARD_PADDING + sy * STEP;
       const isValid = validMoves.some(m => m.x === absPos.x && m.y === absPos.y);
 
-      if (gameMode === '3p' && absPos.x === CENTER_X && absPos.y === CENTER_Y) {
+      // 1. Base Tile Background Fill
+      if ((gameMode === '3p' || gameMode === '4p') && absPos.x === CENTER_X && absPos.y === CENTER_Y) {
         ctx.fillStyle = "rgba(245, 158, 11, 0.25)";
-      } else if (gameMode !== '3p' && sy === 0) {
-        ctx.fillStyle = isValid ? "rgba(0, 210, 255, 0.45)" : "#1b2c4c";
-      } else if (gameMode !== '3p' && sy === 8) {
-        ctx.fillStyle = isValid ? "rgba(0, 210, 255, 0.45)" : "#142138";
-      } else if (isValid) {
-        ctx.fillStyle = "rgba(0, 210, 255, 0.35)";
+      } else if (gameMode === '2p' && sy === 0) {
+        ctx.fillStyle = "#1b2c4c";
+      } else if (gameMode === '2p' && sy === 8) {
+        ctx.fillStyle = "#142138";
       } else {
         ctx.fillStyle = "#121b2d";
       }
@@ -2983,16 +2972,38 @@ function draw() {
       ctx.roundRect(cx, cy, CELL_SIZE, CELL_SIZE, 6);
       ctx.fill();
 
-      ctx.strokeStyle = isValid ? "rgba(0, 210, 255, 0.9)" : "#1e2d4d";
+      // 2. Default Subtle Tile Border
+      ctx.strokeStyle = "#1e2d4d";
       ctx.lineWidth = 1;
       ctx.stroke();
 
+      // 3. Modern Tactical Valid Move Highlight (No dashed lines)
       if (isValid) {
+        // Soft glowing background tint using the current player's color
+        ctx.fillStyle = currentP.color + "28"; // ~16% opacity
+        ctx.beginPath();
+        ctx.roundRect(cx, cy, CELL_SIZE, CELL_SIZE, 6);
+        ctx.fill();
+
+        // Sleek solid glowing border
         ctx.strokeStyle = currentP.color;
-        ctx.lineWidth = 2;
-        ctx.setLineDash([4, 4]);
+        ctx.lineWidth = 1.5;
         ctx.stroke();
-        ctx.setLineDash([]);
+
+        // Centered tactical target pulse dot
+        const midX = cx + CELL_SIZE / 2;
+        const midY = cy + CELL_SIZE / 2;
+
+        ctx.fillStyle = currentP.color;
+        ctx.beginPath();
+        ctx.arc(midX, midY, CELL_SIZE * 0.16, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Outer translucent aura ring around the dot
+        ctx.fillStyle = currentP.color + "40";
+        ctx.beginPath();
+        ctx.arc(midX, midY, CELL_SIZE * 0.26, 0, Math.PI * 2);
+        ctx.fill();
       }
     }
   }
