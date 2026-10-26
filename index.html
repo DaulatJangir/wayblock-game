@@ -2222,38 +2222,52 @@ function updateLevelUI() {
   const wins = parseInt(localStorage.getItem('wayblock_wins') || "8");
   const data = getLevelData(wins);
 
-  // Home Screen rank references safely guarded
+  // Home Screen updates (Safe null checks so JS never halts)
   const hrbLevelName = document.getElementById('hrbLevelName');
-  if (hrbLevelName) hrbLevelName.innerText = data.tier.name;
   const hrbStageCount = document.getElementById('hrbStageCount');
-  if (hrbStageCount) hrbStageCount.innerText = `${data.stageIndex} of 6 stages completed`;
   const hrbPercent = document.getElementById('hrbPercent');
-  if (hrbPercent) hrbPercent.innerText = `${data.overallPercent}%`;
   const hrbTrackFill = document.getElementById('hrbTrackFill');
+
+  if (hrbLevelName) hrbLevelName.innerText = data.tier.name;
+  if (hrbStageCount) hrbStageCount.innerText = `${data.stageIndex} of 6 stages completed`;
+  if (hrbPercent) hrbPercent.innerText = `${data.overallPercent}%`;
   if (hrbTrackFill) hrbTrackFill.style.width = `${data.overallPercent}%`;
 
-  // Dynamic Streak Sync
+  // Profile Screen updates
+  const profLevel = document.getElementById('profileCardLevelName');
+  const profStage = document.getElementById('profileCardStageCount');
+  const profPercent = document.getElementById('profileCardPercent');
+  const profFill = document.getElementById('profileCardTrackFill');
+  const statWins = document.getElementById('statWins');
+
+  if (profLevel) profLevel.innerText = data.tier.name;
+  if (profStage) profStage.innerText = `${data.stageIndex} of 6 stages completed`;
+  if (profPercent) profPercent.innerText = `${data.overallPercent}%`;
+  if (profFill) profFill.style.width = `${data.overallPercent}%`;
+  if (statWins) statWins.innerText = wins;
+
+  // Streak Sync on new Home Card
   const homeStreak = document.getElementById('homeStreakCount');
   const statStreak = document.getElementById('statStreak');
   if (homeStreak && statStreak) homeStreak.innerText = statStreak.innerText || "1";
 
-  // Profile Screen updates
-  document.getElementById('profileCardLevelName').innerText = data.tier.name;
-  document.getElementById('profileCardStageCount').innerText = `${data.stageIndex} of 6 stages completed`;
-  document.getElementById('profileCardPercent').innerText = `${data.overallPercent}%`;
-  document.getElementById('profileCardTrackFill').style.width = `${data.overallPercent}%`;
-  document.getElementById('statWins').innerText = wins;
-
   // Mastery Road Screen updates
-  document.getElementById('roadBadgeFraction').innerText = `🏆 ${data.stageIndex} / 6`;
-  document.getElementById('btnContinueStageText').innerText = `Continue Stage ${data.stageIndex}`;
+  const roadBadge = document.getElementById('roadBadgeFraction');
+  const roadBtn = document.getElementById('btnContinueStageText');
+  const rewardNext = document.getElementById('rewardTitleNext');
+  const rewardDesc = document.getElementById('rewardUnlockDesc');
 
-  if (data.nextTier) {
-    document.getElementById('rewardTitleNext').innerText = data.nextTier.badge;
-    document.getElementById('rewardUnlockDesc').innerText = `Unlocks at ${data.nextTier.minWins} Wins`;
-  } else {
-    document.getElementById('rewardTitleNext').innerText = "Max Level Achieved";
-    document.getElementById('rewardUnlockDesc').innerText = "Legendary WayBlocker";
+  if (roadBadge) roadBadge.innerText = `🏆 ${data.stageIndex} / 6`;
+  if (roadBtn) roadBtn.innerText = `Continue Stage ${data.stageIndex}`;
+
+  if (rewardNext && rewardDesc) {
+    if (data.nextTier) {
+      rewardNext.innerText = data.nextTier.badge;
+      rewardDesc.innerText = `Unlocks at ${data.nextTier.minWins} Wins`;
+    } else {
+      rewardNext.innerText = "Max Level Achieved";
+      rewardDesc.innerText = "Legendary WayBlocker";
+    }
   }
 
   // Render Step Road Items
@@ -2335,15 +2349,20 @@ function switchNavTab(tab) {
 
 function switchView(viewId) {
   ['homeView', 'profileView', 'fullMasteryRoadView', 'fullSettingsView', 'fullReferralView', 'fullGuideView', 'fullSupportView', 'lobbyChoiceView', 'hostLobbyView', 'joinLobbyView', 'gameArenaView', 'localSetupView'].forEach(id => {
-    document.getElementById(id).classList.add('hidden');
+    const el = document.getElementById(id);
+    if (el) el.classList.add('hidden');
   });
-  document.getElementById(viewId).classList.remove('hidden');
+
+  const target = document.getElementById(viewId);
+  if (target) target.classList.remove('hidden');
 
   const dock = document.getElementById('bottomNavDock');
-  if (viewId === 'gameArenaView') {
-    dock.classList.add('hidden');
-  } else {
-    dock.classList.remove('hidden');
+  if (dock) {
+    if (viewId === 'gameArenaView') {
+      dock.classList.add('hidden');
+    } else {
+      dock.classList.remove('hidden');
+    }
   }
 }
 
@@ -2904,6 +2923,7 @@ function startLocalGame(selectedMode) {
   p1.name = playerName;
   p2.name = (selectedMode === 'ai') ? "AI Bot" : "Player 2";
   p3.name = "Player 3";
+  p4.name = "Player 4";
   bootGame(selectedMode, 1);
 }
 
