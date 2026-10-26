@@ -7,14 +7,16 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/peerjs/1.5.4/peerjs.min.js"></script>
 <style>
   :root {
-    --wb-bg: #070d19;
-    --wb-surface: #0e172a;
-    --wb-surface-elevated: #131f38;
-    --wb-border: #1e2d4d;
-    --wb-border-light: rgba(255, 255, 255, 0.08);
+    --wb-bg: #0d0f14;
+    --wb-surface: rgba(18, 22, 31, 0.88);
+    --wb-surface-elevated: rgba(26, 31, 44, 0.95);
+    --wb-border: #262d3d;
+    --wb-border-light: rgba(245, 158, 11, 0.15);
 
+    --wb-accent: #f59e0b;       /* Signature BLOCK Amber Color */
+    --wb-accent-glow: rgba(245, 158, 11, 0.35);
     --wb-blue: #1d4ed8;
-    --wb-cyan: #00d2ff;
+    --wb-cyan: #f59e0b;         /* Updated so existing cyan accents match the new BLOCK color */
     --wb-amber: #f59e0b;
     --wb-gold: #fbbf24;
     --wb-orange: #f97316;
@@ -22,10 +24,10 @@
     --wb-red: #ef4444;
 
     --wb-text: #f8fafc;
-    --wb-text-sub: #94a3b8;
+    --wb-text-sub: #cbd5e1;
     --wb-text-muted: #64748b;
   }
-
+  
   * {
     box-sizing: border-box;
     margin: 0;
@@ -54,8 +56,38 @@
     flex-direction: column;
     padding: 12px 16px;
     box-sizing: border-box;
+    position: relative;
+    z-index: 1;
   }
   .hidden { display: none !important; }
+
+  /* --- Brick Texture with Spotlight for Homepage --- */
+  #homeView {
+    min-height: calc(100vh - 58px);
+    border-radius: 24px;
+    background-color: #0f1217;
+    background-image: 
+      /* Top warm-amber spotlight */
+      radial-gradient(circle at 62% 0%, rgba(245, 158, 11, 0.42) 0%, rgba(180, 83, 9, 0.15) 35%, rgba(13, 15, 20, 0.96) 70%),
+      /* Vertical mortar joints */
+      linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+      /* Horizontal mortar lines */
+      linear-gradient(0deg, rgba(0, 0, 0, 0.75) 2px, transparent 2px),
+      linear-gradient(0deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    background-size: 
+      100% 100%,
+      52px 28px,
+      52px 28px,
+      100% 28px,
+      100% 14px;
+    background-position: 
+      0 0,
+      0 0,
+      26px 14px,
+      0 0,
+      0 0;
+  }
 
   /* ---------------- TOP BAR ---------------- */
   .top-bar {
@@ -1107,7 +1139,7 @@
 <!-- ================= 1. HOME VIEW ================= -->
 <div class="view-container" id="homeView">
   <div class="top-bar">
-    <div class="brand-header-text">WAY<span style="color:var(--wb-cyan);">BLOCK</span></div>
+    <div class="brand-header-text">WAY<span style="color:var(--wb-accent); text-shadow:0 0 14px var(--wb-accent-glow);">BLOCK</span></div>
     <div class="icon-circle-btn" onclick="openFullSettingsPage()" title="Settings">⚙️</div>
   </div>
 
