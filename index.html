@@ -2495,6 +2495,11 @@ if (!playingSince) {
 }
 
 function initProfile() {
+  const winM = document.getElementById('winModal');
+  const intM = document.getElementById('roundIntermissionModal');
+  if (winM) winM.classList.add('hidden');
+  if (intM) intM.classList.add('hidden');
+
   const nameField = document.getElementById('nameField');
   if (nameField) nameField.value = playerName;
   updateProfileNamesUI();
@@ -3262,6 +3267,10 @@ canvas.addEventListener('touchstart', (e) => {
 }, { passive: false });
 
 function checkWin() {
+  // Never check win if game is not active or hasn't started
+  const arena = document.getElementById('gameArenaView');
+  if (!arena || arena.classList.contains('hidden') || gameOver) return false;
+
   let roundWinner = null;
   let winnerKey = null;
 
@@ -3271,6 +3280,8 @@ function checkWin() {
     else if (p3.x === CENTER_X && p3.y === CENTER_Y) { roundWinner = p3; winnerKey = 'p3'; }
     else if (gameMode === '4p' && p4.x === CENTER_X && p4.y === CENTER_Y) { roundWinner = p4; winnerKey = 'p4'; }
   } else {
+    // Player 1 wins by reaching opponent baseline (y === 0)
+    // Player 2 wins by reaching player 1's baseline (y === 8)
     if (p1.y === 0) { roundWinner = p1; winnerKey = 'p1'; }
     else if (p2.y === 8) { roundWinner = p2; winnerKey = 'p2'; }
   }
@@ -3297,6 +3308,7 @@ function checkWin() {
   }
   return false;
 }
+
 function showRoundIntermission(winner) {
   const modal = document.getElementById('roundIntermissionModal');
   document.getElementById('roundWinnerText').innerText = `${winner.name} Wins Round ${currentRound}!`;
