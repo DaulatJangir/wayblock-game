@@ -101,7 +101,7 @@
     font-size: 1.35rem;
     font-weight: 900;
     letter-spacing: 1.5px;
-    color: #ffffff;
+    color: var(--wb-accent);
     display: flex;
     align-items: center;
     gap: 2px;
@@ -419,7 +419,12 @@
     align-items: center;
     margin-bottom: 12px;
   }
-  .sec-title { font-size: 0.88rem; font-weight: 800; color: #ffffff; }
+  .sec-title { 
+    font-size: 0.9rem; 
+    font-weight: 800; 
+    color: var(--wb-accent); 
+    letter-spacing: 0.5px;
+  }
   .sec-link { font-size: 0.74rem; font-weight: 700; color: var(--wb-cyan); cursor: pointer; }
   .match-history-list { display: flex; flex-direction: column; gap: 10px; }
   .match-row { display: flex; align-items: center; justify-content: space-between; }
@@ -681,13 +686,14 @@
     padding: 15px;
   }
   .guide-card h4 {
-    font-size: 0.92rem;
+    font-size: 0.95rem;
     font-weight: 800;
-    color: #ffffff;
+    color: var(--wb-accent);
     margin-bottom: 6px;
     display: flex;
     align-items: center;
     gap: 8px;
+    text-shadow: 0 0 10px var(--wb-accent-glow);
   }
   .guide-card p {
     font-size: 0.8rem;
@@ -903,6 +909,10 @@
     max-width: 320px;
     box-shadow: 0 16px 40px rgba(0, 0, 0, 0.8);
   }
+  .modal-box h2, .modal-box h3 {
+    color: var(--wb-accent);
+    text-shadow: 0 0 10px var(--wb-accent-glow);
+  }
   .text-field {
     width: 100%;
     padding: 12px;
@@ -1070,7 +1080,8 @@
     font-size: 1.35rem;
     font-weight: 900;
     letter-spacing: 1px;
-    color: #ffffff;
+    color: var(--wb-accent);
+    text-shadow: 0 0 14px var(--wb-accent-glow);
     margin-bottom: 6px;
   }
   .online-hero-sub {
