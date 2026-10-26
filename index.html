@@ -1142,6 +1142,193 @@
     font-weight: 800;
     color: #ffffff;
   }
+
+  /* --- Top User Bar Styling (Image 2) --- */
+  .wb-top-user-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    margin: 4px 0 16px;
+  }
+  .wb-user-left-group {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+  }
+  .wb-brand-avatar {
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    background: #090e18;
+    border: 1.5px solid rgba(255, 255, 255, 0.14);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-weight: 900;
+    line-height: 1;
+  }
+  .wb-letter-w {
+    color: #38bdf8;
+    font-size: 1.25rem;
+    filter: drop-shadow(0 0 6px rgba(56, 189, 248, 0.5));
+    transform: translate(-2px, -3px);
+  }
+  .wb-slash {
+    color: rgba(255, 255, 255, 0.28);
+    font-size: 1.15rem;
+    font-weight: 300;
+    transform: rotate(15deg);
+    margin: 0 -2px;
+  }
+  .wb-letter-b {
+    color: #f43f5e;
+    font-size: 1.15rem;
+    filter: drop-shadow(0 0 6px rgba(244, 63, 94, 0.5));
+    transform: translate(2px, 4px);
+  }
+  .wb-user-text-col {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+  }
+  .wb-brand-sublabel {
+    font-size: 0.65rem;
+    font-weight: 800;
+    letter-spacing: 1.4px;
+    color: #94a3b8;
+    text-transform: uppercase;
+  }
+  .wb-brand-highlight {
+    color: var(--wb-accent, #f59e0b) !important;
+  }
+  .wb-user-main-name {
+    font-size: 1.2rem;
+    font-weight: 800;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 1px;
+  }
+  .wb-user-flag {
+    font-size: 1.15rem;
+  }
+  .wb-profile-icon-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    background: #141b28;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #94a3b8;
+    cursor: pointer;
+    transition: transform 0.12s, background 0.15s;
+  }
+  .wb-profile-icon-btn:active {
+    transform: scale(0.95);
+    background: #1c2638;
+  }
+
+  /* --- Sleek "Play Online" Card (Images 1 & 2) --- */
+  .wb-play-online-card {
+    background: #151a23;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 22px;
+    padding: 16px 18px 18px;
+    margin-bottom: 14px;
+    cursor: pointer;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+    transition: transform 0.12s ease, border-color 0.15s ease;
+  }
+  .wb-play-online-card:active {
+    transform: scale(0.985);
+    border-color: rgba(245, 158, 11, 0.4);
+  }
+  .poc-top-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 22px;
+  }
+  .poc-status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(16, 185, 129, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    padding: 4px 12px;
+    border-radius: 9999px;
+  }
+  .poc-green-dot {
+    width: 6.5px;
+    height: 6.5px;
+    border-radius: 50%;
+    background: #22c55e;
+    box-shadow: 0 0 6px #22c55e;
+  }
+  .poc-status-text {
+    font-size: 0.68rem;
+    font-weight: 800;
+    letter-spacing: 1.2px;
+    color: #e2e8f0;
+  }
+  .poc-streak-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.76rem;
+    font-weight: 700;
+    color: var(--wb-accent, #f59e0b);
+  }
+  .poc-fire-icon {
+    font-size: 0.85rem;
+  }
+  .poc-bottom-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+  }
+  .poc-title-group {
+    text-align: left;
+  }
+  .poc-card-title {
+    font-size: 1.45rem;
+    font-weight: 900;
+    color: #ffffff;
+    letter-spacing: 0.3px;
+    margin: 0;
+  }
+  .poc-card-sub {
+    font-size: 0.8rem;
+    color: #94a3b8;
+    margin-top: 4px;
+    font-weight: 500;
+  }
+  .poc-arrow-btn {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: #202b37;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    cursor: pointer;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
+    transition: transform 0.15s ease, background 0.15s ease;
+  }
+  .wb-play-online-card:hover .poc-arrow-btn {
+    background: #2b3a4c;
+    transform: translateX(2px);
+  }
   
 </style>
 </head>
@@ -1149,39 +1336,54 @@
 
 <!-- ================= 1. HOME VIEW ================= -->
 <div class="view-container" id="homeView">
-  <div class="top-bar">
-    <div class="brand-header-text">WAY<span style="color:var(--wb-accent); text-shadow:0 0 14px var(--wb-accent-glow);">BLOCK</span></div>
-    <div class="icon-circle-btn" onclick="openFullSettingsPage()" title="Settings">⚙️</div>
-  </div>
-
-  <div class="home-user-card" onclick="openNameModal()" style="cursor:pointer;">
-    <div class="home-avatar-circle">👤</div>
-    <div class="home-user-meta">
-      <div class="home-user-name">
-        <span id="homeDisplayName">PathFinder</span>
-        <span style="font-size:0.75rem; color:var(--wb-text-muted);" id="homeDisplayId">(44084)</span>
+  <!-- Top Bar: W/B Avatar, Name + Subtitle, Profile Icon Button -->
+  <div class="wb-top-user-bar">
+    <div class="wb-user-left-group" onclick="openNameModal()" title="Edit Name">
+      <div class="wb-brand-avatar">
+        <span class="wb-letter-w">W</span>
+        <span class="wb-slash">/</span>
+        <span class="wb-letter-b">B</span>
       </div>
-      <div class="home-user-status">● Online</div>
-    </div>
-  </div>
-
-  <div class="home-rank-banner" onclick="openFullMasteryRoadPage()">
-    <div class="hrb-top">
-      <div class="hrb-left">
-        <div class="hrb-trophy">🏆</div>
-        <div>
-          <div class="hrb-tag">CURRENT RANK</div>
-          <div class="hrb-level-name" id="hrbLevelName">Corridor Master</div>
+      <div class="wb-user-text-col">
+        <div class="wb-brand-sublabel">WAY<span class="wb-brand-highlight">BLOCK</span></div>
+        <div class="wb-user-main-name">
+          <span id="homeDisplayName">daulat</span>
+          <span class="wb-user-flag">🇮🇳</span>
         </div>
       </div>
-      <span style="color:var(--wb-text-sub); font-size:1.2rem; font-weight:700;">›</span>
     </div>
-    <div class="hrb-track-container">
-      <div class="hrb-track-fill" id="hrbTrackFill" style="width: 50%;"></div>
+    <div class="wb-profile-icon-btn" onclick="switchNavTab('profile')" title="Profile">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+        <circle cx="12" cy="7" r="4"></circle>
+      </svg>
     </div>
-    <div class="hrb-bottom-row">
-      <span id="hrbStageCount">3 of 6 stages completed</span>
-      <span style="font-weight:800; color:var(--wb-gold);" id="hrbPercent">50%</span>
+  </div>
+
+  <!-- Replaced Rank Banner: Sleek "Play Online" Card -->
+  <div class="wb-play-online-card" onclick="goToLobbyChoice()">
+    <div class="poc-top-row">
+      <div class="poc-status-badge">
+        <span class="poc-green-dot"></span>
+        <span class="poc-status-text">ONLINE</span>
+      </div>
+      <div class="poc-streak-badge">
+        <span class="poc-fire-icon">🔥</span>
+        <span>Best Streak: <strong id="homeStreakCount">1</strong></span>
+      </div>
+    </div>
+
+    <div class="poc-bottom-row">
+      <div class="poc-title-group">
+        <h2 class="poc-card-title">Play Online</h2>
+        <p class="poc-card-sub">Ranked matches</p>
+      </div>
+      <button class="poc-arrow-btn" aria-label="Play Online">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+          <polyline points="12 5 19 12 12 19"></polyline>
+        </svg>
+      </button>
     </div>
   </div>
 
@@ -1957,11 +2159,20 @@ function updateLevelUI() {
   const wins = parseInt(localStorage.getItem('wayblock_wins') || "8");
   const data = getLevelData(wins);
 
-  // Home Screen updates
-  document.getElementById('hrbLevelName').innerText = data.tier.name;
-  document.getElementById('hrbStageCount').innerText = `${data.stageIndex} of 6 stages completed`;
-  document.getElementById('hrbPercent').innerText = `${data.overallPercent}%`;
-  document.getElementById('hrbTrackFill').style.width = `${data.overallPercent}%`;
+  // Home Screen rank references safely guarded
+  const hrbLevelName = document.getElementById('hrbLevelName');
+  if (hrbLevelName) hrbLevelName.innerText = data.tier.name;
+  const hrbStageCount = document.getElementById('hrbStageCount');
+  if (hrbStageCount) hrbStageCount.innerText = `${data.stageIndex} of 6 stages completed`;
+  const hrbPercent = document.getElementById('hrbPercent');
+  if (hrbPercent) hrbPercent.innerText = `${data.overallPercent}%`;
+  const hrbTrackFill = document.getElementById('hrbTrackFill');
+  if (hrbTrackFill) hrbTrackFill.style.width = `${data.overallPercent}%`;
+
+  // Dynamic Streak Sync
+  const homeStreak = document.getElementById('homeStreakCount');
+  const statStreak = document.getElementById('statStreak');
+  if (homeStreak && statStreak) homeStreak.innerText = statStreak.innerText || "1";
 
   // Profile Screen updates
   document.getElementById('profileCardLevelName').innerText = data.tier.name;
