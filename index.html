@@ -61,20 +61,15 @@
   }
   .hidden { display: none !important; }
 
-  /* --- Brick Texture with Spotlight for Homepage --- */
-  #homeView {
-    min-height: calc(100vh - 58px);
-    border-radius: 24px;
+  /* --- Global Brick Texture with Amber Spotlight --- */
+  body {
     background-color: #0f1217;
     background-image: 
-      /* Top warm-amber spotlight */
-      radial-gradient(circle at 62% 0%, rgba(245, 158, 11, 0.42) 0%, rgba(180, 83, 9, 0.15) 35%, rgba(13, 15, 20, 0.96) 70%),
-      /* Vertical mortar joints */
-      linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
-      /* Horizontal mortar lines */
+      radial-gradient(circle at 62% 0%, rgba(245, 158, 11, 0.38) 0%, rgba(180, 83, 9, 0.12) 35%, rgba(13, 15, 20, 0.98) 70%),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
       linear-gradient(0deg, rgba(0, 0, 0, 0.75) 2px, transparent 2px),
-      linear-gradient(0deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+      linear-gradient(0deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
     background-size: 
       100% 100%,
       52px 28px,
@@ -87,6 +82,19 @@
       26px 14px,
       0 0,
       0 0;
+    background-attachment: fixed;
+  }
+
+  .view-container {
+    width: 100%;
+    max-width: 420px;
+    display: flex;
+    flex-direction: column;
+    padding: 12px 16px;
+    box-sizing: border-box;
+    position: relative;
+    z-index: 1;
+    min-height: calc(100vh - 58px);
   }
 
   /* ---------------- TOP BAR ---------------- */
@@ -2222,17 +2230,21 @@ function updateLevelUI() {
   const wins = parseInt(localStorage.getItem('wayblock_wins') || "8");
   const data = getLevelData(wins);
 
-  // Home Screen updates (Safe null checks so JS never halts)
+  // Home Screen updates (safe checks so JS never crashes when elements were removed)
   const hrbLevelName = document.getElementById('hrbLevelName');
-  const hrbStageCount = document.getElementById('hrbStageCount');
-  const hrbPercent = document.getElementById('hrbPercent');
-  const hrbTrackFill = document.getElementById('hrbTrackFill');
-
   if (hrbLevelName) hrbLevelName.innerText = data.tier.name;
+  const hrbStageCount = document.getElementById('hrbStageCount');
   if (hrbStageCount) hrbStageCount.innerText = `${data.stageIndex} of 6 stages completed`;
+  const hrbPercent = document.getElementById('hrbPercent');
   if (hrbPercent) hrbPercent.innerText = `${data.overallPercent}%`;
+  const hrbTrackFill = document.getElementById('hrbTrackFill');
   if (hrbTrackFill) hrbTrackFill.style.width = `${data.overallPercent}%`;
 
+  // Streak Sync for the new Home Card
+  const homeStreak = document.getElementById('homeStreakCount');
+  const statStreak = document.getElementById('statStreak');
+  if (homeStreak && statStreak) homeStreak.innerText = statStreak.innerText || "1";
+  
   // Profile Screen updates
   const profLevel = document.getElementById('profileCardLevelName');
   const profStage = document.getElementById('profileCardStageCount');
@@ -2321,34 +2333,56 @@ function updateLevelUI() {
 
 // --- Navigation Tab Controller ---
 function switchNavTab(tab) {
-  ['homeView', 'profileView', 'fullMasteryRoadView', 'fullSettingsView', 'fullReferralView', 'fullGuideView', 'fullSupportView', 'lobbyChoiceView', 'hostLobbyView', 'joinLobbyView', 'gameArenaView', 'localSetupView'].forEach(id => {
-    document.getElementById(id).classList.add('hidden');
+  const allViews = [
+    'homeView', 'profileView', 'fullMasteryRoadView', 'fullSettingsView', 
+    'fullReferralView', 'fullGuideView', 'fullSupportView', 'lobbyChoiceView', 
+    'hostLobbyView', 'joinLobbyView', 'gameArenaView', 'localSetupView'
+  ];
+
+  allViews.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.classList.add('hidden');
   });
 
   ['tabHome', 'tabPlay', 'tabLearn', 'tabProfile'].forEach(id => {
-    document.getElementById(id).classList.remove('active');
+    const el = document.getElementById(id);
+    if (el) el.classList.remove('active');
   });
 
   const dock = document.getElementById('bottomNavDock');
-  dock.classList.remove('hidden');
+  if (dock) dock.classList.remove('hidden');
 
   if (tab === 'home') {
-    document.getElementById('homeView').classList.remove('hidden');
-    document.getElementById('tabHome').classList.add('active');
+    const v = document.getElementById('homeView');
+    const t = document.getElementById('tabHome');
+    if (v) v.classList.remove('hidden');
+    if (t) t.classList.add('active');
   } else if (tab === 'play') {
-    document.getElementById('lobbyChoiceView').classList.remove('hidden');
-    document.getElementById('tabPlay').classList.add('active');
+    const v = document.getElementById('lobbyChoiceView');
+    const t = document.getElementById('tabPlay');
+    if (v) v.classList.remove('hidden');
+    if (t) t.classList.add('active');
   } else if (tab === 'learn') {
-    document.getElementById('fullGuideView').classList.remove('hidden');
-    document.getElementById('tabLearn').classList.add('active');
+    const v = document.getElementById('fullGuideView');
+    const t = document.getElementById('tabLearn');
+    if (v) v.classList.remove('hidden');
+    if (t) t.classList.add('active');
   } else if (tab === 'profile') {
-    document.getElementById('profileView').classList.remove('hidden');
-    document.getElementById('tabProfile').classList.add('active');
+    const v = document.getElementById('profileView');
+    const t = document.getElementById('tabProfile');
+    if (v) v.classList.remove('hidden');
+    if (t) t.classList.add('active');
   }
 }
 
 function switchView(viewId) {
-  ['homeView', 'profileView', 'fullMasteryRoadView', 'fullSettingsView', 'fullReferralView', 'fullGuideView', 'fullSupportView', 'lobbyChoiceView', 'hostLobbyView', 'joinLobbyView', 'gameArenaView', 'localSetupView'].forEach(id => {
+  const allViews = [
+    'homeView', 'profileView', 'fullMasteryRoadView', 'fullSettingsView', 
+    'fullReferralView', 'fullGuideView', 'fullSupportView', 'lobbyChoiceView', 
+    'hostLobbyView', 'joinLobbyView', 'gameArenaView', 'localSetupView'
+  ];
+
+  allViews.forEach(id => {
     const el = document.getElementById(id);
     if (el) el.classList.add('hidden');
   });
@@ -2365,7 +2399,6 @@ function switchView(viewId) {
     }
   }
 }
-
 // Full-Page Transition Handlers
 function openFullMasteryRoadPage() { switchView('fullMasteryRoadView'); }
 function openFullSettingsPage() { switchView('fullSettingsView'); }
