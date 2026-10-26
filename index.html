@@ -58,8 +58,20 @@
     box-sizing: border-box;
     position: relative;
     z-index: 1;
+    min-height: calc(100vh - 58px);
+    pointer-events: auto;
   }
-  .hidden { display: none !important; }
+  .wb-play-online-card,
+  .wb-compact-card,
+  .wb-leaderboard-card,
+  .nav-tab-item,
+  .icon-circle-btn,
+  .primary-action-btn,
+  .wb-control-btn {
+    cursor: pointer;
+    touch-action: manipulation;
+  }
+  /* .hidden { display: none !important; } */
 
   /* --- Global Brick Texture with Amber Spotlight --- */
   body {
@@ -1485,12 +1497,12 @@
         <h2 class="poc-card-title">Play Online</h2>
         <p class="poc-card-sub">Ranked matches</p>
       </div>
-      <button class="poc-arrow-btn" aria-label="Play Online">
+      <div class="poc-arrow-btn" style="pointer-events: none;">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
           <line x1="5" y1="12" x2="19" y2="12"></line>
           <polyline points="12 5 19 12 12 19"></polyline>
         </svg>
-      </button>
+      </div>
     </div>
   </div>
 
@@ -2332,6 +2344,7 @@ function updateLevelUI() {
 }
 
 // --- Navigation Tab Controller ---
+// --- Navigation Tab Controller ---
 function switchNavTab(tab) {
   const allViews = [
     'homeView', 'profileView', 'fullMasteryRoadView', 'fullSettingsView', 
@@ -2399,33 +2412,34 @@ function switchView(viewId) {
     }
   }
 }
+
 // Full-Page Transition Handlers
 function openFullMasteryRoadPage() { switchView('fullMasteryRoadView'); }
 function openFullSettingsPage() { switchView('fullSettingsView'); }
 function openFullReferralPage() { 
-  document.getElementById('referralCodeText').innerText = profileId;
+  const ref = document.getElementById('referralCodeText');
+  if (ref) ref.innerText = profileId;
   switchView('fullReferralView'); 
 }
 function openFullGuidePage() { switchView('fullGuideView'); }
 function openFullSupportPage() {
-  document.getElementById('ticketProfileId').value = profileId;
+  const ticket = document.getElementById('ticketProfileId');
+  if (ticket) ticket.value = profileId;
   switchView('fullSupportView');
 }
 
 function submitSupportTicket(e) {
   e.preventDefault();
   displayToast("Support Ticket", "Ticket submitted! Our developers will review it.");
-  document.getElementById('ticketMessage').value = '';
+  const msg = document.getElementById('ticketMessage');
+  if (msg) msg.value = '';
   setTimeout(() => { switchNavTab('profile'); }, 1200);
 }
 
-// Profile Initialization with Dynamic Creation Date & Permanent ID
-let playerName = localStorage.getItem('wayblock_username') || "PathFinder";
-// Detect & save country where profile was created
+// Country & Flag Handling
 function getOrCreateProfileCountry() {
   let country = localStorage.getItem('wayblock_country');
   if (!country) {
-    // 1. Try detecting from browser locale (e.g. en-IN -> in, en-US -> us)
     try {
       const locale = navigator.language || navigator.userLanguage || "en-IN";
       if (locale.includes("-")) {
@@ -2436,12 +2450,14 @@ function getOrCreateProfileCountry() {
       if (tz.includes("Calcutta") || tz.includes("Kolkata")) country = "in";
     } catch (e) {}
 
-    if (!country) country = "in"; // default fallback
+    country = country || "in";
     localStorage.setItem('wayblock_country', country);
 
-    // 2. Fetch accurate IP country in the background (saved permanently)
     fetch("https://ipapi.co/json/")
-      .then(res => res.json())
+      .then(res => {
+        if (!res.ok) throw new Error("Network response was not ok");
+        return res.json();
+      })
       .then(data => {
         if (data && data.country_code) {
           const realCountry = data.country_code.toLowerCase();
@@ -2461,6 +2477,9 @@ function updateFlagDisplay(countryCode) {
     flagEl.alt = countryCode.toUpperCase();
   }
 }
+
+// Profile Initialization
+let playerName = localStorage.getItem('wayblock_username') || "PathFinder";
 let profileId = localStorage.getItem('wayblock_profile_id');
 if (!profileId) {
   profileId = Math.floor(10000 + Math.random() * 90000).toString();
@@ -2480,8 +2499,6 @@ function initProfile() {
   if (nameField) nameField.value = playerName;
   updateProfileNamesUI();
   updateLevelUI();
-  
-  // Set the real country flag
   const userCountry = getOrCreateProfileCountry();
   updateFlagDisplay(userCountry);
 }
@@ -2530,6 +2547,8 @@ function copyReferralCode() {
   displayToast("Referral", `Invite Code (${profileId}) copied! Share with friends.`);
 }
 
+document.addEventListener('DOMContentLoaded', initProfile);
+initProfile();
 // ==========================================
 // LOCAL PASS & PLAY CONFIGURATION
 // ==========================================
