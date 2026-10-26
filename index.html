@@ -1215,8 +1215,15 @@
     gap: 6px;
     margin-top: 1px;
   }
-  .wb-user-flag {
-    font-size: 1.15rem;
+  .wb-flag-img {
+    width: 22px;
+    height: 15px;
+    object-fit: cover;
+    border-radius: 3px;
+    box-shadow: 0 0 6px rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    display: inline-block;
+    vertical-align: middle;
   }
   .wb-profile-icon-btn {
     width: 40px;
@@ -1329,6 +1336,98 @@
     background: #2b3a4c;
     transform: translateX(2px);
   }
+
+  /* --- 2 Half Cards & Leaderboard (Exact Dark Minimal Styling) --- */
+  .wb-half-deck {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 12px;
+    width: 100%;
+  }
+  .wb-compact-card {
+    background: #151a23;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 22px;
+    padding: 16px 14px 18px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
+    cursor: pointer;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+    transition: transform 0.12s ease, border-color 0.15s ease;
+  }
+  .wb-compact-card:active {
+    transform: scale(0.97);
+    border-color: rgba(245, 158, 11, 0.4);
+  }
+  .wcc-icon-box {
+    width: 44px;
+    height: 44px;
+    border-radius: 14px;
+    background: #202735;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #e2e8f0;
+    margin-bottom: 18px;
+  }
+  .wcc-title {
+    font-size: 0.96rem;
+    font-weight: 800;
+    color: #ffffff;
+    margin-bottom: 3px;
+    line-height: 1.25;
+  }
+  .wcc-sub {
+    font-size: 0.74rem;
+    color: #94a3b8;
+    font-weight: 500;
+  }
+
+  /* Full-Width Leaderboard Card */
+  .wb-leaderboard-card {
+    background: #151a23;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 20px;
+    padding: 16px 18px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    cursor: pointer;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+    transition: transform 0.12s ease, border-color 0.15s ease;
+  }
+  .wb-leaderboard-card:active {
+    transform: scale(0.985);
+    border-color: rgba(245, 158, 11, 0.4);
+  }
+  .lbc-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .lbc-trophy-icon {
+    font-size: 1.3rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    filter: drop-shadow(0 2px 6px rgba(245, 158, 11, 0.35));
+  }
+  .lbc-title {
+    font-size: 1.05rem;
+    font-weight: 800;
+    color: #ffffff;
+    letter-spacing: 0.2px;
+  }
+  .lbc-chevron {
+    color: #94a3b8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
   
 </style>
 </head>
@@ -1348,7 +1447,7 @@
         <div class="wb-brand-sublabel">WAY<span class="wb-brand-highlight">BLOCK</span></div>
         <div class="wb-user-main-name">
           <span id="homeDisplayName">daulat</span>
-          <span class="wb-user-flag">🇮🇳</span>
+          <img id="homeUserFlag" class="wb-flag-img" src="https://flagcdn.com/w40/in.png" alt="Country Flag" />
         </div>
       </div>
     </div>
@@ -1387,86 +1486,50 @@
     </div>
   </div>
 
-  <div class="action-deck">
-    <div class="action-deck-card card-online" onclick="goToLobbyChoice()">
-      <div class="adc-left">
-        <div class="adc-icon-box">🌐</div>
-        <div>
-          <div class="adc-title">PLAY ONLINE</div>
-          <div class="adc-sub">Challenge real players</div>
-        </div>
-      </div>
-      <div class="adc-chevron">›</div>
-    </div>
-
-    <div class="action-deck-card card-ai" onclick="startLocalGame('ai')">
-      <div class="adc-left">
-        <div class="adc-icon-box">🤖</div>
-        <div>
-          <div class="adc-title">VS AI</div>
-          <div class="adc-sub">Play with computer</div>
-        </div>
-      </div>
-      <div class="adc-chevron">›</div>
-    </div>
-
-    <!-- PLAY LOCAL -->
-    <div class="action-deck-card card-local" onclick="openLocalSetupView()">
-      <div class="adc-left">
-        <div class="adc-icon-box">👥</div>
-        <div>
-          <div class="adc-title">PLAY LOCAL</div>
-          <div class="adc-sub">Two players on same device</div>
-        </div>
-      </div>
-      <div class="adc-chevron">›</div>
-    </div>
-  </div>
-
-  <!-- Daily Challenge Card: Redirects to "Play" section on click -->
-  <div class="daily-card" onclick="switchNavTab('play')">
-    <div class="daily-header">
-      <span style="font-size:1.2rem;">📅</span>
-      <div>
-        <div class="daily-title">Daily Challenge</div>
-        <div class="daily-sub">Complete the 9x9 board</div>
-      </div>
-    </div>
-    <div class="daily-body">
-      <div class="daily-board-art">
-        <svg width="100%" height="100%" viewBox="0 0 160 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <line x1="20" y1="0" x2="20" y2="64" stroke="#172644" stroke-width="1.5" />
-          <line x1="60" y1="0" x2="60" y2="64" stroke="#172644" stroke-width="1.5" />
-          <line x1="100" y1="0" x2="100" y2="64" stroke="#172644" stroke-width="1.5" />
-          <line x1="140" y1="0" x2="140" y2="64" stroke="#172644" stroke-width="1.5" />
-          <line x1="0" y1="20" x2="160" y2="20" stroke="#172644" stroke-width="1.5" />
-          <line x1="0" y1="44" x2="160" y2="44" stroke="#172644" stroke-width="1.5" />
-          <rect x="58" y="22" width="4" height="20" rx="2" fill="#fbbf24" />
-          <rect x="70" y="18" width="22" height="4" rx="2" fill="#fbbf24" />
-          <rect x="118" y="14" width="4" height="22" rx="2" fill="#fbbf24" />
-          <rect x="58" y="46" width="4" height="16" rx="2" fill="#fbbf24" />
-          <circle cx="40" cy="32" r="5" fill="#38bdf8" />
-          <circle cx="104" cy="46" r="5" fill="#10b981" />
+<!-- 2 Half-and-Half Cards -->
+  <div class="wb-half-deck">
+    <!-- Play vs Computer Card -->
+    <div class="wb-compact-card" onclick="startLocalGame('ai')">
+      <div class="wcc-icon-box">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="11" width="18" height="10" rx="2"></rect>
+          <circle cx="12" cy="5" r="2"></circle>
+          <path d="M12 7v4"></path>
+          <line x1="8" y1="16" x2="8" y2="16.01"></line>
+          <line x1="16" y1="16" x2="16" y2="16.01"></line>
         </svg>
       </div>
-      <div style="display:flex; align-items:center; gap:8px;">
-        <div class="daily-reward-pill">🪙 +50</div>
-        <span style="color:var(--wb-text-sub); font-size:1.1rem; font-weight:800;">›</span>
+      <div class="wcc-title">Play vs Computer</div>
+      <div class="wcc-sub">Single Player</div>
+    </div>
+
+    <!-- Two Players Card -->
+    <div class="wb-compact-card" onclick="openLocalSetupView()">
+      <div class="wcc-icon-box">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+          <circle cx="9" cy="7" r="4"></circle>
+          <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+          <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+        </svg>
       </div>
+      <div class="wcc-title">Two Players</div>
+      <div class="wcc-sub">Same Device</div>
     </div>
   </div>
 
-  <div class="learning-card" onclick="switchNavTab('learn')">
-    <div style="display:flex; align-items:center; gap:12px;">
-      <div style="width:36px; height:36px; background:#1e293b; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:1.1rem;">🎓</div>
-      <div>
-        <div style="font-size:0.9rem; font-weight:800; color:#ffffff;">Continue Learning</div>
-        <div style="font-size:0.72rem; color:var(--wb-text-sub);">Improve your strategy</div>
-      </div>
+  <!-- Leaderboard Card -->
+  <div class="wb-leaderboard-card" onclick="openFullMasteryRoadPage()">
+    <div class="lbc-left">
+      <div class="lbc-trophy-icon">🏆</div>
+      <span class="lbc-title">Leaderboard</span>
     </div>
-    <span style="color:var(--wb-text-sub); font-size:1.1rem; font-weight:800;">›</span>
+    <div class="lbc-chevron">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="9 18 15 12 9 6"></polyline>
+      </svg>
+    </div>
   </div>
-</div>
 
 <!-- ================= LOCAL PASS & PLAY SETUP VIEW ================= -->
 <div class="view-container hidden" id="localSetupView">
@@ -2306,6 +2369,46 @@ function submitSupportTicket(e) {
 
 // Profile Initialization with Dynamic Creation Date & Permanent ID
 let playerName = localStorage.getItem('wayblock_username') || "PathFinder";
+// Detect & save country where profile was created
+function getOrCreateProfileCountry() {
+  let country = localStorage.getItem('wayblock_country');
+  if (!country) {
+    // 1. Try detecting from browser locale (e.g. en-IN -> in, en-US -> us)
+    try {
+      const locale = navigator.language || navigator.userLanguage || "en-IN";
+      if (locale.includes("-")) {
+        const part = locale.split("-")[1];
+        if (part && part.length === 2) country = part.toLowerCase();
+      }
+      const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || "";
+      if (tz.includes("Calcutta") || tz.includes("Kolkata")) country = "in";
+    } catch (e) {}
+
+    if (!country) country = "in"; // default fallback
+    localStorage.setItem('wayblock_country', country);
+
+    // 2. Fetch accurate IP country in the background (saved permanently)
+    fetch("https://ipapi.co/json/")
+      .then(res => res.json())
+      .then(data => {
+        if (data && data.country_code) {
+          const realCountry = data.country_code.toLowerCase();
+          localStorage.setItem('wayblock_country', realCountry);
+          updateFlagDisplay(realCountry);
+        }
+      })
+      .catch(() => {});
+  }
+  return country;
+}
+
+function updateFlagDisplay(countryCode) {
+  const flagEl = document.getElementById('homeUserFlag');
+  if (flagEl) {
+    flagEl.src = `https://flagcdn.com/w40/${countryCode.toLowerCase()}.png`;
+    flagEl.alt = countryCode.toUpperCase();
+  }
+}
 let profileId = localStorage.getItem('wayblock_profile_id');
 if (!profileId) {
   profileId = Math.floor(10000 + Math.random() * 90000).toString();
@@ -2321,9 +2424,14 @@ if (!playingSince) {
 }
 
 function initProfile() {
-  document.getElementById('nameField').value = playerName;
+  const nameField = document.getElementById('nameField');
+  if (nameField) nameField.value = playerName;
   updateProfileNamesUI();
   updateLevelUI();
+  
+  // Set the real country flag
+  const userCountry = getOrCreateProfileCountry();
+  updateFlagDisplay(userCountry);
 }
 
 function updateProfileNamesUI() {
