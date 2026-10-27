@@ -1657,6 +1657,49 @@
   @media(max-width:380px) { .home-goals-grid{gap:8px}.home-goal-card{padding:10px 9px;border-radius:18px}.home-goal-icon{width:38px;height:38px;font-size:1.55rem}.home-goal-title{font-size:.88rem}.home-goal-sub{font-size:.66rem;margin-bottom:11px}.goal-progress-label{font-size:.57rem}.goal-progress-list{gap:10px}.weekly-goal-content{gap:6px;min-height:95px}.weekly-ring{flex-basis:64px;width:64px;height:64px;font-size:.8rem}.weekly-ring::before{inset:6px}.weekly-goal-list{gap:8px}.weekly-goal-list>div{font-size:.56rem}.home-goal-footer{font-size:.56rem}.goal-reward-pill{font-size:.65rem;padding:4px 6px} }
   @media(prefers-reduced-motion:reduce){.goal-progress-fill{transition:none}}
 
+
+  /* Neon multiplayer hero art — decorative only, does not alter game actions */
+  .home-online-hero {
+    min-height:254px; padding:23px 22px 22px; gap:28px;
+    border:1px solid rgba(18,207,244,.62);
+    background:
+      radial-gradient(ellipse at 77% 64%,rgba(0,175,255,.18),transparent 39%),
+      radial-gradient(ellipse at 5% 100%,rgba(0,213,238,.10),transparent 48%),
+      linear-gradient(135deg,#07182c 0%,#071326 54%,#09283a 100%);
+    box-shadow:0 14px 34px rgba(0,0,0,.32),inset 0 1px 0 rgba(145,238,255,.10),0 0 22px rgba(0,177,255,.08);
+  }
+  .home-online-hero::before {
+    width:250px;height:250px;right:-45px;top:-92px;
+    border-color:rgba(23,205,255,.12);
+    box-shadow:0 0 0 18px rgba(23,205,255,.035),0 0 0 38px rgba(23,205,255,.025);
+  }
+  .home-online-art { position:absolute;z-index:-1;right:8px;top:12px;width:61%;height:90%;pointer-events:none;opacity:.96; }
+  .home-online-globe { position:absolute;width:175px;height:175px;right:6%;top:-28px;border:1px solid rgba(0,177,255,.46);border-radius:50%;background:radial-gradient(circle at 36% 32%,rgba(17,134,220,.2),rgba(3,24,51,.05) 65%,transparent 70%);box-shadow:inset -12px -5px 24px rgba(0,100,255,.12),0 0 28px rgba(0,165,255,.07); }
+  .home-online-globe::before,.home-online-globe::after { content:"";position:absolute;inset:10px 35px;border:1px solid rgba(0,177,255,.25);border-radius:50%; }
+  .home-online-globe::after { inset:0 20px;border-color:rgba(0,177,255,.19); }
+  .home-online-board-art { position:absolute;width:100%;height:100%;right:-3%;top:12%;overflow:visible;filter:drop-shadow(0 5px 13px rgba(0,181,255,.14)); }
+  .home-online-hero-top,.home-online-hero-bottom { position:relative;z-index:1; }
+  .home-online-hero-bottom { align-items:flex-end; }
+  .home-online-copy { max-width:67%; }
+  .home-online-title { font-size:clamp(1.65rem,6vw,2.15rem);letter-spacing:-1px;text-shadow:0 2px 16px rgba(0,0,0,.3); }
+  .home-online-title-accent { color:#24d9f2;text-shadow:0 0 20px rgba(0,213,242,.23); }
+  .home-online-subtitle { display:flex;align-items:flex-start;gap:8px;max-width:245px;color:#b8d8f4;font-size:.91rem;line-height:1.35; }
+  .home-online-globe-icon { color:#27dff4;font-size:1.5rem;line-height:1;flex:0 0 auto;margin-top:-2px; }
+  .home-online-arrow { border:1px solid rgba(31,220,246,.68);background:linear-gradient(145deg,rgba(0,190,230,.24),rgba(0,91,153,.19));box-shadow:inset 0 0 18px rgba(0,213,255,.08),0 0 18px rgba(0,193,255,.12); }
+  .home-online-hero:active .home-online-arrow { background:rgba(0,198,235,.34); }
+  @media(max-width:420px) {
+    .home-online-hero { min-height:238px;padding:20px 17px 19px;gap:25px;border-radius:25px; }
+    .home-online-art { width:67%;right:0;top:22px;opacity:.73; }
+    .home-online-globe { width:135px;height:135px;right:0; }
+    .home-online-board-art { width:115%;right:-12%;top:22%; }
+    .home-online-copy { max-width:74%; }
+    .home-online-title { font-size:clamp(1.55rem,7vw,1.9rem); }
+    .home-online-subtitle { max-width:200px;font-size:.82rem; }
+    .home-online-arrow { width:54px;height:54px;flex-basis:54px; }
+    .home-online-streak { position:relative;z-index:2; }
+  }
+  @media(prefers-reduced-motion:reduce) { .home-online-hero,.home-online-arrow { transition:none; } }
+
 </style>
 </head>
 <body>
@@ -1679,16 +1722,33 @@
     </div>
   </div>
 
-  <!-- Featured Play Online card (keeps the existing online lobby action) -->
+  <!-- Featured Play Online card: neon multiplayer artwork; existing lobby action preserved -->
   <div class="home-online-hero" onclick="goToLobbyChoice()" role="button" tabindex="0" aria-label="Play Online, ranked matches">
+    <div class="home-online-art" aria-hidden="true">
+      <div class="home-online-globe"></div>
+      <svg class="home-online-board-art" viewBox="0 0 340 220" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M170 18L316 98L170 178L24 98L170 18Z" fill="#062849" fill-opacity=".54" stroke="#16D9F7" stroke-opacity=".72" stroke-width="2"/>
+        <path d="M170 38L294 106M145 32L269 100M120 46L244 114M95 59L219 127M70 73L194 141M45 86L169 154M195 32L71 100M220 46L96 114M245 59L121 127M270 73L146 141M295 86L171 154" stroke="#159DD4" stroke-opacity=".34"/>
+        <path d="M170 18V178M141 34V162M112 50V146M83 66V130M54 82V114M199 34V162M228 50V146M257 66V130M286 82V114M24 98H316" stroke="#159DD4" stroke-opacity=".28"/>
+        <path d="M153 42L174 30L187 38L166 50Z" fill="#FACC45" stroke="#FFE28A" stroke-width="1.5"/>
+        <path d="M218 74L239 62L252 70L231 82Z" fill="#FACC45" stroke="#FFE28A" stroke-width="1.5"/>
+        <path d="M120 105L141 93L154 101L133 113Z" fill="#FACC45" stroke="#FFE28A" stroke-width="1.5"/>
+        <ellipse cx="116" cy="82" rx="13" ry="5" fill="#00D9F5" fill-opacity=".25"/>
+        <circle cx="116" cy="68" r="9" fill="#22D3EE" stroke="#A5F3FC" stroke-width="2"/>
+        <path d="M104 84C104 74 128 74 128 84L128 89L104 89Z" fill="#06B6D4" stroke="#67E8F9" stroke-width="1.5"/>
+        <ellipse cx="231" cy="115" rx="13" ry="5" fill="#A855F7" fill-opacity=".25"/>
+        <circle cx="231" cy="101" r="9" fill="#A855F7" stroke="#E9D5FF" stroke-width="2"/>
+        <path d="M219 117C219 107 243 107 243 117L243 122L219 122Z" fill="#7C3AED" stroke="#C4B5FD" stroke-width="1.5"/>
+      </svg>
+    </div>
     <div class="home-online-hero-top">
       <span class="home-online-status"><span class="home-online-dot"></span> ONLINE</span>
       <span class="home-online-streak">🔥 Best Streak: <strong id="homeStreakCount">0</strong></span>
     </div>
     <div class="home-online-hero-bottom">
       <div class="home-online-copy">
-        <div class="home-online-title">Play Online</div>
-        <div class="home-online-subtitle">Ranked matches</div>
+        <div class="home-online-title"><span>Play</span> <span class="home-online-title-accent">Online</span></div>
+        <div class="home-online-subtitle"><span class="home-online-globe-icon" aria-hidden="true">◎</span>Challenge players from around the world</div>
       </div>
       <div class="home-online-arrow" aria-hidden="true">→</div>
     </div>
