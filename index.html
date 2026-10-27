@@ -1297,17 +1297,17 @@
     <div class="stat-card">
       <span class="stat-card-icon">🏆</span>
       <span class="stat-card-label">Wins</span>
-      <span class="stat-card-val" id="statWins">12</span>
+      <span class="stat-card-val" id="statWins">0</span>
     </div>
     <div class="stat-card">
       <span class="stat-card-icon">🎯</span>
       <span class="stat-card-label">Win Rate</span>
-      <span class="stat-card-val" id="statWinRate">68%</span>
+      <span class="stat-card-val" id="statWinRate">0%</span>
     </div>
     <div class="stat-card">
       <span class="stat-card-icon">🔥</span>
       <span class="stat-card-label">Best Streak</span>
-      <span class="stat-card-val" id="statStreak">7</span>
+      <span class="stat-card-val" id="statStreak">0</span>
     </div>
   </div>
 
@@ -1860,32 +1860,47 @@ function getLevelData(wins) {
 }
 
 function updateLevelUI() {
-  const wins = parseInt(localStorage.getItem('wayblock_wins') || "8");
+  const wins = parseInt(localStorage.getItem('wayblock_wins') || "0");
   const data = getLevelData(wins);
 
-  // Home Screen updates
-  document.getElementById('hrbLevelName').innerText = data.tier.name;
-  document.getElementById('hrbStageCount').innerText = `${data.stageIndex} of 6 stages completed`;
-  document.getElementById('hrbPercent').innerText = `${data.overallPercent}%`;
-  document.getElementById('hrbTrackFill').style.width = `${data.overallPercent}%`;
+  // Home Screen updates (safe null checks)
+  const hrbLevelName = document.getElementById('hrbLevelName');
+  if (hrbLevelName) hrbLevelName.innerText = data.tier.name;
+  const hrbStageCount = document.getElementById('hrbStageCount');
+  if (hrbStageCount) hrbStageCount.innerText = `${data.stageIndex} of 6 stages completed`;
+  const hrbPercent = document.getElementById('hrbPercent');
+  if (hrbPercent) hrbPercent.innerText = `${data.overallPercent}%`;
+  const hrbTrackFill = document.getElementById('hrbTrackFill');
+  if (hrbTrackFill) hrbTrackFill.style.width = `${data.overallPercent}%`;
 
   // Profile Screen updates
-  document.getElementById('profileCardLevelName').innerText = data.tier.name;
-  document.getElementById('profileCardStageCount').innerText = `${data.stageIndex} of 6 stages completed`;
-  document.getElementById('profileCardPercent').innerText = `${data.overallPercent}%`;
-  document.getElementById('profileCardTrackFill').style.width = `${data.overallPercent}%`;
-  document.getElementById('statWins').innerText = wins;
+  const profLevel = document.getElementById('profileCardLevelName');
+  const profStage = document.getElementById('profileCardStageCount');
+  const profPercent = document.getElementById('profileCardPercent');
+  const profFill = document.getElementById('profileCardTrackFill');
+
+  if (profLevel) profLevel.innerText = data.tier.name;
+  if (profStage) profStage.innerText = `${data.stageIndex} of 6 stages completed`;
+  if (profPercent) profPercent.innerText = `${data.overallPercent}%`;
+  if (profFill) profFill.style.width = `${data.overallPercent}%`;
 
   // Mastery Road Screen updates
-  document.getElementById('roadBadgeFraction').innerText = `🏆 ${data.stageIndex} / 6`;
-  document.getElementById('btnContinueStageText').innerText = `Continue Stage ${data.stageIndex}`;
+  const roadBadge = document.getElementById('roadBadgeFraction');
+  const roadBtn = document.getElementById('btnContinueStageText');
+  const rewardNext = document.getElementById('rewardTitleNext');
+  const rewardDesc = document.getElementById('rewardUnlockDesc');
 
-  if (data.nextTier) {
-    document.getElementById('rewardTitleNext').innerText = data.nextTier.badge;
-    document.getElementById('rewardUnlockDesc').innerText = `Unlocks at ${data.nextTier.minWins} Wins`;
-  } else {
-    document.getElementById('rewardTitleNext').innerText = "Max Level Achieved";
-    document.getElementById('rewardUnlockDesc').innerText = "Legendary WayBlocker";
+  if (roadBadge) roadBadge.innerText = `🏆 ${data.stageIndex} / 6`;
+  if (roadBtn) roadBtn.innerText = `Continue Stage ${data.stageIndex}`;
+
+  if (rewardNext && rewardDesc) {
+    if (data.nextTier) {
+      rewardNext.innerText = data.nextTier.badge;
+      rewardDesc.innerText = `Unlocks at ${data.nextTier.minWins} Wins`;
+    } else {
+      rewardNext.innerText = "Max Level Achieved";
+      rewardDesc.innerText = "Legendary WayBlocker";
+    }
   }
 
   // Render Step Road Items
@@ -2028,11 +2043,11 @@ function getMatchHistory() {
 
 function saveMatchRecord(match) {
   let matches = getMatchHistory();
-  matches.unshift(match); // newest first
-  if (matches.length > 20) matches = matches.slice(0, 20); // keep recent 20
+  matches.unshift(match);
+  if (matches.length > 20) matches = matches.slice(0, 20);
   localStorage.setItem('wayblock_matches', JSON.stringify(matches));
 
-  // Recalculate streaks and total stats
+  // Update real match counts
   let totalMatches = parseInt(localStorage.getItem('wayblock_total_matches') || "0") + 1;
   localStorage.setItem('wayblock_total_matches', totalMatches.toString());
 
@@ -2040,6 +2055,8 @@ function saveMatchRecord(match) {
   let bestStreak = parseInt(localStorage.getItem('wayblock_best_streak') || "0");
 
   if (match.isWin) {
+    let wins = parseInt(localStorage.getItem('wayblock_wins') || "0") + 1;
+    localStorage.setItem('wayblock_wins', wins.toString());
     currentStreak++;
     if (currentStreak > bestStreak) {
       bestStreak = currentStreak;
@@ -2048,17 +2065,32 @@ function saveMatchRecord(match) {
   } else {
     currentStreak = 0;
   }
+
   localStorage.setItem('wayblock_current_streak', currentStreak.toString());
 
   renderProfileStats();
   renderRecentMatchesUI();
+  updateLevelUI();
 }
 
 function renderProfileStats() {
+  let history = getMatchHistory();
+
+  // Self-heal any stale/corrupted legacy testing data in localStorage
+  let actualWins = history.filter(m => m.isWin).length;
+  let totalMatches = history.length;
+
+  // If match history exists, sync storage with actual logged matches
+  if (totalMatches > 0) {
+    localStorage.setItem('wayblock_wins', actualWins.toString());
+    localStorage.setItem('wayblock_total_matches', totalMatches.toString());
+  }
+
   const wins = parseInt(localStorage.getItem('wayblock_wins') || "0");
-  const totalMatches = parseInt(localStorage.getItem('wayblock_total_matches') || "0");
+  totalMatches = parseInt(localStorage.getItem('wayblock_total_matches') || "0");
   const bestStreak = parseInt(localStorage.getItem('wayblock_best_streak') || "0");
 
+  // Accurate win rate between 0% and 100%
   const winRate = totalMatches > 0 ? Math.round((wins / totalMatches) * 100) : 0;
 
   const statWinsEl = document.getElementById('statWins');
@@ -2071,7 +2103,6 @@ function renderProfileStats() {
   if (statStreakEl) statStreakEl.innerText = bestStreak;
   if (homeStreakEl) homeStreakEl.innerText = bestStreak;
 }
-
 function formatRelativeTime(timestamp) {
   const diffMs = Date.now() - timestamp;
   const mins = Math.floor(diffMs / 60000);
@@ -2916,12 +2947,7 @@ function checkWin() {
     playerScores[winnerKey] = (playerScores[winnerKey] || 0) + 1;
     updateScoreboardUI();
 
-    if (winnerKey === 'p1') {
-      let currentWins = parseInt(localStorage.getItem('wayblock_wins') || "8");
-      currentWins++;
-      localStorage.setItem('wayblock_wins', currentWins.toString());
-      updateLevelUI();
-    }
+    // (Wins are recorded only when the full match is officially won)
 
     if (currentRound < totalRounds) {
       showRoundIntermission(roundWinner);
