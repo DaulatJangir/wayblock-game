@@ -2419,6 +2419,24 @@ function renderProfileStats() {
   if (statWinRateEl) statWinRateEl.innerText = `${winRate}%`;
   if (statStreakEl) statStreakEl.innerText = bestStreak;
   if (homeStreakEl) homeStreakEl.innerText = bestStreak;
+
+  // Keep the online lobby summary synced with the player's local profile and stats.
+  const lobbyNameEl = document.getElementById('lobbyDisplayName');
+  const lobbyAvatarEl = document.getElementById('lobbyAvatarInitials');
+  const lobbyWinRateEl = document.getElementById('lobbyWinRate');
+  const lobbyWinsEl = document.getElementById('lobbyWinsPoints');
+  const lobbyMatchesEl = document.getElementById('lobbyMatchesCount');
+  const lobbyWinProgressEl = document.getElementById('lobbyWinProgress');
+  const savedName = (document.getElementById('homeDisplayName')?.innerText || localStorage.getItem('wayblock_username') || 'Player').trim();
+  if (lobbyNameEl) lobbyNameEl.innerText = savedName;
+  if (lobbyAvatarEl) {
+    const initials = savedName.split(/\\s+/).filter(Boolean).slice(0, 2).map(part => part.charAt(0).toUpperCase()).join('');
+    lobbyAvatarEl.innerText = initials || 'WB';
+  }
+  if (lobbyWinRateEl) lobbyWinRateEl.innerText = `${winRate}%`;
+  if (lobbyWinsEl) lobbyWinsEl.innerText = wins;
+  if (lobbyMatchesEl) lobbyMatchesEl.innerText = `${totalMatches} ${totalMatches === 1 ? 'match' : 'matches'}`;
+  if (lobbyWinProgressEl) lobbyWinProgressEl.style.width = `${winRate}%`;
 }
 function formatRelativeTime(timestamp) {
   const diffMs = Date.now() - timestamp;
