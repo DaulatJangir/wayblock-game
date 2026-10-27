@@ -1657,7 +1657,6 @@
   @media(max-width:380px) { .home-goals-grid{gap:8px}.home-goal-card{padding:10px 9px;border-radius:18px}.home-goal-icon{width:38px;height:38px;font-size:1.55rem}.home-goal-title{font-size:.88rem}.home-goal-sub{font-size:.66rem;margin-bottom:11px}.goal-progress-label{font-size:.57rem}.goal-progress-list{gap:10px}.weekly-goal-content{gap:6px;min-height:95px}.weekly-ring{flex-basis:64px;width:64px;height:64px;font-size:.8rem}.weekly-ring::before{inset:6px}.weekly-goal-list{gap:8px}.weekly-goal-list>div{font-size:.56rem}.home-goal-footer{font-size:.56rem}.goal-reward-pill{font-size:.65rem;padding:4px 6px} }
   @media(prefers-reduced-motion:reduce){.goal-progress-fill{transition:none}}
 
-
 </style>
 </head>
 <body>
@@ -1680,33 +1679,16 @@
     </div>
   </div>
 
-  <!-- Featured Play Online card: neon multiplayer artwork; existing lobby action preserved -->
+  <!-- Featured Play Online card (keeps the existing online lobby action) -->
   <div class="home-online-hero" onclick="goToLobbyChoice()" role="button" tabindex="0" aria-label="Play Online, ranked matches">
-    <div class="home-online-art" aria-hidden="true">
-      <div class="home-online-globe"></div>
-      <svg class="home-online-board-art" viewBox="0 0 340 220" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M170 18L316 98L170 178L24 98L170 18Z" fill="#062849" fill-opacity=".54" stroke="#16D9F7" stroke-opacity=".72" stroke-width="2"/>
-        <path d="M170 38L294 106M145 32L269 100M120 46L244 114M95 59L219 127M70 73L194 141M45 86L169 154M195 32L71 100M220 46L96 114M245 59L121 127M270 73L146 141M295 86L171 154" stroke="#159DD4" stroke-opacity=".34"/>
-        <path d="M170 18V178M141 34V162M112 50V146M83 66V130M54 82V114M199 34V162M228 50V146M257 66V130M286 82V114M24 98H316" stroke="#159DD4" stroke-opacity=".28"/>
-        <path d="M153 42L174 30L187 38L166 50Z" fill="#FACC45" stroke="#FFE28A" stroke-width="1.5"/>
-        <path d="M218 74L239 62L252 70L231 82Z" fill="#FACC45" stroke="#FFE28A" stroke-width="1.5"/>
-        <path d="M120 105L141 93L154 101L133 113Z" fill="#FACC45" stroke="#FFE28A" stroke-width="1.5"/>
-        <ellipse cx="116" cy="82" rx="13" ry="5" fill="#00D9F5" fill-opacity=".25"/>
-        <circle cx="116" cy="68" r="9" fill="#22D3EE" stroke="#A5F3FC" stroke-width="2"/>
-        <path d="M104 84C104 74 128 74 128 84L128 89L104 89Z" fill="#06B6D4" stroke="#67E8F9" stroke-width="1.5"/>
-        <ellipse cx="231" cy="115" rx="13" ry="5" fill="#A855F7" fill-opacity=".25"/>
-        <circle cx="231" cy="101" r="9" fill="#A855F7" stroke="#E9D5FF" stroke-width="2"/>
-        <path d="M219 117C219 107 243 107 243 117L243 122L219 122Z" fill="#7C3AED" stroke="#C4B5FD" stroke-width="1.5"/>
-      </svg>
-    </div>
     <div class="home-online-hero-top">
       <span class="home-online-status"><span class="home-online-dot"></span> ONLINE</span>
       <span class="home-online-streak">🔥 Best Streak: <strong id="homeStreakCount">0</strong></span>
     </div>
     <div class="home-online-hero-bottom">
       <div class="home-online-copy">
-        <div class="home-online-title"><span>Play</span> <span class="home-online-title-accent">Online</span></div>
-        <div class="home-online-subtitle"><span class="home-online-globe-icon" aria-hidden="true">◎</span>Challenge players from around the world</div>
+        <div class="home-online-title">Play Online</div>
+        <div class="home-online-subtitle">Ranked matches</div>
       </div>
       <div class="home-online-arrow" aria-hidden="true">→</div>
     </div>
@@ -1731,22 +1713,54 @@
         <div>
           <div class="adc-title">PLAY LOCAL</div>
           <div class="adc-sub">Two players on same device</div>
-        <!-- Featured Play Online card (keeps the existing online lobby action) -->
-  <div class="home-online-hero" onclick="goToLobbyChoice()" role="button" tabindex="0" aria-label="Play Online, ranked matches">
-    <div class="home-online-hero-top">
-      <span class="home-online-status"><span class="home-online-dot"></span> ONLINE</span>
-      <span class="home-online-streak">🔥 Best Streak: <strong id="homeStreakCount">0</strong></span>
-    </div>
-    <div class="home-online-hero-bottom">
-      <div class="home-online-copy">
-        <div class="home-online-title">Play Online</div>
-        <div class="home-online-subtitle">Ranked matches</div>
+        </div>
       </div>
-      <div class="home-online-arrow" aria-hidden="true">→</div>
+      <div class="adc-chevron">›</div>
     </div>
   </div>
 
-home-goal-footer"><span id="weeklyGoalStatus">Resets weekly</span><span class="goal-reward-pill">🪙 +100</span></div>
+  <!-- Daily Quest + Weekly Goals: progress is tracked from real gameplay -->
+  <div class="home-goals-grid">
+    <section class="home-goal-card daily-goal-card" aria-label="Daily Quest">
+      <div class="home-goal-heading">
+        <div class="home-goal-icon daily-goal-icon">▦</div>
+        <span class="home-goal-chevron">›</span>
+      </div>
+      <div class="home-goal-title">Daily Quest</div>
+      <div class="home-goal-sub">Complete 3 missions</div>
+      <div class="goal-progress-list">
+        <div class="goal-progress-item">
+          <div class="goal-progress-label"><span>Win 1 Online Match</span><span id="dailyOnlineWinText">0/1</span></div>
+          <div class="goal-progress-track"><span id="dailyOnlineWinBar" class="goal-progress-fill cyan-fill" style="width:0%"></span></div>
+        </div>
+        <div class="goal-progress-item">
+          <div class="goal-progress-label"><span>Play 3 Games</span><span id="dailyGamesText">0/3</span></div>
+          <div class="goal-progress-track"><span id="dailyGamesBar" class="goal-progress-fill purple-fill" style="width:0%"></span></div>
+        </div>
+        <div class="goal-progress-item">
+          <div class="goal-progress-label"><span>Place 10 Walls</span><span id="dailyWallsText">0/10</span></div>
+          <div class="goal-progress-track"><span id="dailyWallsBar" class="goal-progress-fill teal-fill" style="width:0%"></span></div>
+        </div>
+      </div>
+      <div class="home-goal-footer"><span id="dailyQuestStatus">Resets daily</span><span class="goal-reward-pill">🪙 +50</span></div>
+    </section>
+
+    <section class="home-goal-card weekly-goal-card" aria-label="Weekly Goals">
+      <div class="home-goal-heading">
+        <div class="home-goal-icon weekly-goal-icon">◎</div>
+        <span class="home-goal-chevron">›</span>
+      </div>
+      <div class="home-goal-title">Weekly Goals</div>
+      <div class="home-goal-sub">Complete weekly targets</div>
+      <div class="weekly-goal-content">
+        <div class="weekly-ring" id="weeklyGoalRing"><div><strong id="weeklyGoalCount">0/5</strong></div></div>
+        <div class="weekly-goal-list">
+          <div><i class="goal-dot dot-cyan"></i><span id="weeklyWinsText">Win 5 Games</span></div>
+          <div><i class="goal-dot dot-purple"></i><span id="weeklyWallsText">Place 20 Walls</span></div>
+          <div><i class="goal-dot dot-blue"></i><span id="weeklyDaysText">Play 3 Days</span></div>
+        </div>
+      </div>
+      <div class="home-goal-footer"><span id="weeklyGoalStatus">Resets weekly</span><span class="goal-reward-pill">🪙 +100</span></div>
     </section>
   </div>
 </div>
