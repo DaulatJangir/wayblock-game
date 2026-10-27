@@ -1702,7 +1702,99 @@
   @media(max-width:360px){.wb-header-motto{display:none}.wb-brand-row{flex-wrap:wrap}.wb-brand-lockup{flex:1}.wb-header-actions{width:100%}.wb-mini-stat{flex:1}}
 
 
-  </style>
+   
+  /* Local Match Setup — premium styling aligned with the Play Online lobby.
+     Scoped to this screen only; game setup and gameplay handlers remain unchanged. */
+  #localSetupView { padding-bottom: 28px; }
+  #localSetupView .local-setup-topbar { margin-bottom: 18px; }
+  #localSetupView .local-setup-top-title { font-size: 1.12rem !important; letter-spacing: -.25px; }
+  #localSetupView .local-setup-top-chip {
+    display:flex; align-items:center; gap:6px; padding:7px 10px;
+    border:1px solid rgba(74,222,232,.2); border-radius:999px;
+    background:rgba(18,42,62,.65); color:#9feaf2; font-size:.58rem;
+    font-weight:900; letter-spacing:1px; white-space:nowrap;
+  }
+  #localSetupView .local-setup-top-chip span {
+    width:6px;height:6px;border-radius:50%;background:#39e6bc;
+    box-shadow:0 0 9px rgba(57,230,188,.65);
+  }
+  #localSetupView .local-setup-hero {
+    position:relative; display:flex; align-items:center; gap:14px;
+    overflow:hidden; isolation:isolate; padding:18px 16px; margin-bottom:16px;
+    border:1px solid rgba(115,159,197,.28); border-radius:22px;
+    background:radial-gradient(ellipse at 100% 0%,rgba(23,119,176,.22),transparent 48%),
+      linear-gradient(135deg,rgba(24,36,52,.98),rgba(12,20,35,.98) 58%,rgba(20,37,49,.98));
+    box-shadow:inset 0 1px rgba(255,255,255,.045),0 12px 28px rgba(0,0,0,.2);
+  }
+  #localSetupView .local-setup-hero::after {
+    content:"";position:absolute;z-index:-1;width:170px;height:170px;right:-72px;top:-94px;
+    border:1px solid rgba(79,210,235,.12);border-radius:50%;
+    box-shadow:0 0 0 18px rgba(79,210,235,.025),0 0 0 38px rgba(79,210,235,.02);
+  }
+  #localSetupView .local-setup-hero-icon {
+    display:grid;place-items:center;flex:0 0 54px;height:54px;border-radius:17px;
+    color:#7cecff;font-size:1.8rem;
+    background:linear-gradient(145deg,rgba(24,155,225,.22),rgba(79,84,203,.16));
+    border:1px solid rgba(92,220,246,.3);box-shadow:inset 0 1px rgba(255,255,255,.1),0 0 20px rgba(0,188,255,.08);
+  }
+  #localSetupView .local-setup-hero-copy { position:relative;z-index:1;min-width:0; }
+  #localSetupView .local-setup-eyebrow { color:#63ddeb;font-size:.58rem;font-weight:900;letter-spacing:1.25px;margin-bottom:5px; }
+  #localSetupView .local-setup-hero h2 { margin:0 0 5px;color:#f7fbff;font-size:1.22rem;font-weight:900;letter-spacing:-.35px; }
+  #localSetupView .local-setup-hero p { margin:0;max-width:290px;color:#aebed6;font-size:.76rem;line-height:1.45; }
+  #localSetupView .local-setup-panel {
+    padding:18px !important;border-radius:22px;
+    background:linear-gradient(145deg,rgba(19,29,49,.98),rgba(11,18,33,.98)) !important;
+    border:1px solid rgba(116,151,199,.24) !important;
+    box-shadow:inset 0 1px rgba(255,255,255,.035),0 12px 28px rgba(0,0,0,.2) !important;
+  }
+  #localSetupView .local-setup-section-head { display:flex;align-items:center;gap:10px;margin:0 0 11px; }
+  #localSetupView .local-setup-step {
+    display:grid;place-items:center;flex:0 0 30px;height:30px;border-radius:10px;
+    color:#69e6f5;background:rgba(20,164,206,.12);border:1px solid rgba(70,211,235,.2);
+    font-size:.68rem;font-weight:900;letter-spacing:.4px;
+  }
+  #localSetupView .local-setup-section-head strong { display:block;color:#f1f6ff;font-size:.88rem;font-weight:850; }
+  #localSetupView .local-setup-section-head small { display:block;margin-top:2px;color:#91a5c5;font-size:.69rem; }
+  #localSetupView .players-count-row { gap:9px;margin-bottom:22px; }
+  #localSetupView .player-count-btn {
+    min-height:48px;padding:10px 5px;border-radius:13px;
+    background:linear-gradient(145deg,rgba(22,32,53,.95),rgba(13,21,37,.95));
+    border:1px solid rgba(128,157,201,.2);color:#a9b8d3;
+    font-size:.79rem;transition:background .2s,border-color .2s,box-shadow .2s,transform .2s;
+  }
+  #localSetupView .player-count-btn.active {
+    background:linear-gradient(135deg,rgba(16,153,207,.28),rgba(50,83,174,.32));
+    border-color:rgba(65,218,244,.8);color:#f5fdff;
+    box-shadow:inset 0 0 0 1px rgba(65,218,244,.08),0 0 18px rgba(0,191,255,.12);
+  }
+  #localSetupView .player-count-btn:active { transform:scale(.98); }
+  #localSetupView .local-setup-profile-head { margin-bottom:12px; }
+  #localSetupView #localProfilesContainer { gap:10px !important;margin-bottom:20px !important; }
+  #localSetupView .local-profile-card {
+    min-height:62px;padding:12px 13px;border-radius:15px;gap:12px;
+    background:linear-gradient(135deg,rgba(10,18,32,.98),rgba(17,27,46,.98));
+    border:1px solid rgba(130,158,200,.2);
+    box-shadow:inset 0 1px rgba(255,255,255,.025);
+  }
+  #localSetupView .local-profile-input { font-size:.88rem;padding:7px 3px;border-bottom-color:rgba(130,158,200,.24); }
+  #localSetupView .local-profile-input:focus { border-bottom-color:#45d9ef; }
+  #localSetupView .local-color-indicator { padding:6px 9px;border:1px solid rgba(139,166,206,.15);border-radius:10px;background:rgba(255,255,255,.035);white-space:nowrap; }
+  #localSetupView .primary-action-btn {
+    min-height:52px;border:1px solid rgba(119,235,255,.55);
+    background:linear-gradient(100deg,#2563eb 0%,#087fc5 55%,#06a7c7 100%);
+    border-radius:15px;box-shadow:0 8px 24px rgba(0,164,230,.2),inset 0 1px rgba(255,255,255,.15);
+    letter-spacing:.1px;
+  }
+  #localSetupView .primary-action-btn:active { transform:scale(.99); }
+  @media (max-width:360px) {
+    #localSetupView .local-setup-hero { padding:15px 12px;gap:10px; }
+    #localSetupView .local-setup-hero-icon { flex-basis:46px;height:46px; }
+    #localSetupView .local-setup-hero h2 { font-size:1.08rem; }
+    #localSetupView .local-setup-panel { padding:14px !important; }
+    #localSetupView .player-count-btn { font-size:.72rem; }
+  }
+
+</style>
 </head>
 <body>
 
@@ -1823,16 +1915,27 @@
 
 <!-- ================= LOCAL PASS & PLAY SETUP VIEW ================= -->
 <div class="view-container hidden" id="localSetupView">
-  <div class="top-bar">
-    <div class="icon-circle-btn" onclick="switchNavTab('home')">←</div>
-    <div class="brand-header-text" style="font-size:1.15rem;">Local Match Setup</div>
-    <div style="width:36px;"></div>
+  <div class="top-bar local-setup-topbar">
+    <div class="icon-circle-btn" onclick="switchNavTab('home')" aria-label="Back to Home">←</div>
+    <div class="brand-header-text local-setup-top-title">Local Match</div>
+    <div class="local-setup-top-chip"><span></span> PASS & PLAY</div>
   </div>
 
-  <div class="match-dashboard-box" style="padding:16px;">
+  <section class="local-setup-hero">
+    <div class="local-setup-hero-icon">♟</div>
+    <div class="local-setup-hero-copy">
+      <div class="local-setup-eyebrow">YOUR TABLE. YOUR RULES.</div>
+      <h2>Set up your match</h2>
+      <p>Choose your players, set their names, then take your place on the board.</p>
+    </div>
+    <div class="local-setup-hero-orb" aria-hidden="true"></div>
+  </section>
+
+  <div class="match-dashboard-box local-setup-panel" style="padding:16px;">
     <!-- Players Count Row (2, 3, 4) -->
-    <div style="font-size:0.75rem; font-weight:800; color:var(--wb-text-sub); text-transform:uppercase; letter-spacing:0.8px; margin-bottom:8px;">
-      Select Players Count
+    <div class="local-setup-section-head">
+      <span class="local-setup-step">01</span>
+      <div><strong>Players</strong><small>How many are playing?</small></div>
     </div>
     <div class="players-count-row">
       <button class="player-count-btn active" id="btnCount2" onclick="setLocalPlayerCount(2)">2 Players</button>
@@ -1841,8 +1944,9 @@
     </div>
 
     <!-- Dynamic Editable Player Profiles List -->
-    <div style="font-size:0.75rem; font-weight:800; color:var(--wb-text-sub); text-transform:uppercase; letter-spacing:0.8px; margin-bottom:8px;">
-      Player Profiles & Colors
+    <div class="local-setup-section-head local-setup-profile-head">
+      <span class="local-setup-step">02</span>
+      <div><strong>Player profiles</strong><small>Personalize names and pawn colors</small></div>
     </div>
     <div id="localProfilesContainer" style="display:flex; flex-direction:column; gap:10px; margin-bottom:16px;">
       <!-- Populated dynamically by JS -->
