@@ -1316,59 +1316,8 @@
       <span class="sec-title">Recent Matches</span>
       <span class="sec-link" onclick="displayToast('Matches', 'Showing latest 4 competitive matches')">View All</span>
     </div>
-    <div class="match-history-list">
-      <div class="match-row">
-        <div class="match-left">
-          <div class="match-avatar-pill" style="background:#1d4ed8;">🛡️</div>
-          <div>
-            <div class="match-name">vs ShadowFox</div>
-            <div class="match-time">3 hours ago</div>
-          </div>
-        </div>
-        <div class="match-right">
-          <div class="match-win">Win</div>
-          <div style="font-size:0.68rem; font-weight:700; color:var(--wb-green);">+12</div>
-        </div>
-      </div>
-      <div class="match-row">
-        <div class="match-left">
-          <div class="match-avatar-pill" style="background:#b91c1c;">⚔️</div>
-          <div>
-            <div class="match-name">vs BlazeRider</div>
-            <div class="match-time">6 hours ago</div>
-          </div>
-        </div>
-        <div class="match-right">
-          <div class="match-loss">Loss</div>
-          <div style="font-size:0.68rem; font-weight:700; color:var(--wb-red);">-8</div>
-        </div>
-      </div>
-      <div class="match-row">
-        <div class="match-left">
-          <div class="match-avatar-pill" style="background:#0f766e;">🛡️</div>
-          <div>
-            <div class="match-name">vs NovaKing</div>
-            <div class="match-time">Yesterday</div>
-          </div>
-        </div>
-        <div class="match-right">
-          <div class="match-win">Win</div>
-          <div style="font-size:0.68rem; font-weight:700; color:var(--wb-green);">+14</div>
-        </div>
-      </div>
-      <div class="match-row">
-        <div class="match-left">
-          <div class="match-avatar-pill" style="background:#15803d;">🛡️</div>
-          <div>
-            <div class="match-name">vs PixelMaster</div>
-            <div class="match-time">Yesterday</div>
-          </div>
-        </div>
-        <div class="match-right">
-          <div class="match-win">Win</div>
-          <div style="font-size:0.68rem; font-weight:700; color:var(--wb-green);">+11</div>
-        </div>
-      </div>
+    <div class="match-history-list" id="recentMatchesList">
+      <!-- Populated dynamically from real game records -->
     </div>
   </div>
 
@@ -2066,10 +2015,130 @@ if (!playingSince) {
   localStorage.setItem('wayblock_created_at', playingSince);
 }
 
+// ==========================================
+// DYNAMIC MATCH HISTORY & STATS ENGINE
+// ==========================================
+function getMatchHistory() {
+  try {
+    return JSON.parse(localStorage.getItem('wayblock_matches') || '[]');
+  } catch (e) {
+    return [];
+  }
+}
+
+function saveMatchRecord(match) {
+  let matches = getMatchHistory();
+  matches.unshift(match); // newest first
+  if (matches.length > 20) matches = matches.slice(0, 20); // keep recent 20
+  localStorage.setItem('wayblock_matches', JSON.stringify(matches));
+
+  // Recalculate streaks and total stats
+  let totalMatches = parseInt(localStorage.getItem('wayblock_total_matches') || "0") + 1;
+  localStorage.setItem('wayblock_total_matches', totalMatches.toString());
+
+  let currentStreak = parseInt(localStorage.getItem('wayblock_current_streak') || "0");
+  let bestStreak = parseInt(localStorage.getItem('wayblock_best_streak') || "0");
+
+  if (match.isWin) {
+    currentStreak++;
+    if (currentStreak > bestStreak) {
+      bestStreak = currentStreak;
+      localStorage.setItem('wayblock_best_streak', bestStreak.toString());
+    }
+  } else {
+    currentStreak = 0;
+  }
+  localStorage.setItem('wayblock_current_streak', currentStreak.toString());
+
+  renderProfileStats();
+  renderRecentMatchesUI();
+}
+
+function renderProfileStats() {
+  const wins = parseInt(localStorage.getItem('wayblock_wins') || "0");
+  const totalMatches = parseInt(localStorage.getItem('wayblock_total_matches') || "0");
+  const bestStreak = parseInt(localStorage.getItem('wayblock_best_streak') || "0");
+
+  const winRate = totalMatches > 0 ? Math.round((wins / totalMatches) * 100) : 0;
+
+  const statWinsEl = document.getElementById('statWins');
+  const statWinRateEl = document.getElementById('statWinRate');
+  const statStreakEl = document.getElementById('statStreak');
+  const homeStreakEl = document.getElementById('homeStreakCount');
+
+  if (statWinsEl) statWinsEl.innerText = wins;
+  if (statWinRateEl) statWinRateEl.innerText = `${winRate}%`;
+  if (statStreakEl) statStreakEl.innerText = bestStreak;
+  if (homeStreakEl) homeStreakEl.innerText = bestStreak;
+}
+
+function formatRelativeTime(timestamp) {
+  const diffMs = Date.now() - timestamp;
+  const mins = Math.floor(diffMs / 60000);
+  if (mins < 1) return "Just now";
+  if (mins < 60) return `${mins}m ago`;
+  const hrs = Math.floor(mins / 60);
+  if (hrs < 24) return `${hrs}h ago`;
+  const days = Math.floor(hrs / 24);
+  return `${days}d ago`;
+}
+
+function renderRecentMatchesUI() {
+  const listEl = document.getElementById('recentMatchesList');
+  if (!listEl) return;
+
+  const history = getMatchHistory();
+  if (history.length === 0) {
+    listEl.innerHTML = `
+      <div style="text-align:center; padding:16px 8px; color:var(--wb-text-muted); font-size:0.8rem;">
+        No matches played yet. Play a match to see history here!
+      </div>
+    `;
+    return;
+  }
+
+  listEl.innerHTML = '';
+  // Show up to the 5 most recent matches
+  history.slice(0, 5).forEach(m => {
+    const row = document.createElement('div');
+    row.className = 'match-row';
+    const bg = m.isWin ? '#15803d' : '#b91c1c';
+    const icon = m.isWin ? '🛡️' : '⚔️';
+    const winClass = m.isWin ? 'match-win' : 'match-loss';
+    const winLabel = m.isWin ? 'Win' : 'Loss';
+    const pts = m.isWin ? `+${m.scoreDiff || 12}` : `-${m.scoreDiff || 8}`;
+    const ptsColor = m.isWin ? 'var(--wb-green)' : 'var(--wb-red)';
+
+    row.innerHTML = `
+      <div class="match-left">
+        <div class="match-avatar-pill" style="background:${bg};">${icon}</div>
+        <div>
+          <div class="match-name">vs ${m.opponent}</div>
+          <div class="match-time">${formatRelativeTime(m.timestamp)} • ${m.modeLabel}</div>
+        </div>
+      </div>
+      <div class="match-right">
+        <div class="${winClass}">${winLabel}</div>
+        <div style="font-size:0.68rem; font-weight:700; color:${ptsColor};">${pts}</div>
+      </div>
+    `;
+    listEl.appendChild(row);
+  });
+}
+
 function initProfile() {
-  document.getElementById('nameField').value = playerName;
+  const winM = document.getElementById('winModal');
+  const intM = document.getElementById('roundIntermissionModal');
+  if (winM) winM.classList.add('hidden');
+  if (intM) intM.classList.add('hidden');
+
+  const nameField = document.getElementById('nameField');
+  if (nameField) nameField.value = playerName;
+
   updateProfileNamesUI();
   updateLevelUI();
+  renderProfileStats();
+  renderRecentMatchesUI();
 }
 
 function updateProfileNamesUI() {
@@ -2909,27 +2978,54 @@ function showFinalTournamentWin() {
   const podiumList = document.getElementById('podiumList');
   podiumList.innerHTML = '';
 
-  let players = (gameMode === '3p') ? [p1, p2, p3] : [p1, p2];
+  let players = [p1, p2];
+  if (gameMode === '3p') players.push(p3);
+  if (gameMode === '4p') players.push(p3, p4);
+
   players.forEach((p, idx) => {
-    const key = idx === 0 ? 'p1' : (idx === 1 ? 'p2' : 'p3');
-    p.finalScore = playerScores[key];
+    const key = `p${idx + 1}`;
+    p.finalScore = playerScores[key] || 0;
   });
 
   players.sort((a, b) => b.finalScore - a.finalScore);
 
-  const medals = ["🥇 Champion", "🥈 Runner-Up", "🥉 3rd Place"];
+  const champion = players[0];
+  const medals = ["🥇 Champion", "🥈 Runner-Up", "🥉 3rd Place", "4th Place"];
   players.forEach((p, idx) => {
     const item = document.createElement('div');
     item.style.cssText = "display:flex; justify-content:space-between; padding:10px 14px; background:#142038; border-radius:10px; margin-bottom:8px; font-weight:700;";
     item.innerHTML = `
-      <span>${medals[idx]} - <span style="color:${p.color}">${p.name}</span></span>
+      <span>${medals[idx] || `${idx + 1}th`} - <span style="color:${p.color}">${p.name}</span></span>
       <span style="color:var(--wb-text-sub);">${p.finalScore} ${p.finalScore === 1 ? 'Win' : 'Wins'}</span>
     `;
     podiumList.appendChild(item);
   });
 
-  document.getElementById('finalTourneySub').innerText = `${players[0].name} won the match!`;
+  const sub = document.getElementById('finalTourneySub');
+  if (sub) sub.innerText = `${champion.name} won the match!`;
   modal.classList.remove('hidden');
+
+  // --- RECORD REAL MATCH RESULT TO PROFILE ---
+  const myPlayerObj = (myRole === 1) ? p1 : ((myRole === 2) ? p2 : ((myRole === 3) ? p3 : p4));
+  const isUserWinner = (champion === myPlayerObj);
+
+  // Identify opponent name(s)
+  const opponents = players.filter(p => p !== myPlayerObj).map(p => p.name);
+  const oppString = opponents.length === 1 ? opponents[0] : (opponents.length === 2 ? `${opponents[0]} & ${opponents[1]}` : `${opponents[0]} +${opponents.length - 1}`);
+
+  let modeText = "1v1 AI";
+  if (isOnline) modeText = "Online Match";
+  else if (gameMode === '3p') modeText = "3P Local";
+  else if (gameMode === '4p') modeText = "4P Local";
+  else if (gameMode === '2p') modeText = "2P Local";
+
+  saveMatchRecord({
+    opponent: oppString || "Opponent",
+    isWin: isUserWinner,
+    timestamp: Date.now(),
+    modeLabel: modeText,
+    scoreDiff: isUserWinner ? (10 + Math.floor(Math.random() * 5)) : (6 + Math.floor(Math.random() * 4))
+  });
 }
 
 function switchTurn(localTriggered = false) {
