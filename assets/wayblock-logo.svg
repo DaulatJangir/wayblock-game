@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="520" height="150" viewBox="0 0 520 150" fill="none">
+  <defs>
+    <linearGradient id="blue" x1="12" y1="18" x2="68" y2="120" gradientUnits="userSpaceOnUse"><stop stop-color="#70E9FF"/><stop offset=".45" stop-color="#168CFF"/><stop offset="1" stop-color="#1838C9"/></linearGradient>
+    <linearGradient id="violet" x1="88" y1="18" x2="145" y2="120" gradientUnits="userSpaceOnUse"><stop stop-color="#FFD0FF"/><stop offset=".42" stop-color="#BD58FF"/><stop offset="1" stop-color="#6022C8"/></linearGradient>
+    <linearGradient id="wall" x1="62" y1="8" x2="102" y2="118" gradientUnits="userSpaceOnUse"><stop stop-color="#E3F4FF" stop-opacity=".92"/><stop offset=".5" stop-color="#9CBCE8" stop-opacity=".68"/><stop offset="1" stop-color="#647EA9" stop-opacity=".46"/></linearGradient>
+    <linearGradient id="word" x1="180" y1="25" x2="380" y2="130" gradientUnits="userSpaceOnUse"><stop stop-color="#F5FAFF"/><stop offset=".52" stop-color="#4AE8F3"/><stop offset="1" stop-color="#A77BFF"/></linearGradient>
+    <filter id="glow" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="3" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  </defs>
+  <g filter="url(#glow)">
+    <path d="M31 78C20 73 19 64 25 55C31 47 46 47 52 55C58 64 56 73 45 78L58 100C61 106 56 112 49 114H23C16 112 11 106 14 100L31 78Z" fill="url(#blue)"/>
+    <circle cx="38.5" cy="36" r="17" fill="url(#blue)"/>
+    <ellipse cx="38.5" cy="116" rx="28" ry="6" fill="#126BFF" fill-opacity=".48"/>
+    <path d="M113 78C102 73 101 64 107 55C113 47 128 47 134 55C140 64 138 73 127 78L140 100C143 106 138 112 131 114H105C98 112 93 106 96 100L113 78Z" fill="url(#violet)"/>
+    <circle cx="120.5" cy="36" r="17" fill="url(#violet)"/>
+    <ellipse cx="120.5" cy="116" rx="28" ry="6" fill="#9C3FFF" fill-opacity=".42"/>
+  </g>
+  <path d="M67 18L103 4Q107 3 107 8V108L70 130Q66 132 66 127V23Q66 19 67 18Z" fill="url(#wall)" stroke="#D7ECFF" stroke-opacity=".85" stroke-width="1.6"/>
+  <path d="M67 23L99 10V108L70 125V23Z" fill="#EAF5FF" fill-opacity=".14"/>
+  <g font-family="Arial, Helvetica, sans-serif" font-weight="900" letter-spacing="2">
+    <text x="176" y="68" font-size="53" fill="#F6FAFF">WAY</text>
+    <text x="176" y="124" font-size="53" fill="url(#word)">BLOCK</text>
+  </g>
+</svg>
