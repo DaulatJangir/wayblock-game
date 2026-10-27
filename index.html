@@ -2067,7 +2067,7 @@
     </div>
   </div>
 
-  <div class="lobby-feature-card" onclick="initHostView()" role="button" tabindex="0" aria-label="Host and Join Game">
+  <div class="lobby-feature-card" onclick="toggleLobbyHostJoinOptions()" role="button" tabindex="0" aria-label="Show Host Game and Join Game options" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();toggleLobbyHostJoinOptions();}">
     <div class="lobby-feature-bottom">
       <div>
         <div class="lobby-feature-title">Host and Join Game</div>
@@ -2077,14 +2077,14 @@
     </div>
   </div>
 
-  <div class="lobby-action-row">
-    <div class="lobby-action-card" onclick="initHostView()" role="button" tabindex="0" aria-label="Create Room">
+  <div class="lobby-action-row hidden" id="lobbyHostJoinOptions">
+    <div class="lobby-action-card" onclick="initHostView()" role="button" tabindex="0" aria-label="Host Game" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();initHostView();}">
       <span class="lobby-action-icon">⊕</span>
-      <span class="lobby-action-title">Create Room</span>
+      <span class="lobby-action-title">Host Game</span>
     </div>
-    <div class="lobby-action-card" onclick="initJoinView()" role="button" tabindex="0" aria-label="Online Players">
+    <div class="lobby-action-card" onclick="initJoinView()" role="button" tabindex="0" aria-label="Join Game" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();initJoinView();}">
       <span class="lobby-action-icon">♟♟</span>
-      <span class="lobby-action-title">Online Players</span>
+      <span class="lobby-action-title">Join Game</span>
     </div>
   </div>
 
@@ -2903,6 +2903,12 @@ function cancelNetworkSession() {
   if (peer) { peer.destroy(); peer = null; }
   candidateGuest = null;
   switchView('lobbyChoiceView');
+}
+
+function toggleLobbyHostJoinOptions() {
+  const options = document.getElementById('lobbyHostJoinOptions');
+  if (!options) return;
+  options.classList.toggle('hidden');
 }
 
 function initHostView() {
