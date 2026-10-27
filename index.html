@@ -1576,6 +1576,48 @@
 
 
 
+
+  .host-join-choice-intro {
+    margin: 22px 0 20px;
+    padding: 22px 18px;
+    border-radius: 22px;
+    border: 1px solid rgba(143,163,195,.17);
+    background: radial-gradient(ellipse at 100% 0%, rgba(49,202,190,.12), transparent 58%), linear-gradient(145deg, rgba(25,34,47,.96), rgba(13,20,32,.98));
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.04);
+  }
+  .host-join-choice-mark {
+    display: grid; place-items: center; width: 44px; height: 44px;
+    border-radius: 15px; background: rgba(0,210,255,.1);
+    border: 1px solid rgba(0,210,255,.2); font-size: 1.35rem; margin-bottom: 14px;
+  }
+  .host-join-choice-intro h2 { margin: 0 0 6px; font-size: 1.3rem; font-weight: 900; color: #f5f7fb; }
+  .host-join-choice-intro p { margin: 0; font-size: .88rem; line-height: 1.5; color: #aebbd0; }
+  .host-join-choice-actions { display: grid; gap: 12px; }
+  .host-join-choice-card {
+    display: flex; align-items: center; gap: 13px; min-height: 86px;
+    box-sizing: border-box; padding: 15px; border-radius: 20px;
+    border: 1px solid rgba(145,165,195,.2);
+    background: linear-gradient(135deg, rgba(30,40,53,.98), rgba(15,22,34,.98));
+    box-shadow: 0 8px 22px rgba(0,0,0,.18), inset 0 1px 0 rgba(255,255,255,.04);
+    cursor: pointer; transition: transform .16s ease, border-color .16s ease, filter .16s ease;
+  }
+  .host-join-choice-card:active { transform: scale(.985); filter: brightness(1.08); }
+  .host-join-choice-card:focus-visible { outline: 2px solid var(--wb-cyan); outline-offset: 3px; }
+  .host-join-choice-icon {
+    display: grid; place-items: center; flex: 0 0 46px; width: 46px; height: 46px;
+    border-radius: 15px; font-size: 1.4rem; background: rgba(255,255,255,.06);
+    border: 1px solid rgba(255,255,255,.1); color: #f4f7fc;
+  }
+  .host-join-choice-copy { display: flex; flex: 1; min-width: 0; flex-direction: column; gap: 5px; }
+  .host-join-choice-copy strong { color: #f6f8fc; font-size: 1rem; font-weight: 900; }
+  .host-join-choice-copy span { color: #aab8ce; font-size: .76rem; line-height: 1.35; }
+  .host-join-choice-arrow { color: #dbe7f7; font-size: 1.3rem; font-weight: 800; }
+  .host-choice { border-color: rgba(91,215,194,.27); }
+  .host-choice .host-join-choice-icon { background: rgba(76,205,180,.12); border-color: rgba(76,205,180,.24); color: #8fe5d2; }
+  .join-choice { border-color: rgba(106,144,255,.26); }
+  .join-choice .host-join-choice-icon { background: rgba(92,125,245,.13); border-color: rgba(125,151,255,.23); color: #b8c7ff; }
+  @media (prefers-reduced-motion: reduce) { .host-join-choice-card { transition: none; } }
+
 </style>
 </head>
 <body>
@@ -2067,7 +2109,7 @@
     </div>
   </div>
 
-  <div class="lobby-feature-card" onclick="initHostView()" role="button" tabindex="0" aria-label="Host and Join Game">
+  <div class="lobby-feature-card" onclick="switchView('hostJoinChoiceView')" role="button" tabindex="0" aria-label="Host and Join Game" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();switchView('hostJoinChoiceView');}">
     <div class="lobby-feature-bottom">
       <div>
         <div class="lobby-feature-title">Host and Join Game</div>
@@ -2092,6 +2134,32 @@
   <div class="lobby-info-card">
     <div class="lobby-info-icon">🔗</div>
     <div><strong>Invite friends with a room code</strong><p>Create a room to get your code, or join a friend by entering theirs. Both players need an internet connection.</p></div>
+  </div>
+</div>
+
+<!-- Host / Join choice screen opened from the main multiplayer card -->
+<div class="view-container hidden" id="hostJoinChoiceView">
+  <div class="top-bar lobby-top-bar">
+    <div class="icon-circle-btn" onclick="switchView('lobbyChoiceView')" aria-label="Back to Online Lobby">←</div>
+    <div class="lobby-heading">Host or Join</div>
+    <div style="width:36px;"></div>
+  </div>
+  <div class="host-join-choice-intro">
+    <div class="host-join-choice-mark">♟</div>
+    <h2>Play with friends</h2>
+    <p>Host a new room or join a friend with their room code.</p>
+  </div>
+  <div class="host-join-choice-actions">
+    <div class="host-join-choice-card host-choice" onclick="initHostView()" role="button" tabindex="0" aria-label="Host Game" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();initHostView();}">
+      <div class="host-join-choice-icon">⊕</div>
+      <div class="host-join-choice-copy"><strong>Host Game</strong><span>Create a room and invite friends</span></div>
+      <span class="host-join-choice-arrow">→</span>
+    </div>
+    <div class="host-join-choice-card join-choice" onclick="initJoinView()" role="button" tabindex="0" aria-label="Join Game" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();initJoinView();}">
+      <div class="host-join-choice-icon">♟♟</div>
+      <div class="host-join-choice-copy"><strong>Join Game</strong><span>Enter a friend's room code</span></div>
+      <span class="host-join-choice-arrow">→</span>
+    </div>
   </div>
 </div>
 
@@ -2431,7 +2499,7 @@ function updateLevelUI() {
 
 // --- Navigation Tab Controller ---
 function switchNavTab(tab) {
-  ['homeView', 'profileView', 'fullMasteryRoadView', 'fullSettingsView', 'fullReferralView', 'fullGuideView', 'fullSupportView', 'lobbyChoiceView', 'hostLobbyView', 'joinLobbyView', 'gameArenaView', 'localSetupView'].forEach(id => {
+  ['homeView', 'profileView', 'fullMasteryRoadView', 'fullSettingsView', 'fullReferralView', 'fullGuideView', 'fullSupportView', 'lobbyChoiceView', 'hostJoinChoiceView', 'hostLobbyView', 'joinLobbyView', 'gameArenaView', 'localSetupView'].forEach(id => {
     document.getElementById(id).classList.add('hidden');
   });
 
