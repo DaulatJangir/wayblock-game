@@ -3442,6 +3442,7 @@ function relayToOtherGuests(senderConn, data) {
 
 function acceptCandidate() {
   if (!candidateGuest) return;
+  if (confirmedGuests.length >= 1) { rejectCandidate(); displayToast('Room full', 'This room is limited to 2 players.'); return; }
   const newConn = candidateGuest.conn;
   const slot = 2;
 
