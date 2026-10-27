@@ -1805,6 +1805,20 @@
   .home-simple-profile-row{padding:0;min-height:0;background:transparent;border:0}
   @media(max-width:430px){.home-simple-header{margin-bottom:22px}.home-simple-wordmark{font-size:1.25rem}.home-simple-top-row{padding-bottom:14px}}
 
+
+.online-players-overlay{position:fixed;inset:0;z-index:300;display:flex;align-items:center;justify-content:center;padding:20px;background:rgba(2,6,16,.78);backdrop-filter:blur(8px)}
+.online-players-window{width:100%;max-width:390px;max-height:72vh;display:flex;flex-direction:column;overflow:hidden;background:linear-gradient(180deg,#111d34,#0b1425);border:1px solid var(--wb-border);border-radius:20px;box-shadow:0 24px 70px rgba(0,0,0,.55)}
+.online-players-header{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding:18px 16px 14px;border-bottom:1px solid var(--wb-border)}
+.online-players-heading{font-size:1rem;font-weight:900;color:#fff;text-align:left;line-height:1.35}.online-players-count{color:var(--wb-cyan)}.online-players-caption{margin-top:4px;font-size:.72rem;color:var(--wb-text-sub)}
+.online-players-close{width:32px;height:32px;border-radius:10px;border:1px solid var(--wb-border);background:#0b1425;color:#fff;font-size:1.1rem;cursor:pointer}
+.online-players-list{padding:10px 12px 14px;overflow-y:auto;min-height:110px}
+.online-player-row{display:flex;align-items:center;gap:10px;padding:11px 10px;margin-bottom:7px;border:1px solid rgba(255,255,255,.06);border-radius:12px;background:rgba(255,255,255,.035)}
+.online-player-avatar{width:36px;height:36px;flex:0 0 36px;border-radius:12px;display:flex;align-items:center;justify-content:center;background:rgba(0,210,255,.12);color:var(--wb-cyan)}
+.online-player-info{min-width:0;flex:1}.online-player-name{color:#fff;font-size:.82rem;font-weight:800;overflow-wrap:anywhere}
+.online-player-status{display:flex;align-items:center;gap:5px;margin-top:3px;color:var(--wb-text-sub);font-size:.68rem}.online-player-dot{width:6px;height:6px;border-radius:50%;background:var(--wb-green)}
+.online-players-empty{padding:22px 12px;text-align:center;color:var(--wb-text-sub);font-size:.8rem;line-height:1.5}
+.online-players-refresh{margin:0 12px 12px;padding:10px;border:1px solid var(--wb-border);border-radius:11px;background:#14213a;color:#eaf8ff;font-size:.78rem;font-weight:800;cursor:pointer}
+
 </style>
 </head>
 <body>
@@ -2326,7 +2340,7 @@
       <span class="lobby-action-icon">⊕</span>
       <span class="lobby-action-title">Create Room</span>
     </div>
-    <div class="lobby-action-card" data-action-placeholder="online-players">
+    <div class="lobby-action-card" data-action-placeholder="online-players" onclick="openOnlinePlayersModal()" role="button" tabindex="0" aria-label="Online Players">
       <span class="lobby-action-icon">♟♟</span>
       <span class="lobby-action-title">Online Players</span>
     </div>
@@ -2337,6 +2351,15 @@
     <div class="lobby-info-icon">🔗</div>
     <div><strong>Invite friends with a room code</strong><p>Create a room to get your code, or join a friend by entering theirs. Both players need an internet connection.</p></div>
   </div>
+</div>
+
+
+<div class="online-players-overlay hidden" id="onlinePlayersModal" role="dialog" aria-modal="true" aria-labelledby="onlinePlayersHeading" onclick="if(event.target===this)closeOnlinePlayersModal()">
+ <div class="online-players-window">
+  <div class="online-players-header"><div><div class="online-players-heading" id="onlinePlayersHeading">Online Players (<span class="online-players-count" id="onlinePlayersCount">0</span>)</div><div class="online-players-caption">Players discoverable on the game network</div></div><button class="online-players-close" type="button" onclick="closeOnlinePlayersModal()" aria-label="Close">×</button></div>
+  <div class="online-players-list" id="onlinePlayersList"><div class="online-players-empty">Checking who's online…</div></div>
+  <button class="online-players-refresh" type="button" onclick="refreshOnlinePlayers()">↻ Refresh list</button>
+ </div>
 </div>
 
 <!-- Host / Join choice screen opened from the main multiplayer card -->
@@ -3373,6 +3396,12 @@ function launchOnlineMatch() {
   bootGame(targetMode, totalRounds);
 }
 
+let onlinePlayersProbe = null;
+let onlinePlayersRefreshToken = 0;
+function openOnlinePlayersModal(){const m=document.getElementById('onlinePlayersModal');if(!m)return;m.classList.remove('hidden');refreshOnlinePlayers();}
+function closeOnlinePlayersModal(){const m=document.getElementById('onlinePlayersModal');if(m)m.classList.add('hidden');onlinePlayersRefreshToken++;if(onlinePlayersProbe){try{onlinePlayersProbe.destroy();}catch(e){}onlinePlayersProbe=null;}}
+function renderOnlinePlayers(ids,ownId,message){const list=document.getElementById('onlinePlayersList'),count=document.getElementById('onlinePlayersCount');if(!list||!count)return;const unique=[...new Set((ids||[]).filter(id=>id&&id!==ownId))];count.textContent=String(unique.length);if(message){list.textContent=message;list.className='online-players-list';const e=document.createElement('div');e.className='online-players-empty';e.textContent=message;list.innerHTML='';list.appendChild(e);return;}if(!unique.length){list.innerHTML='<div class="online-players-empty">No discoverable players right now.<br>Try refreshing in a moment.</div>';return;}list.innerHTML='';unique.sort().forEach(id=>{const row=document.createElement('div');row.className='online-player-row';const av=document.createElement('div');av.className='online-player-avatar';av.textContent='♟';const info=document.createElement('div');info.className='online-player-info';const name=document.createElement('div');name.className='online-player-name';name.textContent=id.startsWith('wb-')?'Room '+id.slice(3):'Player '+id.slice(0,12);const status=document.createElement('div');status.className='online-player-status';const dot=document.createElement('span');dot.className='online-player-dot';status.appendChild(dot);status.appendChild(document.createTextNode('Online on game network'));info.appendChild(name);info.appendChild(status);row.appendChild(av);row.appendChild(info);list.appendChild(row);});}
+function refreshOnlinePlayers(){const list=document.getElementById('onlinePlayersList'),count=document.getElementById('onlinePlayersCount'),modal=document.getElementById('onlinePlayersModal');if(!list||!count||!modal||modal.classList.contains('hidden'))return;const token=++onlinePlayersRefreshToken;if(onlinePlayersProbe){try{onlinePlayersProbe.destroy();}catch(e){}onlinePlayersProbe=null;}count.textContent='…';list.innerHTML='<div class="online-players-empty">Checking online players…</div>';if(typeof Peer==='undefined'){renderOnlinePlayers([],null,'Online player discovery is unavailable right now.');return;}try{onlinePlayersProbe=new Peer({debug:0});onlinePlayersProbe.on('open',ownId=>{if(token!==onlinePlayersRefreshToken)return;if(typeof onlinePlayersProbe.listAllPeers!=='function'){renderOnlinePlayers([],ownId,'This network does not support listing online peers yet.');return;}onlinePlayersProbe.listAllPeers(peers=>{if(token!==onlinePlayersRefreshToken)return;renderOnlinePlayers(peers,ownId);try{onlinePlayersProbe.destroy();}catch(e){}onlinePlayersProbe=null;});});onlinePlayersProbe.on('error',()=>{if(token!==onlinePlayersRefreshToken)return;renderOnlinePlayers([],null,'Could not load the online list. Please refresh.');try{onlinePlayersProbe.destroy();}catch(e){}onlinePlayersProbe=null;});}catch(e){renderOnlinePlayers([],null,'Could not load the online list. Please refresh.');}}
 function initJoinView() {
   switchView('joinLobbyView');
   document.getElementById('joinInputCode').value = '';
