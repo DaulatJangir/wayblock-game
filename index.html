@@ -1657,25 +1657,81 @@
   @media(max-width:380px) { .home-goals-grid{gap:8px}.home-goal-card{padding:10px 9px;border-radius:18px}.home-goal-icon{width:38px;height:38px;font-size:1.55rem}.home-goal-title{font-size:.88rem}.home-goal-sub{font-size:.66rem;margin-bottom:11px}.goal-progress-label{font-size:.57rem}.goal-progress-list{gap:10px}.weekly-goal-content{gap:6px;min-height:95px}.weekly-ring{flex-basis:64px;width:64px;height:64px;font-size:.8rem}.weekly-ring::before{inset:6px}.weekly-goal-list{gap:8px}.weekly-goal-list>div{font-size:.56rem}.home-goal-footer{font-size:.56rem}.goal-reward-pill{font-size:.65rem;padding:4px 6px} }
   @media(prefers-reduced-motion:reduce){.goal-progress-fill{transition:none}}
 
+
+  /* WAYBLOCK branded header — scoped above the untouched Play Online card */
+  .wb-brand-shell{margin:0 0 26px;border:1px solid rgba(0,174,255,.42);border-radius:24px;overflow:hidden;background:radial-gradient(ellipse at 10% 0%,rgba(0,158,255,.09),transparent 48%),linear-gradient(145deg,#031326 0%,#06162b 55%,#031020 100%);box-shadow:0 8px 24px rgba(0,0,0,.22),inset 0 1px 0 rgba(73,205,255,.08)}
+  .wb-brand-row{min-height:72px;padding:12px 14px 11px 17px;display:flex;align-items:center;justify-content:space-between;gap:12px;border-bottom:1px solid rgba(50,133,196,.28)}
+  .wb-brand-lockup{display:flex;align-items:center;gap:10px;min-width:0}
+  .wb-brand-mark{display:grid;grid-template-columns:repeat(2,13px);grid-template-rows:repeat(2,13px);gap:3px;flex:0 0 auto}
+  .wb-brand-mark i{display:block;border-radius:2px;background:#12d9f5;box-shadow:0 0 8px rgba(0,211,255,.22)}
+  .wb-brand-mark i:nth-child(1),.wb-brand-mark i:nth-child(4){background:#167de8}
+  .wb-brand-lockup .brand-header-text{font-size:clamp(1.02rem,4.3vw,1.55rem);letter-spacing:1.3px;white-space:nowrap}
+  .wb-header-actions{display:flex;align-items:center;gap:7px;min-width:0}
+  .wb-mini-stat{height:44px;min-width:64px;padding:4px 8px;display:flex;align-items:center;justify-content:center;gap:6px;border:1px solid rgba(0,157,255,.34);border-radius:13px;background:linear-gradient(145deg,rgba(3,35,64,.9),rgba(4,19,38,.92));color:#f2f7ff;box-shadow:inset 0 1px 0 rgba(93,197,255,.06)}
+  .wb-mini-icon{font-size:1.15rem;color:#21def5;line-height:1}
+  .wb-mini-stat strong{display:block;font-size:.94rem;line-height:1.05;font-weight:900;text-align:center}
+  .wb-mini-stat small{display:block;margin-top:2px;font-size:.57rem;line-height:1;color:#a7c1df;text-align:center;white-space:nowrap}
+  .wb-header-settings{width:42px;height:44px;flex:0 0 42px;border-color:rgba(0,157,255,.38);background:linear-gradient(145deg,#0b2944,#07182b);border-radius:13px}
+  .wb-profile-row{min-height:99px;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px;background:linear-gradient(90deg,rgba(0,18,37,.14),rgba(0,28,51,.25))}
+  .wb-profile-row .home-user-card{margin:0;gap:13px;min-width:0}
+  .wb-profile-row .home-avatar-circle{width:67px;height:67px;flex:0 0 67px;border-width:3px;font-size:1.9rem;box-shadow:0 0 0 4px rgba(0,217,245,.06),0 0 18px rgba(0,210,255,.23)}
+  .wb-profile-row .home-user-name{font-size:1.12rem;white-space:nowrap}
+  .wb-profile-row .home-user-status{font-size:.82rem;margin-top:5px}
+  .wb-online-dot{width:9px;height:9px;display:inline-block;border-radius:50%;background:#00e6ad;box-shadow:0 0 10px rgba(0,230,173,.45)}
+  .wb-header-motto{display:flex;align-items:center;gap:7px;color:#60baff;font-size:.83rem;font-style:italic;line-height:1.45;text-align:center;white-space:nowrap}
+  .wb-motto-slashes{font-size:2.1rem;line-height:1;font-style:normal;font-weight:300;color:#00dcf5;text-shadow:12px -8px 0 rgba(74,65,255,.45);margin-right:5px}
+  .wb-header-motto b{color:#b78bff;font-weight:800}
+  @media(max-width:430px){
+    .wb-brand-shell{margin-bottom:22px;border-radius:21px}
+    .wb-brand-row{padding:10px 10px;gap:7px;min-height:66px}
+    .wb-brand-lockup{gap:7px}
+    .wb-brand-mark{grid-template-columns:repeat(2,10px);grid-template-rows:repeat(2,10px);gap:2px}
+    .wb-brand-lockup .brand-header-text{font-size:clamp(.88rem,4.4vw,1.2rem);letter-spacing:.8px}
+    .wb-header-actions{gap:5px}
+    .wb-mini-stat{min-width:0;height:39px;padding:3px 5px;gap:3px;border-radius:10px;flex:1}
+    .wb-mini-icon{font-size:.95rem}
+    .wb-mini-stat strong{font-size:.78rem}
+    .wb-mini-stat small{font-size:.49rem}
+    .wb-header-settings{width:36px;height:39px;flex-basis:36px;font-size:.9rem}
+    .wb-profile-row{min-height:85px;padding:12px 13px}
+    .wb-profile-row .home-avatar-circle{width:57px;height:57px;flex-basis:57px;font-size:1.6rem}
+    .wb-profile-row .home-user-name{font-size:.98rem}
+    .wb-header-motto{font-size:.68rem;gap:4px}
+    .wb-motto-slashes{font-size:1.7rem;margin-right:2px}
+  }
+  @media(max-width:360px){.wb-header-motto{display:none}.wb-brand-row{flex-wrap:wrap}.wb-brand-lockup{flex:1}.wb-header-actions{width:100%}.wb-mini-stat{flex:1}}
+
 </style>
 </head>
 <body>
 
 <!-- ================= 1. HOME VIEW ================= -->
 <div class="view-container" id="homeView">
-  <div class="top-bar">
-    <div class="brand-header-text">WAY<span style="color:var(--wb-cyan);">BLOCK</span></div>
-    <div class="icon-circle-btn" onclick="openFullSettingsPage()" title="Settings">⚙️</div>
-  </div>
-
-  <div class="home-user-card" onclick="openNameModal()" style="cursor:pointer;">
-    <div class="home-avatar-circle">👤</div>
-    <div class="home-user-meta">
-      <div class="home-user-name">
-        <span id="homeDisplayName">PathFinder</span>
-        <span style="font-size:0.75rem; color:var(--wb-text-muted);" id="homeDisplayId">(44084)</span>
+  <div class="wb-brand-shell">
+    <div class="wb-brand-row">
+      <div class="wb-brand-lockup">
+        <span class="wb-brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+        <div class="brand-header-text">WAY<span style="color:var(--wb-cyan);">BLOCK</span></div>
       </div>
-      <div class="home-user-status">● Online</div>
+      <div class="wb-header-actions">
+        <div class="wb-mini-stat"><span class="wb-mini-icon">🏆</span><span><strong id="homeHeaderWins">0</strong><small>Wins</small></span></div>
+        <div class="wb-mini-stat"><span class="wb-mini-icon">◎</span><span><strong id="homeHeaderRate">0%</strong><small>Win Rate</small></span></div>
+        <div class="wb-mini-stat wb-streak-stat"><span class="wb-mini-icon">🔥</span><span><strong id="homeHeaderStreak">0</strong><small>Streak</small></span></div>
+        <div class="icon-circle-btn wb-header-settings" onclick="openFullSettingsPage()" title="Settings" aria-label="Settings">⚙️</div>
+      </div>
+    </div>
+    <div class="wb-profile-row">
+      <div class="home-user-card" onclick="openNameModal()" style="cursor:pointer;">
+        <div class="home-avatar-circle">👤</div>
+        <div class="home-user-meta">
+          <div class="home-user-name">
+            <span id="homeDisplayName">PathFinder</span>
+            <span style="font-size:0.75rem; color:var(--wb-text-muted);" id="homeDisplayId">(44084)</span>
+          </div>
+          <div class="home-user-status"><span class="wb-online-dot"></span> Online</div>
+        </div>
+      </div>
+      <div class="wb-header-motto" aria-hidden="true"><span class="wb-motto-slashes">╱╱</span><span>Your Move<br><b>Matters</b></span></div>
     </div>
   </div>
 
@@ -4027,5 +4083,20 @@ function draw() {
 initProfile();
 renderHomeQuestCards();
 </script>
+
+<script>
+function renderWayblockHeaderStats(){
+  try{
+    const wins=Number(localStorage.getItem('wayblock_wins')||0);
+    const matches=Number(localStorage.getItem('wayblock_total_matches')||0);
+    const streak=Number(localStorage.getItem('wayblock_best_streak')||localStorage.getItem('wayblock_current_streak')||0);
+    const rate=matches>0?Math.round((wins/matches)*100):0;
+    const w=document.getElementById('homeHeaderWins'),r=document.getElementById('homeHeaderRate'),st=document.getElementById('homeHeaderStreak');
+    if(w)w.textContent=wins;if(r)r.textContent=rate+'%';if(st)st.textContent=streak;
+  }catch(e){}
+}
+document.addEventListener('DOMContentLoaded',renderWayblockHeaderStats);
+</script>
+
 </body>
 </html>
