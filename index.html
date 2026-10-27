@@ -1661,7 +1661,8 @@
   /* WAYBLOCK branded header — harmonized with the existing Play Online card */
   .wb-brand-shell{margin:0 0 26px;border:1px solid rgba(148,163,184,.25);border-radius:24px;overflow:hidden;background:radial-gradient(ellipse at 92% 100%,rgba(116,160,157,.13),transparent 45%),linear-gradient(135deg,#20282f 0%,#171e25 55%,#29383b 100%);box-shadow:0 8px 24px rgba(0,0,0,.24),inset 0 1px 0 rgba(255,255,255,.045)}
   .wb-brand-row{min-height:72px;padding:12px 14px 11px 17px;display:flex;align-items:center;justify-content:space-between;gap:8px;border-bottom:1px solid rgba(190,210,214,.13)}
-  .wb-brand-lockup{display:flex;align-items:center;flex:0 0 auto;min-width:0}
+  .wb-brand-lockup{display:flex;align-items:center;flex:0 0 auto;min-width:0;width:clamp(120px,34vw,190px)}
+  .wb-brand-logo{display:block;width:100%;height:auto;max-height:58px;object-fit:contain;object-position:left center}
   .wb-brand-mark{display:grid;grid-template-columns:repeat(2,13px);grid-template-rows:repeat(2,13px);gap:3px;flex:0 0 auto}
   .wb-brand-mark i{display:block;border-radius:2px;background:#20d9e8;box-shadow:0 0 8px rgba(32,217,232,.16)}
   .wb-brand-mark i:nth-child(1),.wb-brand-mark i:nth-child(4){background:#368fe0}
@@ -1710,7 +1711,7 @@
   <div class="wb-brand-shell">
     <div class="wb-brand-row">
       <div class="wb-brand-lockup">
-        <div class="brand-header-text"><span>WAY</span><span style="color:var(--wb-cyan);">BLOCK</span></div>
+        <img class="wb-brand-logo" src="assets/wayblock-logo.svg" alt="WAYBLOCK" />
       </div>
       <div class="wb-header-actions">
         <div class="wb-mini-stat"><span class="wb-mini-icon">🏆</span><span><strong id="homeHeaderWins">0</strong><small>Wins</small></span></div>
