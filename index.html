@@ -2608,12 +2608,12 @@ function renderHomeQuestCards() {
   const dailyStatus = document.getElementById('dailyQuestStatus');
   if (dailyStatus) dailyStatus.textContent = dailyDone ? (state.daily.rewarded ? 'Reward earned ✓' : 'All quests complete') : 'Resets daily';
   const weeklyWins = Math.min(state.weekly.wins,5), weeklyWalls = Math.min(state.weekly.walls,20), weeklyDays = Math.min(state.weekly.days.length,3);
-  const total = weeklyWins + weeklyWalls + weeklyDays;
+  const weeklyProgress = weeklyWins / 5;
   const weeklyDone = weeklyWins >= 5 && weeklyWalls >= 20 && weeklyDays >= 3;
   const ring = document.getElementById('weeklyGoalRing');
-  if (ring) ring.style.background = 'conic-gradient(#22d3ee 0deg,' + (total/11*360) + 'deg,#24365c ' + (total/11*360) + 'deg 360deg)';
+  if (ring) ring.style.background = 'conic-gradient(#22d3ee 0deg,' + (weeklyProgress*360) + 'deg,#24365c ' + (weeklyProgress*360) + 'deg 360deg)';
   const count = document.getElementById('weeklyGoalCount');
-  if (count) count.textContent = total + '/11';
+  if (count) count.textContent = weeklyWins + '/5';
   const winsText = document.getElementById('weeklyWinsText');
   const wallsText = document.getElementById('weeklyWallsText');
   const daysText = document.getElementById('weeklyDaysText');
