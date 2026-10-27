@@ -1794,25 +1794,29 @@
     #localSetupView .player-count-btn { font-size:.72rem; }
   }
 
+
+  /* Simple default home header */
+  .home-simple-header{margin:0 0 24px;padding:0;background:transparent;border:0;border-radius:0;box-shadow:none;overflow:visible}
+  .home-simple-top-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:0 0 16px}
+  .home-simple-wordmark{display:flex;align-items:center;gap:5px;font-size:1.35rem;font-weight:950;letter-spacing:1px;line-height:1}
+  .home-simple-wordmark span:first-child{color:var(--wb-text)}
+  .home-simple-wordmark span:last-child{color:var(--wb-cyan)}
+  .home-simple-settings{width:42px!important;height:42px!important;min-width:42px!important;min-height:42px!important;border-radius:14px;background:var(--wb-card);border:1px solid var(--wb-border);box-shadow:none}
+  .home-simple-profile-row{padding:0;min-height:0;background:transparent;border:0}
+  @media(max-width:430px){.home-simple-header{margin-bottom:22px}.home-simple-wordmark{font-size:1.25rem}.home-simple-top-row{padding-bottom:14px}}
+
 </style>
 </head>
 <body>
 
 <!-- ================= 1. HOME VIEW ================= -->
 <div class="view-container" id="homeView">
-  <div class="wb-brand-shell">
-    <div class="wb-brand-row">
-      <div class="wb-brand-lockup">
-        <div class="brand-header-text"><span>WAY</span><span style="color:var(--wb-cyan);">BLOCK</span></div>
-      </div>
-      <div class="wb-header-actions">
-        <div class="wb-mini-stat"><span class="wb-mini-icon">🏆</span><span><strong id="homeHeaderWins">0</strong><small>Wins</small></span></div>
-        <div class="wb-mini-stat"><span class="wb-mini-icon">◎</span><span><strong id="homeHeaderRate">0%</strong><small>Win Rate</small></span></div>
-        <div class="wb-mini-stat wb-streak-stat"><span class="wb-mini-icon">🔥</span><span><strong id="homeHeaderStreak">0</strong><small>Streak</small></span></div>
-        <div class="icon-circle-btn wb-header-settings" onclick="openFullSettingsPage()" title="Settings" aria-label="Settings">⚙️</div>
-      </div>
+  <div class="home-simple-header">
+    <div class="home-simple-top-row">
+      <div class="home-simple-wordmark"><span>WAY</span><span>BLOCK</span></div>
+      <div class="icon-circle-btn home-simple-settings" onclick="openFullSettingsPage()" title="Settings" aria-label="Settings">⚙️</div>
     </div>
-    <div class="wb-profile-row">
+    <div class="home-simple-profile-row">
       <div class="home-user-card" onclick="openNameModal()" style="cursor:pointer;">
         <div class="home-avatar-circle">👤</div>
         <div class="home-user-meta">
@@ -1823,10 +1827,8 @@
           <div class="home-user-status"><span class="wb-online-dot"></span> Online</div>
         </div>
       </div>
-      <div class="wb-header-motto" aria-hidden="true"><span class="wb-motto-slashes">╱╱</span><span>Your Move<br><b>Matters</b></span></div>
     </div>
   </div>
-
   <!-- Featured Play Online card (keeps the existing online lobby action) -->
   <div class="home-online-hero" onclick="goToLobbyChoice()" role="button" tabindex="0" aria-label="Play Online, ranked matches">
     <div class="home-online-hero-top">
