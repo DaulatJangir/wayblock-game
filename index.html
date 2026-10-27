@@ -1486,6 +1486,94 @@
 
 
 
+
+  /* Compact half-width game mode cards, visually matched to Play Online */
+  .action-deck {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  .action-deck-card {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    box-sizing: border-box;
+    width: 100%;
+    min-width: 0;
+    min-height: 158px;
+    padding: 15px 14px 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    border: 1px solid rgba(196,207,225,.2);
+    border-radius: 23px;
+    background: linear-gradient(145deg, rgba(39,47,55,.98), rgba(20,27,34,.98) 65%, rgba(32,39,46,.98));
+    box-shadow: 0 12px 26px rgba(0,0,0,.23), inset 0 1px 0 rgba(255,255,255,.05);
+    cursor: pointer;
+    transition: transform .18s ease, filter .18s ease, border-color .18s ease;
+  }
+  .action-deck-card::before {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    width: 150px;
+    height: 150px;
+    right: -72px;
+    top: -92px;
+    border: 1px solid rgba(255,255,255,.075);
+    border-radius: 50%;
+    box-shadow: 0 0 0 16px rgba(255,255,255,.018), 0 0 0 34px rgba(255,255,255,.012);
+    pointer-events: none;
+  }
+  .action-deck-card:active { transform: scale(.98); filter: brightness(1.08); }
+  .action-deck-card:focus-visible { outline: 2px solid var(--wb-cyan); outline-offset: 3px; }
+  .adc-left {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    width: 100%;
+    min-width: 0;
+    text-align: left;
+  }
+  .adc-icon-box {
+    width: 43px;
+    height: 43px;
+    flex: 0 0 43px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    background: rgba(255,255,255,.07);
+    border: 1px solid rgba(255,255,255,.12);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.05);
+  }
+  .adc-title { font-size: 1rem; line-height: 1.2; font-weight: 900; letter-spacing: -.2px; color: #fff; }
+  .adc-sub { font-size: .72rem; line-height: 1.35; color: #c0c7d0; opacity: 1; margin-top: 5px; }
+  .adc-chevron { position: absolute; right: 14px; top: 15px; font-size: 1.2rem; color: #e8edf0; font-weight: 700; }
+  .card-ai {
+    background: radial-gradient(ellipse at 100% 100%, rgba(129,92,246,.20), transparent 55%), linear-gradient(145deg,#272532,#171923 68%,#20202d);
+    border-color: rgba(157,133,255,.24);
+  }
+  .card-local {
+    background: radial-gradient(ellipse at 100% 100%, rgba(65,190,163,.18), transparent 55%), linear-gradient(145deg,#202e30,#151e22 68%,#1d292b);
+    border-color: rgba(105,205,183,.22);
+  }
+  .card-ai .adc-icon-box { background: rgba(143,115,255,.14); border-color: rgba(170,147,255,.24); }
+  .card-local .adc-icon-box { background: rgba(91,202,177,.12); border-color: rgba(121,218,196,.23); }
+  @media (max-width: 380px) {
+    .action-deck { gap: 9px; }
+    .action-deck-card { min-height: 148px; padding: 13px 11px 14px; border-radius: 21px; }
+    .adc-icon-box { width: 39px; height: 39px; flex-basis: 39px; font-size: 1.25rem; }
+    .adc-title { font-size: .91rem; }
+    .adc-sub { font-size: .67rem; }
+    .adc-chevron { right: 11px; top: 12px; }
+  }
+
 </style>
 </head>
 <body>
