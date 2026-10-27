@@ -1485,61 +1485,6 @@
   }
 
 
-  /* WAY BLOCK world background — subtle strategy-board atmosphere across every screen */
-  html {
-    min-height: 100%;
-    background: #070b13;
-  }
-  body {
-    position: relative;
-    isolation: isolate;
-    background:
-      radial-gradient(ellipse at 50% -12%, rgba(47, 78, 115, .28), transparent 46rem),
-      radial-gradient(ellipse at 0% 42%, rgba(24, 115, 111, .10), transparent 30rem),
-      radial-gradient(ellipse at 100% 78%, rgba(83, 68, 133, .10), transparent 32rem),
-      linear-gradient(180deg, #080d16 0%, #090e18 48%, #070b13 100%);
-    background-attachment: fixed;
-  }
-  body::before {
-    content: "";
-    position: fixed;
-    inset: 0;
-    z-index: -1;
-    pointer-events: none;
-    background-image:
-      linear-gradient(rgba(133, 163, 190, .045) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(133, 163, 190, .045) 1px, transparent 1px);
-    background-size: 38px 38px;
-    background-position: center 4px;
-    -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,.55), transparent 78%);
-    mask-image: linear-gradient(to bottom, rgba(0,0,0,.55), transparent 78%);
-  }
-  body::after {
-    content: "";
-    position: fixed;
-    inset: 0;
-    z-index: -1;
-    pointer-events: none;
-    opacity: .5;
-    background:
-      radial-gradient(circle at 12% 16%, rgba(87, 220, 204, .15) 0 1px, transparent 2px),
-      radial-gradient(circle at 86% 31%, rgba(255, 198, 102, .14) 0 1px, transparent 2px),
-      radial-gradient(circle at 78% 72%, rgba(87, 220, 204, .11) 0 1px, transparent 2px),
-      radial-gradient(ellipse at 50% 100%, rgba(10, 15, 27, .05), rgba(2, 5, 10, .34));
-    background-size: 100% 100%;
-  }
-  .view-container, .bottom-nav-dock, .modal-overlay, .toast-bubble {
-    position: relative;
-    z-index: 1;
-  }
-  .bottom-nav-dock {
-    background: rgba(8, 12, 22, .88);
-    backdrop-filter: blur(22px);
-    -webkit-backdrop-filter: blur(22px);
-  }
-  @media (prefers-reduced-motion: reduce) {
-    body { background-attachment: scroll; }
-  }
 
 </style>
 </head>
