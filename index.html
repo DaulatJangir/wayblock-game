@@ -1450,6 +1450,40 @@
     .lobby-action-title { font-size: .66rem; }
   }
 
+
+  /* Stack action icons above their labels for consistent alignment */
+  .lobby-action-card {
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    height: 76px;
+    padding: 9px 8px;
+    text-align: center;
+  }
+  .lobby-action-icon {
+    width: 27px;
+    height: 27px;
+    flex: 0 0 27px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
+    line-height: 1;
+    font-size: 1.05rem;
+  }
+  .lobby-action-title {
+    display: block;
+    line-height: 1.15;
+    text-align: center;
+    white-space: nowrap;
+  }
+  @media(max-width:380px) {
+    .lobby-action-card { height: 72px; gap: 4px; padding: 8px 5px; }
+    .lobby-action-icon { width: 25px; height: 25px; flex-basis: 25px; }
+    .lobby-action-title { font-size: .66rem; }
+  }
+
 </style>
 </head>
 <body>
