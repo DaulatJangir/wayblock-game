@@ -1877,6 +1877,21 @@
 @media(max-width:380px){.host-search-hero h1{font-size:1.75rem}.host-duel-avatar{width:64px;height:64px}.host-settings-lock{font-size:.52rem}.create-room-body{padding:15px}.create-room-round{padding:10px 7px}}
 @media(prefers-reduced-motion:reduce){.create-room-overlay,.create-room-window,.host-search-view,.host-duel-player,.host-question-avatar,.host-search-progress span,.host-player-searching i,.host-search-dots b{animation:none!important}}
 
+
+/* OPEN 1v1 ROOMS DISCOVERY */
+.open-rooms-section{margin:20px 0 18px;padding:16px 14px;border:1px solid var(--wb-border);border-radius:19px;background:linear-gradient(155deg,rgba(19,34,59,.92),rgba(8,16,30,.96));box-shadow:0 12px 28px rgba(0,0,0,.15)}
+.open-rooms-heading-row{display:flex;align-items:center;justify-content:space-between;gap:8px}.open-rooms-heading-row h2{font-size:1rem;font-weight:900;letter-spacing:-.2px;color:var(--wb-text)}
+.open-rooms-heading-row button{width:32px;height:32px;border:1px solid var(--wb-border);border-radius:10px;background:rgba(0,210,255,.07);color:var(--wb-cyan);font-size:1.1rem;cursor:pointer}
+.open-rooms-subtitle{margin-top:5px;font-size:.73rem;color:var(--wb-text-sub)}
+.open-rooms-list{display:flex;flex-direction:column;gap:9px;margin-top:13px}
+.open-rooms-empty{padding:18px 10px;text-align:center;border:1px dashed rgba(100,130,170,.25);border-radius:13px;color:var(--wb-text-sub);font-size:.76rem;line-height:1.5}
+.open-room-row{display:flex;align-items:center;gap:11px;padding:12px;border:1px solid rgba(100,130,170,.22);border-radius:14px;background:rgba(4,11,22,.55);animation:roomFadeIn .25s ease both}
+.open-room-avatar{display:grid;place-items:center;flex:0 0 42px;height:42px;border-radius:13px;background:linear-gradient(145deg,rgba(37,99,235,.35),rgba(0,210,255,.12));border:1px solid rgba(0,210,255,.24);color:var(--wb-cyan);font-size:1.2rem}
+.open-room-copy{display:flex;flex:1;min-width:0;flex-direction:column;gap:4px}.open-room-copy strong{font-size:.79rem;color:var(--wb-text)}.open-room-copy span{font-size:.66rem;color:var(--wb-text-sub)}
+.open-room-join{padding:9px 11px;border:1px solid rgba(0,210,255,.32);border-radius:10px;background:linear-gradient(135deg,rgba(37,99,235,.25),rgba(0,210,255,.1));color:var(--wb-cyan);font-size:.7rem;font-weight:900;white-space:nowrap;cursor:pointer}.open-room-join:disabled{opacity:.5;cursor:wait}
+.host-room-ready-label{font-family:inherit!important;font-size:1.35rem!important;letter-spacing:2px!important;color:var(--wb-green)!important}.host-room-discovery-copy{font-size:.65rem;color:var(--wb-text-sub)}.host-room-open-icon{font-size:1.7rem;color:var(--wb-cyan)}
+.host-direct-join-label{cursor:default!important;color:var(--wb-green)!important;border-color:rgba(16,185,129,.25)!important}
+
 </style>
 </head>
 <body>
@@ -2404,10 +2419,16 @@
     </div>
   </div>
 
+  <section class="open-rooms-section" aria-labelledby="openRoomsHeading">
+    <div class="open-rooms-heading-row"><h2 id="openRoomsHeading">Rooms open to join</h2><button type="button" onclick="refreshOpenRooms()" aria-label="Refresh open rooms">↻</button></div>
+    <p class="open-rooms-subtitle">Jump into a live 1v1 room — no code needed.</p>
+    <div class="open-rooms-list" id="openRoomsList"><div class="open-rooms-empty">Looking for open rooms…</div></div>
+  </section>
+
   <div class="lobby-section-heading"><span>HOW TO PLAY ONLINE</span><i></i></div>
   <div class="lobby-info-card">
-    <div class="lobby-info-icon">🔗</div>
-    <div><strong>Invite friends with a room code</strong><p>Create a room to get your code, or join a friend by entering theirs. Both players need an internet connection.</p></div>
+    <div class="lobby-info-icon">⚡</div>
+    <div><strong>Join instantly or use a code</strong><p>Open rooms appear above automatically. You can still join a private room using the separate room-code option.</p></div>
   </div>
 </div>
 
@@ -2473,15 +2494,14 @@
   <div class="top-bar host-search-topbar">
     <div class="icon-circle-btn" onclick="cancelNetworkSession()" aria-label="Cancel room">←</div>
     <div class="host-search-brand"><span class="host-search-brand-dot"></span> WAYBLOCK <span>DUEL LOBBY</span></div>
-    <button class="host-share-mini" type="button" onclick="copyHostRoomCode()">⧉ Share code</button>
+    <span class="host-share-mini host-direct-join-label">OPEN ROOM · 1V1</span>
   </div>
   <section class="host-search-hero">
     <div class="host-search-eyebrow"><span class="host-live-dot"></span> ROOM IS LIVE</div>
     <h1>Find your <span>rival.</span></h1>
     <p>Your arena is ready. Invite one player with your room code and get ready for a tactical duel.</p>
     <div class="host-room-code-card">
-      <div><span class="host-room-code-label">YOUR ROOM CODE</span><strong id="hostCodeDisplay">------</strong></div>
-      <button type="button" onclick="copyHostRoomCode()" aria-label="Copy room code">⧉</button>
+      <div><span class="host-room-code-label">ROOM DISCOVERY</span><strong class="host-room-ready-label">OPEN</strong><span class="host-room-discovery-copy">Visible in “Rooms open to join”</span></div><span class="host-room-open-icon">⌁</span>
     </div>
   </section>
   <section class="host-versus-card">
@@ -3499,6 +3519,67 @@ function launchOnlineMatch() {
   p2.name = namesPayload.p2;
   p3.name = namesPayload.p3;
   bootGame(targetMode, totalRounds);
+}
+
+let openRoomsProbe = null;
+let openRoomsRefreshTimer = null;
+let openRoomsRefreshToken = 0;
+function refreshOpenRooms(){
+  const list=document.getElementById('openRoomsList');
+  if(!list||!document.getElementById('lobbyChoiceView')||document.getElementById('lobbyChoiceView').classList.contains('hidden'))return;
+  const token=++openRoomsRefreshToken;
+  if(openRoomsProbe){try{openRoomsProbe.destroy();}catch(e){}openRoomsProbe=null;}
+  list.innerHTML='<div class="open-rooms-empty">Checking for open rooms…</div>';
+  if(typeof Peer==='undefined'){list.innerHTML='<div class="open-rooms-empty">Room discovery is unavailable right now.</div>';return;}
+  try{
+    openRoomsProbe=new Peer({debug:0});
+    openRoomsProbe.on('open',ownId=>{
+      if(token!==openRoomsRefreshToken)return;
+      if(typeof openRoomsProbe.listAllPeers!=='function'){list.innerHTML='<div class="open-rooms-empty">This network does not support room discovery yet.</div>';try{openRoomsProbe.destroy();}catch(e){}openRoomsProbe=null;return;}
+      openRoomsProbe.listAllPeers(ids=>{
+        if(token!==openRoomsRefreshToken)return;
+        const rooms=[...new Set((ids||[]).filter(id=>/^wb-\\d{5}$/.test(id)&&id!==ownId))];
+        list.innerHTML='';
+        if(!rooms.length){list.innerHTML='<div class="open-rooms-empty">No open rooms right now.<br>Be the first to create a room!</div>';}
+        rooms.sort().forEach((roomId,index)=>{
+          const row=document.createElement('div');row.className='open-room-row';
+          const avatar=document.createElement('div');avatar.className='open-room-avatar';avatar.textContent='♟';
+          const info=document.createElement('div');info.className='open-room-copy';
+          const title=document.createElement('strong');title.textContent='Open 1v1 Room';
+          const status=document.createElement('span');status.textContent='Room available · 1 seat open';
+          const join=document.createElement('button');join.className='open-room-join';join.type='button';join.textContent='Join room →';
+          join.addEventListener('click',()=>joinDiscoveredRoom(roomId,join));
+          info.appendChild(title);info.appendChild(status);row.appendChild(avatar);row.appendChild(info);row.appendChild(join);list.appendChild(row);
+        });
+        try{openRoomsProbe.destroy();}catch(e){}openRoomsProbe=null;
+      });
+    });
+    openRoomsProbe.on('error',()=>{if(token!==openRoomsRefreshToken)return;list.innerHTML='<div class="open-rooms-empty">Could not refresh rooms. Tap ↻ to try again.</div>';try{openRoomsProbe.destroy();}catch(e){}openRoomsProbe=null;});
+  }catch(e){list.innerHTML='<div class="open-rooms-empty">Could not refresh rooms. Tap ↻ to try again.</div>';}
+}
+function joinDiscoveredRoom(roomId,button){
+  if(peer){try{peer.destroy();}catch(e){}peer=null;}
+  if(clientConn){try{clientConn.close();}catch(e){}clientConn=null;}
+  switchView('joinLobbyView');
+  document.getElementById('joinInputCode').value=roomId.replace(/^wb-/,'');
+  document.getElementById('joinStatusNotice').innerText='Connecting to open room…';
+  if(typeof Peer==='undefined'){document.getElementById('joinStatusNotice').innerText='Online connection is unavailable.';return;}
+  peer=new Peer({debug:1});
+  peer.on('open',()=>{
+    clientConn=peer.connect(roomId,{reliable:true});
+    clientConn.on('open',()=>{
+      document.getElementById('joinStatusNotice').innerText='Join request sent! Waiting for host approval…';
+      clientConn.send({type:'join_request',senderName:playerName});
+    });
+    clientConn.on('data',data=>{
+      if(data.type==='join_accepted'){myRole=data.assignedRole;document.getElementById('joinStatusNotice').innerText='Accepted! Waiting for the host to start the match…';}
+      else if(data.type==='join_rejected'){document.getElementById('joinStatusNotice').innerText=data.reason||'This room is no longer available.';}
+      else if(data.type==='start_game'){p1.name=data.names.p1;p2.name=data.names.p2;p3.name=data.names.p3;totalRounds=data.rounds||1;bootGame(data.mode,totalRounds);}
+      else if(data.type==='sync_action'){handleRemoteAction(data);}
+    });
+    clientConn.on('error',()=>{document.getElementById('joinStatusNotice').innerText='Could not join this room. It may have closed.';});
+  });
+  peer.on('error',()=>{document.getElementById('joinStatusNotice').innerText='This room is no longer available.';});
 }
 
 let createRoomRounds = 1;
