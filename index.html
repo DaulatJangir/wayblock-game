@@ -1618,6 +1618,45 @@
   .join-choice .host-join-choice-icon { background: rgba(92,125,245,.13); border-color: rgba(125,151,255,.23); color: #b8c7ff; }
   @media (prefers-reduced-motion: reduce) { .host-join-choice-card { transition: none; } }
 
+
+  /* Home quest cards: matching the existing navy / neon Way Block theme */
+  .home-goals-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; margin-top:12px; margin-bottom:18px; }
+  .home-goal-card { min-width:0; padding:12px 12px 11px; border-radius:21px; border:1px solid rgba(73,105,179,.48); background:radial-gradient(ellipse at 100% 0%,rgba(31,75,139,.19),transparent 48%),linear-gradient(145deg,#101a31,#0b1327 76%); box-shadow:0 8px 22px rgba(0,0,0,.18),inset 0 1px 0 rgba(255,255,255,.035); overflow:hidden; position:relative; }
+  .home-goal-card::before { content:"";position:absolute;width:135px;height:135px;right:-54px;top:-76px;border:1px solid rgba(80,122,226,.13);border-radius:50%;box-shadow:0 0 0 15px rgba(80,122,226,.035),0 0 0 31px rgba(80,122,226,.025);pointer-events:none; }
+  .home-goal-heading { display:flex; align-items:center; justify-content:space-between; position:relative; margin-bottom:9px; }
+  .home-goal-icon { width:43px;height:43px;border-radius:14px;display:grid;place-items:center;font-size:1.8rem;font-weight:800; }
+  .daily-goal-icon { color:#49e4ff;background:rgba(0,210,255,.13);border:1px solid rgba(0,210,255,.38);box-shadow:0 0 18px rgba(0,210,255,.08); }
+  .weekly-goal-card { border-color:rgba(117,92,224,.48);background:radial-gradient(ellipse at 100% 0%,rgba(111,74,210,.19),transparent 50%),linear-gradient(145deg,#17152f,#0d142a 76%); }
+  .weekly-goal-card::before { border-color:rgba(156,115,255,.15);box-shadow:0 0 0 15px rgba(156,115,255,.035),0 0 0 31px rgba(156,115,255,.025); }
+  .weekly-goal-icon { color:#c3a0ff;background:rgba(139,92,246,.18);border:1px solid rgba(167,139,250,.42);box-shadow:0 0 18px rgba(139,92,246,.1); }
+  .home-goal-chevron { color:#dce7ff;font-size:1.45rem;font-weight:700;line-height:1; }
+  .home-goal-title { color:#fff;font-size:.98rem;line-height:1.2;font-weight:900;letter-spacing:-.25px; }
+  .home-goal-sub { color:#9dbcf3;font-size:.72rem;line-height:1.4;margin-top:4px;margin-bottom:13px; }
+  .goal-progress-list { display:flex;flex-direction:column;gap:11px; }
+  .goal-progress-item { min-width:0; }
+  .goal-progress-label { display:flex;justify-content:space-between;gap:4px;color:#d7e2f7;font-size:.63rem;line-height:1.3;margin-bottom:5px; }
+  .goal-progress-label span:first-child { min-width:0; }
+  .goal-progress-label span:last-child { flex-shrink:0;color:#dbeafe;font-variant-numeric:tabular-nums; }
+  .goal-progress-track { height:6px;background:#18294a;border-radius:99px;overflow:hidden; }
+  .goal-progress-fill { display:block;height:100%;border-radius:99px;transition:width .25s ease; }
+  .cyan-fill { background:linear-gradient(90deg,#06b6d4,#55dcff);box-shadow:0 0 9px rgba(34,211,238,.28); }
+  .purple-fill { background:linear-gradient(90deg,#8b5cf6,#c084fc);box-shadow:0 0 9px rgba(168,85,247,.2); }
+  .teal-fill { background:linear-gradient(90deg,#10b981,#5eead4);box-shadow:0 0 9px rgba(16,185,129,.2); }
+  .home-goal-footer { display:flex;align-items:center;justify-content:space-between;gap:4px;margin-top:13px;font-size:.61rem;color:#8298bd; }
+  .goal-reward-pill { flex-shrink:0;display:inline-flex;align-items:center;gap:3px;padding:5px 8px;border-radius:99px;border:1px solid rgba(245,158,11,.45);background:rgba(245,158,11,.09);color:#fbbf24;font-size:.72rem;font-weight:900; }
+  .weekly-goal-content { display:flex;align-items:center;gap:10px;min-height:104px; }
+  .weekly-ring { flex:0 0 76px;width:76px;height:76px;border-radius:50%;display:grid;place-items:center;background:conic-gradient(#22d3ee 0deg,#22d3ee 0deg,#24365c 0deg 360deg);position:relative; }
+  .weekly-ring::before { content:"";position:absolute;inset:7px;border-radius:50%;background:#10172e;border:1px solid rgba(125,149,206,.12); }
+  .weekly-ring > div { position:relative;text-align:center;z-index:1;color:#4eeaff;font-size:.86rem; }
+  .weekly-goal-list { display:flex;flex-direction:column;gap:9px;min-width:0; }
+  .weekly-goal-list > div { display:flex;align-items:center;gap:5px;color:#b9c9e7;font-size:.62rem;line-height:1.25; }
+  .goal-dot { width:7px;height:7px;flex:0 0 7px;border-radius:50%;display:inline-block; }
+  .dot-cyan { background:#38d9f4; }.dot-purple { background:#a78bfa; }.dot-blue { background:#6278bd; }
+  .home-goal-card.is-complete { border-color:rgba(16,185,129,.55); }
+  .home-goal-card.is-complete .goal-reward-pill { color:#6ee7b7;border-color:rgba(16,185,129,.45);background:rgba(16,185,129,.1); }
+  @media(max-width:380px) { .home-goals-grid{gap:8px}.home-goal-card{padding:10px 9px;border-radius:18px}.home-goal-icon{width:38px;height:38px;font-size:1.55rem}.home-goal-title{font-size:.88rem}.home-goal-sub{font-size:.66rem;margin-bottom:11px}.goal-progress-label{font-size:.57rem}.goal-progress-list{gap:10px}.weekly-goal-content{gap:6px;min-height:95px}.weekly-ring{flex-basis:64px;width:64px;height:64px;font-size:.8rem}.weekly-ring::before{inset:6px}.weekly-goal-list{gap:8px}.weekly-goal-list>div{font-size:.56rem}.home-goal-footer{font-size:.56rem}.goal-reward-pill{font-size:.65rem;padding:4px 6px} }
+  @media(prefers-reduced-motion:reduce){.goal-progress-fill{transition:none}}
+
 </style>
 </head>
 <body>
@@ -1680,48 +1719,49 @@
     </div>
   </div>
 
-  <!-- Daily Challenge Card: Redirects to "Play" section on click -->
-  <div class="daily-card" onclick="switchNavTab('play')">
-    <div class="daily-header">
-      <span style="font-size:1.2rem;">📅</span>
-      <div>
-        <div class="daily-title">Daily Challenge</div>
-        <div class="daily-sub">Complete the 9x9 board</div>
+  <!-- Daily Quest + Weekly Goals: progress is tracked from real gameplay -->
+  <div class="home-goals-grid">
+    <section class="home-goal-card daily-goal-card" aria-label="Daily Quest">
+      <div class="home-goal-heading">
+        <div class="home-goal-icon daily-goal-icon">▦</div>
+        <span class="home-goal-chevron">›</span>
       </div>
-    </div>
-    <div class="daily-body">
-      <div class="daily-board-art">
-        <svg width="100%" height="100%" viewBox="0 0 160 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <line x1="20" y1="0" x2="20" y2="64" stroke="#172644" stroke-width="1.5" />
-          <line x1="60" y1="0" x2="60" y2="64" stroke="#172644" stroke-width="1.5" />
-          <line x1="100" y1="0" x2="100" y2="64" stroke="#172644" stroke-width="1.5" />
-          <line x1="140" y1="0" x2="140" y2="64" stroke="#172644" stroke-width="1.5" />
-          <line x1="0" y1="20" x2="160" y2="20" stroke="#172644" stroke-width="1.5" />
-          <line x1="0" y1="44" x2="160" y2="44" stroke="#172644" stroke-width="1.5" />
-          <rect x="58" y="22" width="4" height="20" rx="2" fill="#fbbf24" />
-          <rect x="70" y="18" width="22" height="4" rx="2" fill="#fbbf24" />
-          <rect x="118" y="14" width="4" height="22" rx="2" fill="#fbbf24" />
-          <rect x="58" y="46" width="4" height="16" rx="2" fill="#fbbf24" />
-          <circle cx="40" cy="32" r="5" fill="#38bdf8" />
-          <circle cx="104" cy="46" r="5" fill="#10b981" />
-        </svg>
+      <div class="home-goal-title">Daily Quest</div>
+      <div class="home-goal-sub">Complete 3 missions</div>
+      <div class="goal-progress-list">
+        <div class="goal-progress-item">
+          <div class="goal-progress-label"><span>Win 1 Online Match</span><span id="dailyOnlineWinText">0/1</span></div>
+          <div class="goal-progress-track"><span id="dailyOnlineWinBar" class="goal-progress-fill cyan-fill" style="width:0%"></span></div>
+        </div>
+        <div class="goal-progress-item">
+          <div class="goal-progress-label"><span>Play 3 Games</span><span id="dailyGamesText">0/3</span></div>
+          <div class="goal-progress-track"><span id="dailyGamesBar" class="goal-progress-fill purple-fill" style="width:0%"></span></div>
+        </div>
+        <div class="goal-progress-item">
+          <div class="goal-progress-label"><span>Place 10 Walls</span><span id="dailyWallsText">0/10</span></div>
+          <div class="goal-progress-track"><span id="dailyWallsBar" class="goal-progress-fill teal-fill" style="width:0%"></span></div>
+        </div>
       </div>
-      <div style="display:flex; align-items:center; gap:8px;">
-        <div class="daily-reward-pill">🪙 +50</div>
-        <span style="color:var(--wb-text-sub); font-size:1.1rem; font-weight:800;">›</span>
-      </div>
-    </div>
-  </div>
+      <div class="home-goal-footer"><span id="dailyQuestStatus">Resets daily</span><span class="goal-reward-pill">🪙 +50</span></div>
+    </section>
 
-  <div class="learning-card" onclick="switchNavTab('learn')">
-    <div style="display:flex; align-items:center; gap:12px;">
-      <div style="width:36px; height:36px; background:#1e293b; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:1.1rem;">🎓</div>
-      <div>
-        <div style="font-size:0.9rem; font-weight:800; color:#ffffff;">Continue Learning</div>
-        <div style="font-size:0.72rem; color:var(--wb-text-sub);">Improve your strategy</div>
+    <section class="home-goal-card weekly-goal-card" aria-label="Weekly Goals">
+      <div class="home-goal-heading">
+        <div class="home-goal-icon weekly-goal-icon">◎</div>
+        <span class="home-goal-chevron">›</span>
       </div>
-    </div>
-    <span style="color:var(--wb-text-sub); font-size:1.1rem; font-weight:800;">›</span>
+      <div class="home-goal-title">Weekly Goals</div>
+      <div class="home-goal-sub">Complete weekly targets</div>
+      <div class="weekly-goal-content">
+        <div class="weekly-ring" id="weeklyGoalRing"><div><strong id="weeklyGoalCount">0/5</strong></div></div>
+        <div class="weekly-goal-list">
+          <div><i class="goal-dot dot-cyan"></i><span id="weeklyWinsText">Win 5 Games</span></div>
+          <div><i class="goal-dot dot-purple"></i><span id="weeklyWallsText">Place 20 Walls</span></div>
+          <div><i class="goal-dot dot-blue"></i><span id="weeklyDaysText">Play 3 Days</span></div>
+        </div>
+      </div>
+      <div class="home-goal-footer"><span id="weeklyGoalStatus">Resets weekly</span><span class="goal-reward-pill">🪙 +100</span></div>
+    </section>
   </div>
 </div>
 
@@ -2498,6 +2538,94 @@ function updateLevelUI() {
 }
 
 // --- Navigation Tab Controller ---
+
+/* Persistent daily and weekly quest logic (stored locally for this static app). */
+const QUEST_STORAGE_KEY = 'wayblock_quest_state_v1';
+function questDayKey(date = new Date()) {
+  return date.getFullYear() + '-' + String(date.getMonth()+1).padStart(2,'0') + '-' + String(date.getDate()).padStart(2,'0');
+}
+function questWeekKey(date = new Date()) {
+  const d = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+  const weekday = (d.getDay() + 6) % 7;
+  d.setDate(d.getDate() - weekday);
+  return questDayKey(d);
+}
+function readQuestState() {
+  let state = {};
+  try { state = JSON.parse(localStorage.getItem(QUEST_STORAGE_KEY) || '{}') || {}; } catch (e) {}
+  const day = questDayKey(), week = questWeekKey();
+  if (state.day !== day) state.daily = { onlineWins:0, games:0, walls:0, rewarded:false };
+  if (state.week !== week) state.weekly = { wins:0, walls:0, days:[], rewarded:false };
+  state.day = day; state.week = week;
+  state.daily = Object.assign({onlineWins:0,games:0,walls:0,rewarded:false},state.daily || {});
+  state.weekly = Object.assign({wins:0,walls:0,days:[],rewarded:false},state.weekly || {});
+  if (!Array.isArray(state.weekly.days)) state.weekly.days = [];
+  return state;
+}
+function saveQuestState(state) {
+  localStorage.setItem(QUEST_STORAGE_KEY, JSON.stringify(state));
+}
+function recordQuestEvent(type, data = {}) {
+  const state = readQuestState();
+  if (type === 'game') {
+    state.daily.games++;
+    const today = questDayKey();
+    if (!state.weekly.days.includes(today)) state.weekly.days.push(today);
+  } else if (type === 'wall') {
+    state.daily.walls++;
+    state.weekly.walls++;
+  } else if (type === 'win') {
+    state.weekly.wins++;
+    if (data.online) state.daily.onlineWins++;
+  }
+  const dailyDone = state.daily.onlineWins >= 1 && state.daily.games >= 3 && state.daily.walls >= 10;
+  const weeklyDone = state.weekly.wins >= 5 && state.weekly.walls >= 20 && state.weekly.days.length >= 3;
+  if (dailyDone && !state.daily.rewarded) {
+    state.daily.rewarded = true;
+    localStorage.setItem('wayblock_coins', String((parseInt(localStorage.getItem('wayblock_coins') || '0',10) || 0) + 50));
+  }
+  if (weeklyDone && !state.weekly.rewarded) {
+    state.weekly.rewarded = true;
+    localStorage.setItem('wayblock_coins', String((parseInt(localStorage.getItem('wayblock_coins') || '0',10) || 0) + 100));
+  }
+  saveQuestState(state);
+  renderHomeQuestCards();
+}
+function setQuestProgress(textId, barId, value, target) {
+  const safeValue = Math.max(0, Number(value) || 0), percent = Math.min(100, safeValue / target * 100);
+  const textEl = document.getElementById(textId), barEl = document.getElementById(barId);
+  if (textEl) textEl.textContent = Math.min(safeValue,target) + '/' + target;
+  if (barEl) barEl.style.width = percent + '%';
+}
+function renderHomeQuestCards() {
+  const state = readQuestState();
+  setQuestProgress('dailyOnlineWinText','dailyOnlineWinBar',state.daily.onlineWins,1);
+  setQuestProgress('dailyGamesText','dailyGamesBar',state.daily.games,3);
+  setQuestProgress('dailyWallsText','dailyWallsBar',state.daily.walls,10);
+  const dailyDone = state.daily.onlineWins >= 1 && state.daily.games >= 3 && state.daily.walls >= 10;
+  const dailyCard = document.querySelector('.daily-goal-card');
+  if (dailyCard) dailyCard.classList.toggle('is-complete',dailyDone);
+  const dailyStatus = document.getElementById('dailyQuestStatus');
+  if (dailyStatus) dailyStatus.textContent = dailyDone ? (state.daily.rewarded ? 'Reward earned ✓' : 'All quests complete') : 'Resets daily';
+  const weeklyWins = Math.min(state.weekly.wins,5), weeklyWalls = Math.min(state.weekly.walls,20), weeklyDays = Math.min(state.weekly.days.length,3);
+  const total = weeklyWins + weeklyWalls + weeklyDays;
+  const weeklyDone = weeklyWins >= 5 && weeklyWalls >= 20 && weeklyDays >= 3;
+  const ring = document.getElementById('weeklyGoalRing');
+  if (ring) ring.style.background = 'conic-gradient(#22d3ee 0deg,' + (total/11*360) + 'deg,#24365c ' + (total/11*360) + 'deg 360deg)';
+  const count = document.getElementById('weeklyGoalCount');
+  if (count) count.textContent = total + '/11';
+  const winsText = document.getElementById('weeklyWinsText');
+  const wallsText = document.getElementById('weeklyWallsText');
+  const daysText = document.getElementById('weeklyDaysText');
+  if (winsText) winsText.textContent = 'Win ' + weeklyWins + '/5 Games';
+  if (wallsText) wallsText.textContent = 'Walls ' + weeklyWalls + '/20';
+  if (daysText) daysText.textContent = 'Play ' + weeklyDays + '/3 Days';
+  const weeklyCard = document.querySelector('.weekly-goal-card');
+  if (weeklyCard) weeklyCard.classList.toggle('is-complete',weeklyDone);
+  const weeklyStatus = document.getElementById('weeklyGoalStatus');
+  if (weeklyStatus) weeklyStatus.textContent = weeklyDone ? (state.weekly.rewarded ? 'Reward earned ✓' : 'All goals complete') : 'Resets weekly';
+}
+
 function switchNavTab(tab) {
   ['homeView', 'profileView', 'fullMasteryRoadView', 'fullSettingsView', 'fullReferralView', 'fullGuideView', 'fullSupportView', 'lobbyChoiceView', 'hostJoinChoiceView', 'hostLobbyView', 'joinLobbyView', 'gameArenaView', 'localSetupView'].forEach(id => {
     document.getElementById(id).classList.add('hidden');
@@ -3209,6 +3337,7 @@ function startLocalGame(selectedMode) {
 }
 
 function bootGame(selectedMode, selectedTotalRounds) {
+  recordQuestEvent('game');
   gameMode = selectedMode;
   totalRounds = selectedTotalRounds || 1;
   currentRound = 1;
@@ -3459,6 +3588,7 @@ function handlePointer(clientX, clientY, isClick) {
 
         const placed = tryPlaceWall(absPos.x, absPos.y, absIsH, currentP.color);
         if (placed) {
+          if (!isOnline || myRole === turn) recordQuestEvent('wall');
           currentP.walls--;
 
           if (isOnline) {
@@ -3607,6 +3737,8 @@ function showFinalTournamentWin() {
   else if (gameMode === '3p') modeText = "3P Local";
   else if (gameMode === '4p') modeText = "4P Local";
   else if (gameMode === '2p') modeText = "2P Local";
+
+  if (isUserWinner) recordQuestEvent('win', { online: isOnline && modeText === 'Online Match' });
 
   saveMatchRecord({
     opponent: oppString || "Opponent",
@@ -3893,6 +4025,7 @@ function draw() {
 }
 
 initProfile();
+renderHomeQuestCards();
 </script>
 </body>
 </html>
