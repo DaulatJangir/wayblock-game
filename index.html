@@ -1337,6 +1337,79 @@
     .home-online-arrow { width: 54px; height: 54px; flex-basis: 54px; }
   }
 
+
+  /* Online lobby redesign */
+  .lobby-top-bar { display:flex; align-items:center; gap:12px; margin-bottom:20px; }
+  .lobby-heading { flex:1; font-size:1.16rem; font-weight:850; letter-spacing:-.35px; color:#f5f6fa; }
+  .lobby-profile-icon { display:flex; align-items:center; justify-content:center; font-size:1rem; color:#dbe3ef; }
+  .lobby-player-card {
+    padding:17px 16px 0; margin-bottom:15px; border-radius:23px; overflow:hidden;
+    border:1px solid rgba(221,190,104,.19);
+    background:linear-gradient(145deg,rgba(24,29,37,.98),rgba(11,14,20,.99));
+    box-shadow:0 14px 30px rgba(0,0,0,.23),inset 0 1px 0 rgba(255,255,255,.035);
+  }
+  .lobby-player-main { display:flex; align-items:center; gap:12px; }
+  .lobby-player-avatar {
+    width:46px;height:46px;flex:0 0 46px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+    background:linear-gradient(145deg,#293c46,#17242c);border:1px solid rgba(230,194,111,.48);
+    color:#f1cc78;font-size:.85rem;font-weight:900;letter-spacing:.5px;
+  }
+  .lobby-player-copy { min-width:0; flex:1; }
+  .lobby-player-name { overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:.9rem;font-weight:850;color:#f4f5f7; }
+  .lobby-player-winrate { margin-top:4px;color:#9ba3ad;font-size:.72rem; }
+  .lobby-player-winrate span { color:#b8c0ca; }
+  .lobby-player-points {
+    min-width:52px;padding:8px 9px;border-radius:13px;text-align:center;
+    border:1px solid rgba(230,194,111,.26);background:rgba(219,177,76,.075);
+  }
+  .lobby-player-points strong { display:block;color:#f1ca73;font-size:1.05rem;line-height:1.15; }
+  .lobby-player-points span { display:block;margin-top:4px;font-size:.54rem;letter-spacing:1.3px;color:#b8a779;font-weight:800; }
+  .lobby-player-progress { height:4px;margin:14px 0 8px;border-radius:99px;background:#252b33;overflow:hidden; }
+  .lobby-player-progress span { display:block;width:0;height:100%;border-radius:inherit;background:linear-gradient(90deg,#78c9b6,#e8c773);transition:width .25s ease; }
+  .lobby-player-footer { display:flex;align-items:center;justify-content:space-between;gap:8px;color:#818b99;font-size:.68rem;padding-bottom:13px; }
+  .lobby-online-indicator { display:inline-flex;align-items:center;gap:7px; }
+  .lobby-online-indicator i,.lobby-feature-badge i { display:inline-block;width:7px;height:7px;border-radius:50%;background:#78d69a;box-shadow:0 0 9px rgba(120,214,154,.38); }
+  .lobby-leaderboard-row { display:flex;align-items:center;justify-content:space-between;margin:0 -16px;padding:13px 16px;border-top:1px solid rgba(255,255,255,.065);color:#d5b76d;font-size:.66rem;font-weight:900;letter-spacing:1.2px;cursor:pointer; }
+  .lobby-leaderboard-row span:first-child { display:flex;align-items:center;gap:9px; }
+  .lobby-chevron { font-size:1.25rem;color:#a8b0ba; }
+  .lobby-feature-card {
+    position:relative;isolation:isolate;overflow:hidden;min-height:174px;display:flex;flex-direction:column;justify-content:space-between;
+    gap:27px;padding:20px 19px;margin-bottom:13px;border-radius:25px;border:1px solid rgba(185,205,212,.19);
+    background:radial-gradient(ellipse at 80% 110%,rgba(105,154,151,.2),transparent 46%),linear-gradient(135deg,#252c32,#171d23 65%,#20272c);
+    box-shadow:0 15px 30px rgba(0,0,0,.24);cursor:pointer;transition:transform .16s ease,filter .16s ease;
+  }
+  .lobby-feature-card::after { content:"";position:absolute;z-index:-1;width:170px;height:170px;right:-73px;top:-100px;border:1px solid rgba(255,255,255,.075);border-radius:50%;box-shadow:0 0 0 18px rgba(255,255,255,.018),0 0 0 38px rgba(255,255,255,.012); }
+  .lobby-feature-card:active,.lobby-action-card:active { transform:scale(.985);filter:brightness(1.08); }
+  .lobby-feature-card:focus-visible,.lobby-action-card:focus-visible,.lobby-leaderboard-row:focus-visible { outline:2px solid var(--wb-cyan);outline-offset:3px; }
+  .lobby-feature-top,.lobby-feature-bottom { display:flex;align-items:center;justify-content:space-between;gap:12px; }
+  .lobby-feature-badge { display:inline-flex;align-items:center;gap:8px;padding:8px 11px;border:1px solid rgba(217,227,231,.16);border-radius:99px;color:#e7ebee;font-size:.61rem;font-weight:900;letter-spacing:1.5px; }
+  .lobby-feature-note { color:#b6b9b8;font-size:.57rem;font-weight:800;letter-spacing:1px; }
+  .lobby-feature-title { color:#fff;font-size:1.35rem;line-height:1.16;font-weight:900;letter-spacing:-.6px;margin-bottom:6px; }
+  .lobby-feature-sub { color:#b7c0c7;font-size:.78rem;line-height:1.4; }
+  .lobby-feature-arrow { width:53px;height:53px;flex:0 0 53px;border:1px solid rgba(192,222,216,.3);border-radius:50%;background:rgba(112,160,154,.17);display:flex;align-items:center;justify-content:center;color:#f6faf9;font-size:1.8rem; }
+  .lobby-action-row { display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:24px; }
+  .lobby-action-card {
+    min-height:104px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;
+    padding:12px 8px;border:1px solid rgba(170,190,204,.15);border-radius:19px;
+    background:linear-gradient(145deg,rgba(28,34,42,.98),rgba(15,19,25,.98));cursor:pointer;transition:transform .16s ease,filter .16s ease;
+  }
+  .lobby-action-icon { width:29px;height:29px;display:flex;align-items:center;justify-content:center;border-radius:10px;background:rgba(130,195,183,.14);border:1px solid rgba(130,195,183,.22);color:#a8d9ce;font-size:1.25rem;font-weight:700; }
+  .lobby-action-title { color:#e8edf0;font-size:.78rem;font-weight:850; }
+  .lobby-action-sub { color:#89939d;font-size:.63rem; }
+  .lobby-section-heading { display:flex;align-items:center;gap:10px;margin:0 2px 12px;color:#bda965;font-size:.61rem;letter-spacing:2px;font-weight:900; }
+  .lobby-section-heading i { height:1px;flex:1;background:linear-gradient(90deg,rgba(189,169,101,.25),transparent); }
+  .lobby-info-card { display:flex;align-items:flex-start;gap:12px;padding:15px;border:1px solid rgba(166,185,203,.12);border-radius:18px;background:rgba(20,26,34,.8); }
+  .lobby-info-icon { width:37px;height:37px;flex:0 0 37px;display:flex;align-items:center;justify-content:center;border-radius:12px;background:rgba(129,158,176,.12);font-size:1.1rem; }
+  .lobby-info-card strong { display:block;color:#e8edf0;font-size:.78rem;margin:1px 0 5px; }
+  .lobby-info-card p { margin:0;color:#929ca7;font-size:.7rem;line-height:1.55; }
+  @media(max-width:380px) {
+    .lobby-player-card { padding-left:13px;padding-right:13px; }
+    .lobby-leaderboard-row { margin-left:-13px;margin-right:-13px;padding-left:13px;padding-right:13px; }
+    .lobby-feature-card { padding:18px 16px;min-height:164px; }
+    .lobby-feature-title { font-size:1.22rem; }
+    .lobby-feature-note { font-size:.5rem;letter-spacing:.6px; }
+  }
+
 </style>
 </head>
 <body>
@@ -1800,42 +1873,65 @@
 
 <!-- ================= 8. MULTIPLAYER SELECTION VIEW ================= -->
 <div class="view-container hidden" id="lobbyChoiceView">
-  <div class="top-bar">
-    <div class="icon-circle-btn" onclick="switchNavTab('home')">←</div>
-    <div class="brand-header-text" style="font-size:1.15rem;">Play Online</div>
-    <div style="width:36px;"></div>
+  <div class="top-bar lobby-top-bar">
+    <div class="icon-circle-btn" onclick="switchNavTab('home')" aria-label="Back to Home">←</div>
+    <div class="lobby-heading">Online Lobby</div>
+    <div class="icon-circle-btn lobby-profile-icon" onclick="openNameModal()" title="Edit profile" aria-label="Edit profile">♟</div>
   </div>
 
-  <!-- Hero Header Card -->
-  <div class="online-play-hero-card">
-    <div class="online-globe-beacon">🌐</div>
-    <h2 class="online-hero-title">PLAY ONLINE</h2>
-    <p class="online-hero-sub">Ensure all players are connected with proper internet connection</p>
+  <div class="lobby-player-card">
+    <div class="lobby-player-main">
+      <div class="lobby-player-avatar" id="lobbyAvatarInitials">WB</div>
+      <div class="lobby-player-copy">
+        <div class="lobby-player-name" id="lobbyDisplayName">Player</div>
+        <div class="lobby-player-winrate">Win Rate <span id="lobbyWinRate">0%</span></div>
+      </div>
+      <div class="lobby-player-points">
+        <strong id="lobbyWinsPoints">0</strong>
+        <span>WINS</span>
+      </div>
+    </div>
+    <div class="lobby-player-progress"><span id="lobbyWinProgress"></span></div>
+    <div class="lobby-player-footer">
+      <span class="lobby-online-indicator"><i></i> Ready to play</span>
+      <span id="lobbyMatchesCount">0 matches</span>
+    </div>
+    <div class="lobby-leaderboard-row" onclick="openFullMasteryRoadPage()" role="button" tabindex="0">
+      <span><b>🏆</b> MASTERY ROAD</span><span class="lobby-chevron">›</span>
+    </div>
   </div>
 
-  <!-- Action Cards -->
-  <div class="action-deck">
-    <div class="online-mode-card card-host" onclick="initHostView()">
-      <div class="omc-left">
-        <div class="omc-icon-badge">⚡</div>
-        <div>
-          <div class="omc-title">Host Game</div>
-          <div class="omc-desc">Create room code & invite friends</div>
-        </div>
-      </div>
-      <div class="omc-chevron">›</div>
+  <div class="lobby-feature-card" onclick="initHostView()" role="button" tabindex="0" aria-label="Host and Join Game">
+    <div class="lobby-feature-top">
+      <span class="lobby-feature-badge"><i></i> MULTIPLAYER</span>
+      <span class="lobby-feature-note">PLAY WITH FRIENDS</span>
     </div>
+    <div class="lobby-feature-bottom">
+      <div>
+        <div class="lobby-feature-title">Host and Join Game</div>
+        <div class="lobby-feature-sub">Create a room or join using a room code</div>
+      </div>
+      <div class="lobby-feature-arrow">→</div>
+    </div>
+  </div>
 
-    <div class="online-mode-card card-join" onclick="initJoinView()">
-      <div class="omc-left">
-        <div class="omc-icon-badge">🔗</div>
-        <div>
-          <div class="omc-title">Join Game</div>
-          <div class="omc-desc">Enter a host's 5-digit room code</div>
-        </div>
-      </div>
-      <div class="omc-chevron">›</div>
+  <div class="lobby-action-row">
+    <div class="lobby-action-card" onclick="initHostView()" role="button" tabindex="0">
+      <span class="lobby-action-icon">⊕</span>
+      <span class="lobby-action-title">Create Room</span>
+      <span class="lobby-action-sub">Host a match</span>
     </div>
+    <div class="lobby-action-card" onclick="initJoinView()" role="button" tabindex="0">
+      <span class="lobby-action-icon">♟</span>
+      <span class="lobby-action-title">Join Game</span>
+      <span class="lobby-action-sub">Enter room code</span>
+    </div>
+  </div>
+
+  <div class="lobby-section-heading"><span>HOW TO PLAY ONLINE</span><i></i></div>
+  <div class="lobby-info-card">
+    <div class="lobby-info-icon">🔗</div>
+    <div><strong>Invite friends with a room code</strong><p>Create a room to get your code, or join a friend by entering theirs. Both players need an internet connection.</p></div>
   </div>
 </div>
 
