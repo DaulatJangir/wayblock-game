@@ -1658,48 +1658,6 @@
   @media(prefers-reduced-motion:reduce){.goal-progress-fill{transition:none}}
 
 
-  /* Neon multiplayer hero art — decorative only, does not alter game actions */
-  .home-online-hero {
-    min-height:254px; padding:23px 22px 22px; gap:28px;
-    border:1px solid rgba(18,207,244,.62);
-    background:
-      radial-gradient(ellipse at 77% 64%,rgba(0,175,255,.18),transparent 39%),
-      radial-gradient(ellipse at 5% 100%,rgba(0,213,238,.10),transparent 48%),
-      linear-gradient(135deg,#07182c 0%,#071326 54%,#09283a 100%);
-    box-shadow:0 14px 34px rgba(0,0,0,.32),inset 0 1px 0 rgba(145,238,255,.10),0 0 22px rgba(0,177,255,.08);
-  }
-  .home-online-hero::before {
-    width:250px;height:250px;right:-45px;top:-92px;
-    border-color:rgba(23,205,255,.12);
-    box-shadow:0 0 0 18px rgba(23,205,255,.035),0 0 0 38px rgba(23,205,255,.025);
-  }
-  .home-online-art { position:absolute;z-index:-1;right:8px;top:12px;width:61%;height:90%;pointer-events:none;opacity:.96; }
-  .home-online-globe { position:absolute;width:175px;height:175px;right:6%;top:-28px;border:1px solid rgba(0,177,255,.46);border-radius:50%;background:radial-gradient(circle at 36% 32%,rgba(17,134,220,.2),rgba(3,24,51,.05) 65%,transparent 70%);box-shadow:inset -12px -5px 24px rgba(0,100,255,.12),0 0 28px rgba(0,165,255,.07); }
-  .home-online-globe::before,.home-online-globe::after { content:"";position:absolute;inset:10px 35px;border:1px solid rgba(0,177,255,.25);border-radius:50%; }
-  .home-online-globe::after { inset:0 20px;border-color:rgba(0,177,255,.19); }
-  .home-online-board-art { position:absolute;width:100%;height:100%;right:-3%;top:12%;overflow:visible;filter:drop-shadow(0 5px 13px rgba(0,181,255,.14)); }
-  .home-online-hero-top,.home-online-hero-bottom { position:relative;z-index:1; }
-  .home-online-hero-bottom { align-items:flex-end; }
-  .home-online-copy { max-width:67%; }
-  .home-online-title { font-size:clamp(1.65rem,6vw,2.15rem);letter-spacing:-1px;text-shadow:0 2px 16px rgba(0,0,0,.3); }
-  .home-online-title-accent { color:#24d9f2;text-shadow:0 0 20px rgba(0,213,242,.23); }
-  .home-online-subtitle { display:flex;align-items:flex-start;gap:8px;max-width:245px;color:#b8d8f4;font-size:.91rem;line-height:1.35; }
-  .home-online-globe-icon { color:#27dff4;font-size:1.5rem;line-height:1;flex:0 0 auto;margin-top:-2px; }
-  .home-online-arrow { border:1px solid rgba(31,220,246,.68);background:linear-gradient(145deg,rgba(0,190,230,.24),rgba(0,91,153,.19));box-shadow:inset 0 0 18px rgba(0,213,255,.08),0 0 18px rgba(0,193,255,.12); }
-  .home-online-hero:active .home-online-arrow { background:rgba(0,198,235,.34); }
-  @media(max-width:420px) {
-    .home-online-hero { min-height:238px;padding:20px 17px 19px;gap:25px;border-radius:25px; }
-    .home-online-art { width:67%;right:0;top:22px;opacity:.73; }
-    .home-online-globe { width:135px;height:135px;right:0; }
-    .home-online-board-art { width:115%;right:-12%;top:22%; }
-    .home-online-copy { max-width:74%; }
-    .home-online-title { font-size:clamp(1.55rem,7vw,1.9rem); }
-    .home-online-subtitle { max-width:200px;font-size:.82rem; }
-    .home-online-arrow { width:54px;height:54px;flex-basis:54px; }
-    .home-online-streak { position:relative;z-index:2; }
-  }
-  @media(prefers-reduced-motion:reduce) { .home-online-hero,.home-online-arrow { transition:none; } }
-
 </style>
 </head>
 <body>
@@ -1773,54 +1731,22 @@
         <div>
           <div class="adc-title">PLAY LOCAL</div>
           <div class="adc-sub">Two players on same device</div>
-        </div>
+        <!-- Featured Play Online card (keeps the existing online lobby action) -->
+  <div class="home-online-hero" onclick="goToLobbyChoice()" role="button" tabindex="0" aria-label="Play Online, ranked matches">
+    <div class="home-online-hero-top">
+      <span class="home-online-status"><span class="home-online-dot"></span> ONLINE</span>
+      <span class="home-online-streak">🔥 Best Streak: <strong id="homeStreakCount">0</strong></span>
+    </div>
+    <div class="home-online-hero-bottom">
+      <div class="home-online-copy">
+        <div class="home-online-title">Play Online</div>
+        <div class="home-online-subtitle">Ranked matches</div>
       </div>
-      <div class="adc-chevron">›</div>
+      <div class="home-online-arrow" aria-hidden="true">→</div>
     </div>
   </div>
 
-  <!-- Daily Quest + Weekly Goals: progress is tracked from real gameplay -->
-  <div class="home-goals-grid">
-    <section class="home-goal-card daily-goal-card" aria-label="Daily Quest">
-      <div class="home-goal-heading">
-        <div class="home-goal-icon daily-goal-icon">▦</div>
-        <span class="home-goal-chevron">›</span>
-      </div>
-      <div class="home-goal-title">Daily Quest</div>
-      <div class="home-goal-sub">Complete 3 missions</div>
-      <div class="goal-progress-list">
-        <div class="goal-progress-item">
-          <div class="goal-progress-label"><span>Win 1 Online Match</span><span id="dailyOnlineWinText">0/1</span></div>
-          <div class="goal-progress-track"><span id="dailyOnlineWinBar" class="goal-progress-fill cyan-fill" style="width:0%"></span></div>
-        </div>
-        <div class="goal-progress-item">
-          <div class="goal-progress-label"><span>Play 3 Games</span><span id="dailyGamesText">0/3</span></div>
-          <div class="goal-progress-track"><span id="dailyGamesBar" class="goal-progress-fill purple-fill" style="width:0%"></span></div>
-        </div>
-        <div class="goal-progress-item">
-          <div class="goal-progress-label"><span>Place 10 Walls</span><span id="dailyWallsText">0/10</span></div>
-          <div class="goal-progress-track"><span id="dailyWallsBar" class="goal-progress-fill teal-fill" style="width:0%"></span></div>
-        </div>
-      </div>
-      <div class="home-goal-footer"><span id="dailyQuestStatus">Resets daily</span><span class="goal-reward-pill">🪙 +50</span></div>
-    </section>
-
-    <section class="home-goal-card weekly-goal-card" aria-label="Weekly Goals">
-      <div class="home-goal-heading">
-        <div class="home-goal-icon weekly-goal-icon">◎</div>
-        <span class="home-goal-chevron">›</span>
-      </div>
-      <div class="home-goal-title">Weekly Goals</div>
-      <div class="home-goal-sub">Complete weekly targets</div>
-      <div class="weekly-goal-content">
-        <div class="weekly-ring" id="weeklyGoalRing"><div><strong id="weeklyGoalCount">0/5</strong></div></div>
-        <div class="weekly-goal-list">
-          <div><i class="goal-dot dot-cyan"></i><span id="weeklyWinsText">Win 5 Games</span></div>
-          <div><i class="goal-dot dot-purple"></i><span id="weeklyWallsText">Place 20 Walls</span></div>
-          <div><i class="goal-dot dot-blue"></i><span id="weeklyDaysText">Play 3 Days</span></div>
-        </div>
-      </div>
-      <div class="home-goal-footer"><span id="weeklyGoalStatus">Resets weekly</span><span class="goal-reward-pill">🪙 +100</span></div>
+home-goal-footer"><span id="weeklyGoalStatus">Resets weekly</span><span class="goal-reward-pill">🪙 +100</span></div>
     </section>
   </div>
 </div>
