@@ -2370,7 +2370,7 @@
   <div class="profile-section-box">
     <div class="sec-header">
       <span class="sec-title">Achievements</span>
-      <span class="sec-link" onclick="displayToast('Achievements', '4 of 12 badges unlocked!')">View All</span>
+      <span class="sec-link" onclick="openAchievementsModal()">View All</span>
     </div>
     <div class="achieve-row">
       <div class="achieve-item">
@@ -5102,5 +5102,64 @@ html body #leaderboardView .leaderboard-search:focus {
 .room-preview-stats>div{display:flex;flex-direction:column;gap:4px;padding:12px 7px;border:1px solid rgba(160,153,132,.18);border-radius:13px;background:rgba(255,255,255,.02)}
 .room-preview-stats strong{font-size:1.25rem;color:#f7f8fa}.room-preview-stats span{font-size:.58rem;font-weight:900;letter-spacing:.5px;color:#a6adb7}
 </style>
+
+<div class="create-room-overlay hidden" id="achievementsModal" role="dialog" aria-modal="true" aria-labelledby="achievementsModalTitle" onclick="if(event.target===this)closeAchievementsModal()">
+  <div class="create-room-window achievements-window">
+    <div class="create-room-header">
+      <div class="create-room-kicker">WAYBLOCK REWARDS</div>
+      <div class="create-room-heading" id="achievementsModalTitle">All Achievements</div>
+      <p id="achievementsProgress">Track your progress and unlock every badge.</p>
+      <button type="button" class="achievements-close" onclick="closeAchievementsModal()" aria-label="Close achievements">×</button>
+    </div>
+    <div class="create-room-body"><div id="allAchievementsList" class="all-achievements-list"></div></div>
+  </div>
+</div>
+<style id="achievements-modal-theme">
+.achievements-window{position:relative;max-height:min(82vh,760px);overflow:hidden;background:linear-gradient(180deg,#14191f 0%,#0e1319 100%);border-color:#38342b}
+.achievements-window .create-room-header{position:relative;background:linear-gradient(180deg,rgba(245,196,91,.055),transparent);border-bottom-color:rgba(160,153,132,.16);padding-right:56px}
+.achievements-window .create-room-kicker{color:#f5c45b}
+.achievements-window .create-room-body{overflow-y:auto;max-height:calc(82vh - 145px)}
+.achievements-close{position:absolute;right:16px;top:16px;width:34px;height:34px;border:1px solid rgba(160,153,132,.2);border-radius:11px;background:rgba(255,255,255,.025);color:#a6adb7;font-size:1.5rem}
+.all-achievements-list{display:grid;grid-template-columns:1fr;gap:10px}
+.achievement-entry{display:grid;grid-template-columns:46px minmax(0,1fr) auto;align-items:center;gap:12px;padding:12px;border:1px solid rgba(160,153,132,.18);border-radius:15px;background:rgba(255,255,255,.018)}
+.achievement-entry.locked{opacity:.62;background:rgba(0,0,0,.12)}
+.achievement-entry-icon{width:44px;height:44px;display:grid;place-items:center;border:1px solid rgba(245,196,91,.24);border-radius:13px;background:rgba(245,196,91,.07);font-size:1.35rem}
+.achievement-entry.locked .achievement-entry-icon{filter:grayscale(1);border-color:rgba(160,153,132,.16);background:rgba(255,255,255,.025)}
+.achievement-entry strong{display:block;color:#f7f8fa;font-size:.88rem}
+.achievement-entry p{margin:4px 0 0;color:#a6adb7;font-size:.72rem;line-height:1.35}
+.achievement-status{font-size:.62rem;font-weight:900;letter-spacing:.5px;color:#a6adb7;white-space:nowrap}
+.achievement-entry.unlocked .achievement-status{color:#f5c45b}
+</style>
+<script id="achievements-modal-logic">
+function openAchievementsModal(){
+  const history = typeof getMatchHistory === 'function' ? getMatchHistory() : [];
+  const wins = Math.max(Number(localStorage.getItem('wayblock_wins')||0), history.filter(m=>m.isWin).length);
+  const matches = Math.max(Number(localStorage.getItem('wayblock_total_matches')||0), history.length);
+  const losses = Math.max(0,matches-wins);
+  const streak = Number(localStorage.getItem('wayblock_best_streak')||0);
+  const defs = [
+    {name:'First Win',icon:'🏆',desc:'Win your first match.',ok:wins>=1},
+    {name:'5 Matches',icon:'⭐',desc:'Play 5 matches.',ok:matches>=5},
+    {name:'Streak 5',icon:'🌟',desc:'Reach a 5-win streak.',ok:streak>=5},
+    {name:'Strategist',icon:'🎖️',desc:'Win 10 matches.',ok:wins>=10},
+    {name:'Getting Started',icon:'♟️',desc:'Play your first match.',ok:matches>=1},
+    {name:'10 Matches',icon:'🎯',desc:'Play 10 matches.',ok:matches>=10},
+    {name:'25 Matches',icon:'🧩',desc:'Play 25 matches.',ok:matches>=25},
+    {name:'50 Matches',icon:'🏅',desc:'Play 50 matches.',ok:matches>=50},
+    {name:'5 Wins',icon:'🥉',desc:'Win 5 matches.',ok:wins>=5},
+    {name:'25 Wins',icon:'🥈',desc:'Win 25 matches.',ok:wins>=25},
+    {name:'50 Wins',icon:'🥇',desc:'Win 50 matches.',ok:wins>=50},
+    {name:'Comeback Player',icon:'🛡️',desc:'Finish 5 losses and keep playing.',ok:losses>=5&&matches>losses}
+  ];
+  const unlocked=defs.filter(a=>a.ok).length;
+  const progress=document.getElementById('achievementsProgress');
+  const list=document.getElementById('allAchievementsList');
+  if(progress)progress.textContent=unlocked+' of '+defs.length+' achievements unlocked';
+  if(list)list.innerHTML=defs.map(a=>'<div class="achievement-entry '+(a.ok?'unlocked':'locked')+'"><div class="achievement-entry-icon">'+a.icon+'</div><div><strong>'+a.name+'</strong><p>'+a.desc+'</p></div><span class="achievement-status">'+(a.ok?'✓ UNLOCKED':'🔒 LOCKED')+'</span></div>').join('');
+  document.getElementById('achievementsModal').classList.remove('hidden');
+}
+function closeAchievementsModal(){const m=document.getElementById('achievementsModal');if(m)m.classList.add('hidden');}
+</script>
+
 </body>
 </html>
