@@ -871,6 +871,28 @@
     max-width: 320px;
     box-shadow: 0 16px 40px rgba(0, 0, 0, 0.8);
   }
+  .exit-confirm-box {
+    max-width: 350px;
+    padding: 27px 22px 22px;
+    border: 1px solid rgba(0,210,255,.42);
+    border-radius: 24px;
+    background: radial-gradient(ellipse at top, rgba(0,210,255,.13), transparent 58%), linear-gradient(155deg,#111e34,#080e1c 78%);
+    box-shadow: 0 24px 80px rgba(0,0,0,.72), 0 0 35px rgba(0,210,255,.1);
+    text-align: center;
+  }
+  .exit-confirm-icon {
+    display: grid; place-items: center; width: 58px; height: 58px; margin: 0 auto 13px;
+    border-radius: 19px; color: #00d2ff; font-size: 1.8rem; font-weight: 900;
+    background: linear-gradient(145deg,rgba(0,210,255,.2),rgba(0,112,255,.08));
+    border: 1px solid rgba(0,210,255,.3); box-shadow: inset 0 0 18px rgba(0,210,255,.08);
+  }
+  .exit-confirm-eyebrow { color:#00d2ff; font-size:.66rem; letter-spacing:2.2px; font-weight:900; margin-bottom:8px; }
+  .exit-confirm-title { color:#fff; font-size:1.45rem; font-weight:900; letter-spacing:-.5px; margin:0 0 9px; }
+  .exit-confirm-copy { color:var(--wb-text-sub); font-size:.86rem; line-height:1.55; margin:0 auto 22px; max-width:270px; }
+  .exit-confirm-actions { display:flex; flex-direction:column; gap:9px; }
+  .exit-stay-btn,.exit-leave-btn { width:100%; border-radius:12px; padding:13px 14px; font-size:.88rem; font-weight:850; cursor:pointer; }
+  .exit-stay-btn { color:#eaf7ff; background:#17243a; border:1px solid #30415b; }
+  .exit-leave-btn { color:#fff; background:linear-gradient(100deg,#087fba,#00bde8); border:1px solid rgba(0,210,255,.65); box-shadow:0 7px 20px rgba(0,180,230,.18); }
   .text-field {
     width: 100%;
     padding: 12px;
@@ -2757,6 +2779,19 @@
 <!-- Name Change Modal -->
 <!-- Name Change Modal -->
 <!-- Name Change Modal -->
+<div class="modal-overlay hidden" id="exitConfirmModal">
+  <div class="modal-box exit-confirm-box">
+    <div class="exit-confirm-icon">↗</div>
+    <div class="exit-confirm-eyebrow">PAUSE THE MATCH</div>
+    <h2 class="exit-confirm-title">Leaving so soon?</h2>
+    <p class="exit-confirm-copy">Your current game will end if you leave now. Are you sure you want to exit?</p>
+    <div class="exit-confirm-actions">
+      <button class="exit-stay-btn" onclick="closeExitConfirm()">Stay in Game</button>
+      <button class="exit-leave-btn" onclick="confirmExitToHome()">Exit Game</button>
+    </div>
+  </div>
+</div>
+
 <div class="modal-overlay hidden" id="nameModal">
   <div class="modal-box">
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
@@ -3101,10 +3136,20 @@ function switchView(viewId) {
   const dock = document.getElementById('bottomNavDock');
   if (viewId === 'gameArenaView') {
     dock.classList.add('hidden');
+    history.pushState({ wayblockGame: true }, '', location.href);
   } else {
     dock.classList.remove('hidden');
   }
 }
+
+// Keep browser/device back from instantly abandoning an active match.
+window.addEventListener('popstate', () => {
+  const arena = document.getElementById('gameArenaView');
+  if (arena && !arena.classList.contains('hidden')) {
+    document.getElementById('exitConfirmModal').classList.remove('hidden');
+    history.pushState({ wayblockGame: true }, '', location.href);
+  }
+});
 
 // Full-Page Transition Handlers
 function openFullMasteryRoadPage() { switchView('fullMasteryRoadView'); }
@@ -3982,6 +4027,19 @@ function resetRoundBoard() {
 }
 
 function exitToHome() {
+  if (document.getElementById('gameArenaView') && !document.getElementById('gameArenaView').classList.contains('hidden')) {
+    document.getElementById('exitConfirmModal').classList.remove('hidden');
+    return;
+  }
+  confirmExitToHome();
+}
+
+function closeExitConfirm() {
+  document.getElementById('exitConfirmModal').classList.add('hidden');
+}
+
+function confirmExitToHome() {
+  closeExitConfirm();
   clearInterval(turnTimerInterval);
   cancelNetworkSession();
   document.getElementById('winModal').classList.add('hidden');
