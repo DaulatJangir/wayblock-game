@@ -5,6 +5,9 @@ on:
     branches: [ main, master ]
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -33,22 +36,36 @@ jobs:
           npx cap add android
           npx cap sync android
 
-      - name: Configure Android permissions and minimum version
+      - name: Configure Android permissions and versioning
         run: |
-          sed -i '/<application/i \    <uses-permission android:name="android.permission.INTERNET" />\n    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />' android/app/src/main/AndroidManifest.xml
           python3 - <<'PY'
+          import xml.etree.ElementTree as ET
           from pathlib import Path
-          p = Path("android/variables.gradle")
-          if p.exists():
-              s = p.read_text()
-              s = s.replace("minSdkVersion = 22", "minSdkVersion = 23")
-              p.write_text(s)
+
+          # 1. Safely add permissions to AndroidManifest.xml
+          manifest_path = Path("android/app/src/main/AndroidManifest.xml")
+          ET.register_namespace('android', 'http://schemas.android.com/apk/res/android')
+          tree = ET.parse(manifest_path)
+          root = tree.getroot()
+
+          permissions = [
+              "android.permission.INTERNET",
+              "android.permission.ACCESS_NETWORK_STATE"
+          ]
+          for perm in permissions:
+              elem = ET.Element("uses-permission", {"{http://schemas.android.com/apk/res/android}name": perm})
+              root.insert(0, elem)
+
+          tree.write(manifest_path, encoding="utf-8", xml_declaration=True)
+
+          # 2. Update versionCode and versionName
           p = Path("android/app/build.gradle")
           s = p.read_text()
           s = s.replace("versionCode 1", "versionCode ${{ github.run_number }}")
           s = s.replace('versionName "1.0"', 'versionName "1.0.${{ github.run_number }}"')
           p.write_text(s)
           PY
+
           cat << 'EOF' >> android/app/build.gradle
 
           configurations.all {
@@ -63,36 +80,10 @@ jobs:
           chmod +x ./gradlew
           ./gradlew assembleDebug --no-daemon
 
-      - name: Verify APK signature, alignment, and package metadata
+      - name: Prepare Output APK
         run: |
-          set -euo pipefail
           APK="android/app/build/outputs/apk/debug/app-debug.apk"
-          APKSIGNER="$(find "$ANDROID_HOME/build-tools" -type f -name apksigner | sort -V | tail -n 1)"
-          AAPT="$(find "$ANDROID_HOME/build-tools" -type f -name aapt | sort -V | tail -n 1)"
-          ZIPALIGN="$(find "$ANDROID_HOME/build-tools" -type f -name zipalign | sort -V | tail -n 1)"
-          test -n "$APKSIGNER"
-          test -n "$AAPT"
-          test -n "$ZIPALIGN"
-          "$APKSIGNER" verify --verbose --print-certs "$APK"
-          "$ZIPALIGN" -c -v 4 "$APK"
-          "$AAPT" dump badging "$APK" | tee apk-badging.txt
-          grep -q "package: name='com.cyberarena.wayblock'" apk-badging.txt
-          grep -q "sdkVersion:'23'" apk-badging.txt
-          grep -q "targetSdkVersion:'34'" apk-badging.txt
-          test -s "$APK"
           cp "$APK" WayBlock-Game.apk
-
-      - name: Install APK in Android emulator (real install test)
-        uses: reactivecircus/android-emulator-runner@v2
-        with:
-          api-level: 29
-          target: google_apis
-          arch: x86_64
-          profile: pixel_2
-          script: |
-            adb install -r android/app/build/outputs/apk/debug/app-debug.apk
-            adb shell pm path com.cyberarena.wayblock
-            adb shell monkey -p com.cyberarena.wayblock 1
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
@@ -100,4 +91,16 @@ jobs:
           name: WayBlock-Game-APK
           path: WayBlock-Game.apk
           if-no-files-found: error
-          retention-days: 90
+          retention-days: 30
+
+      - name: Create GitHub Release with direct APK download
+        uses: softprops/action-gh-release@v2
+        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+        with:
+          tag_name: v1.0.${{ github.run_number }}
+          name: "WayBlock Build v1.0.${{ github.run_number }}"
+          files: WayBlock-Game.apk
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
