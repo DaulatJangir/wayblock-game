@@ -2379,6 +2379,17 @@
     </div>
   </div>
 
+  <div class="profile-section-box profile-points-card">
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;">
+      <div>
+        <div style="font-size:.7rem;font-weight:800;letter-spacing:1.4px;color:var(--wb-text-sub);">TOTAL POINTS</div>
+        <div id="profilePointsBalance" style="font-size:2rem;font-weight:900;color:var(--wb-gold);line-height:1.25;">100</div>
+        <div style="font-size:.75rem;color:var(--wb-text-sub);margin-top:3px;">Win matches to earn points · Losses deduct points</div>
+      </div>
+      <div style="font-size:2rem;border:1px solid rgba(251,191,36,.25);background:rgba(251,191,36,.08);border-radius:16px;padding:12px;">★</div>
+    </div>
+  </div>
+
   <div class="profile-stats-grid">
     <div class="stat-card">
       <span class="stat-card-icon">🏆</span>
@@ -3475,10 +3486,38 @@ function getMatchHistory() {
   }
 }
 
+// New profiles start with 100 login points. Existing profiles without a saved
+// balance are reconstructed from their match history to preserve earned points.
+function getProfilePoints() {
+  let saved = localStorage.getItem('wayblock_points');
+  if (saved === null) {
+    const history = getMatchHistory();
+    const netFromHistory = history.reduce((total, match) => {
+      const amount = Number(match.scoreDiff) || (match.isWin ? 12 : 8);
+      return total + (match.isWin ? Math.abs(amount) : -Math.abs(amount));
+    }, 0);
+    saved = String(Math.max(0, 100 + netFromHistory));
+    localStorage.setItem('wayblock_points', saved);
+  }
+  const points = Math.max(0, parseInt(saved, 10) || 0);
+  localStorage.setItem('wayblock_points', String(points));
+  return points;
+}
+
+function renderProfilePoints() {
+  const pointsEl = document.getElementById('profilePointsBalance');
+  if (pointsEl) pointsEl.textContent = getProfilePoints().toLocaleString();
+}
+
 function saveMatchRecord(match) {
   let matches = getMatchHistory();
   matches.unshift(match);
   localStorage.setItem('wayblock_matches', JSON.stringify(matches));
+
+  const scoreChange = Number(match.scoreDiff) || (match.isWin ? 12 : 8);
+  const currentPoints = getProfilePoints();
+  const updatedPoints = Math.max(0, currentPoints + (match.isWin ? Math.abs(scoreChange) : -Math.abs(scoreChange)));
+  localStorage.setItem('wayblock_points', String(updatedPoints));
 
   // Update real match counts
   let totalMatches = parseInt(localStorage.getItem('wayblock_total_matches') || "0") + 1;
@@ -3535,6 +3574,7 @@ function renderProfileStats() {
   if (statWinRateEl) statWinRateEl.innerText = `${winRate}%`;
   if (statStreakEl) statStreakEl.innerText = bestStreak;
   if (homeStreakEl) homeStreakEl.innerText = bestStreak;
+  renderProfilePoints();
   if (typeof renderProfileAchievements === 'function') renderProfileAchievements();
 
   // Keep the online lobby summary synced with the player's local profile and stats.
