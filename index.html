@@ -3588,9 +3588,14 @@ function initHostView(selectedRounds) {
   if (roomCodeLabel) roomCodeLabel.textContent = isCreateRoomFlow ? 'ROOM DISCOVERY' : 'ROOM PASSCODE';
   if (roomReadyLabel) { roomReadyLabel.textContent = isCreateRoomFlow ? 'OPEN' : ''; roomReadyLabel.classList.toggle('hidden', !isCreateRoomFlow); }
   if (discoveryCopy) { discoveryCopy.textContent = isCreateRoomFlow ? 'Visible in “Rooms open to join”' : 'Share this code with friends to join'; discoveryCopy.classList.toggle('hidden', !isCreateRoomFlow); }
-  if (roomCodeEl) roomCodeEl.classList.toggle('hidden', isCreateRoomFlow);
+  if (roomCodeEl) {
+    roomCodeEl.classList.toggle('hidden', isCreateRoomFlow);
+    roomCodeEl.style.cssText = isCreateRoomFlow ? '' : 'display:inline-block;font-family:ui-monospace,monospace;font-size:1.65rem;font-weight:900;letter-spacing:5px;color:var(--wb-gold);margin-left:10px;';
+  }
   const lockLabel = document.querySelector('.host-settings-lock');
   if (lockLabel) lockLabel.textContent = isCreateRoomFlow ? '🔒 2 PLAYERS MAX' : '🔒 3 PLAYERS MAX';
+  const settingsSubtitle = document.querySelector('.host-settings-heading > div span');
+  if (settingsSubtitle) settingsSubtitle.textContent = isCreateRoomFlow ? 'Head-to-head only' : 'Play with up to two friends';
   const intro = document.querySelector('.host-search-hero p');
   if (intro) intro.textContent = isCreateRoomFlow ? 'Your arena is ready. Invite one opponent with your room code and get ready for a tactical duel.' : 'Your room is ready. Share the room passcode and invite up to two friends to play together.';
   const heading = document.querySelector('.host-search-hero h1');
@@ -3651,7 +3656,7 @@ function relayToOtherGuests(senderConn, data) {
 
 function acceptCandidate() {
   if (!candidateGuest) return;
-  if (confirmedGuests.length >= 1) { rejectCandidate(); displayToast('Room full', 'This room is limited to 2 players.'); return; }
+  if (confirmedGuests.length >= (activeHostFlow === 'create-room' ? 1 : 2)) { rejectCandidate(); displayToast('Room full', activeHostFlow === 'create-room' ? 'This room is limited to 2 players.' : 'This room is limited to 3 players.'); return; }
   const newConn = candidateGuest.conn;
   const slot = activeHostFlow === 'create-room' ? 2 : confirmedGuests.length + 2;
 
