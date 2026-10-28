@@ -3273,7 +3273,7 @@ function renderGameHistory() {
     const duration = Number(match.durationMs || 0);
     const durationText = duration > 0 ? (duration >= 3600000 ? Math.floor(duration / 3600000) + 'h ' + Math.floor((duration % 3600000) / 60000) + 'm' : duration >= 60000 ? Math.floor(duration / 60000) + 'm ' + Math.floor((duration % 60000) / 1000) + 's' : Math.floor(duration / 1000) + 's') : 'Not recorded';
     const card = document.createElement('article');
-    card.style.cssText = 'background:linear-gradient(145deg,#142236,#0e1726);border:1px solid ' + (won ? 'rgba(52,211,153,.28)' : 'rgba(248,113,113,.24)') + ';border-radius:15px;padding:14px;';
+    card.style.cssText = 'background:linear-gradient(180deg,#14191f 0%,#0e1319 100%);border:1px solid #38342b;border-radius:15px;padding:14px;box-shadow:0 5px 16px rgba(0,0,0,.18),inset 0 1px 0 rgba(255,255,255,.02);';
     const top = document.createElement('div');
     top.style.cssText = 'display:flex;justify-content:space-between;align-items:flex-start;gap:10px;';
     const details = document.createElement('div');
