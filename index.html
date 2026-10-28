@@ -4044,7 +4044,7 @@ function refreshOpenRooms(){
       if(typeof openRoomsProbe.listAllPeers!=='function'){list.innerHTML='<div class="open-rooms-empty">This network does not support room discovery yet.</div>';try{openRoomsProbe.destroy();}catch(e){}openRoomsProbe=null;return;}
       openRoomsProbe.listAllPeers(ids=>{
         if(token!==openRoomsRefreshToken)return;
-        const ownRoomId=peer&&peer.id?peer.id:null;const rooms=[...new Set((ids||[]).filter(id=>/^wb-\\d{5}$/.test(id)&&id!==ownId&&id!==ownRoomId))];
+        const ownRoomId=peer&&peer.id?peer.id:null;const rooms=[...new Set((ids||[]).filter(id=>/^wb-\d{5}$/.test(id)&&id!==ownId&&id!==ownRoomId))];
         list.innerHTML='';
         if(!rooms.length){list.innerHTML='<div class="open-rooms-empty">No open rooms right now.<br>Be the first to create a room!</div>';}
         rooms.sort().forEach((roomId,index)=>{
