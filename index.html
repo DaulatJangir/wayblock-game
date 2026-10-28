@@ -2687,6 +2687,21 @@
   <div class="leaderboard-rows" id="leaderboardRows"></div>
 </div>
 
+<!-- ================= FULL GAME HISTORY ================= -->
+<div class="view-container hidden" id="historyView" style="padding:18px 16px 100px;min-height:100%;">
+  <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px;">
+    <div><div style="font-size:.68rem;font-weight:800;letter-spacing:2px;color:var(--wb-cyan);">YOUR ACTIVITY</div><div style="font-size:1.55rem;font-weight:900;color:#fff;margin-top:4px;">Game History</div><div style="font-size:.8rem;color:var(--wb-text-sub);margin-top:4px;">Completed matches, results and play times</div></div>
+    <div class="icon-circle-btn" aria-label="History"><i class="fa-solid fa-clock-rotate-left" aria-hidden="true"></i></div>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-bottom:16px;">
+    <div style="background:linear-gradient(145deg,#14283a,#101a2a);border:1px solid rgba(0,210,255,.2);border-radius:14px;padding:13px 9px;"><div id="historyTotalMatches" style="font-size:1.35rem;font-weight:900;color:#fff;">0</div><div style="font-size:.62rem;color:var(--wb-text-sub);font-weight:800;letter-spacing:.7px;">MATCHES</div></div>
+    <div style="background:linear-gradient(145deg,#14283a,#101a2a);border:1px solid rgba(52,211,153,.22);border-radius:14px;padding:13px 9px;"><div id="historyTotalWins" style="font-size:1.35rem;font-weight:900;color:#34d399;">0</div><div style="font-size:.62rem;color:var(--wb-text-sub);font-weight:800;letter-spacing:.7px;">WINS</div></div>
+    <div style="background:linear-gradient(145deg,#14283a,#101a2a);border:1px solid rgba(248,113,113,.22);border-radius:14px;padding:13px 9px;"><div id="historyTotalLosses" style="font-size:1.35rem;font-weight:900;color:#f87171;">0</div><div style="font-size:.62rem;color:var(--wb-text-sub);font-weight:800;letter-spacing:.7px;">LOSSES</div></div>
+  </div>
+  <div style="display:flex;align-items:center;justify-content:space-between;margin:10px 2px;"><div style="font-size:.8rem;font-weight:900;letter-spacing:1px;color:#dce8f5;">RECENT MATCHES</div><div style="font-size:.7rem;color:var(--wb-text-sub);">Newest first</div></div>
+  <div id="gameHistoryList" style="display:flex;flex-direction:column;gap:10px;"></div>
+</div>
+
 <!-- ================= 4-TAB DOCK: PLAY, LEADERBOARD, RANK, PROFILE ================= -->
 <div class="bottom-nav-dock" id="bottomNavDock">
   <div class="nav-tab-item active" id="tabHome" onclick="switchNavTab('home')">
@@ -2698,8 +2713,8 @@
     <span>Leaderboard</span>
   </div>
   <div class="nav-tab-item" id="tabLearn" onclick="switchNavTab('learn')">
-    <span class="nav-icon"><i class="fa-solid fa-ranking-star" aria-hidden="true"></i></span>
-    <span>Rank</span>
+    <span class="nav-icon"><i class="fa-solid fa-clock-rotate-left" aria-hidden="true"></i></span>
+    <span>History</span>
   </div>
   <div class="nav-tab-item" id="tabProfile" onclick="switchNavTab('profile')">
     <span class="nav-icon"><i class="fa-solid fa-user" aria-hidden="true"></i></span>
@@ -2987,8 +3002,68 @@ function renderHomeQuestCards() {
   if (weeklyStatus) weeklyStatus.textContent = weeklyDone ? (state.weekly.rewarded ? 'Reward earned ✓' : 'All goals complete') : 'Resets weekly';
 }
 
+function renderGameHistory() {
+  const history = getMatchHistory();
+  const wins = history.filter(match => !!match.isWin).length;
+  const totalEl = document.getElementById('historyTotalMatches');
+  const winsEl = document.getElementById('historyTotalWins');
+  const lossesEl = document.getElementById('historyTotalLosses');
+  const list = document.getElementById('gameHistoryList');
+  if (!list) return;
+  if (totalEl) totalEl.textContent = history.length;
+  if (winsEl) winsEl.textContent = wins;
+  if (lossesEl) lossesEl.textContent = history.length - wins;
+  list.innerHTML = '';
+  if (!history.length) {
+    const empty = document.createElement('div');
+    empty.style.cssText = 'text-align:center;padding:28px 18px;background:#101a2a;border:1px solid rgba(148,163,184,.16);border-radius:16px;color:var(--wb-text-sub);font-size:.85rem;line-height:1.6;';
+    empty.innerHTML = '<i class="fa-solid fa-gamepad" style="font-size:1.6rem;color:var(--wb-cyan);display:block;margin-bottom:10px;" aria-hidden="true"></i><strong style="color:#fff;display:block;margin-bottom:4px;">No completed matches yet</strong>Your game results will appear here after you finish a match.';
+    list.appendChild(empty);
+    return;
+  }
+  history.forEach(match => {
+    const won = !!match.isWin;
+    const date = new Date(Number(match.timestamp || match.startedAt || Date.now()));
+    const dateText = date.toLocaleDateString(undefined, {month:'short', day:'numeric', year:'numeric'});
+    const timeText = date.toLocaleTimeString(undefined, {hour:'numeric', minute:'2-digit'});
+    const duration = Number(match.durationMs || 0);
+    const durationText = duration > 0 ? (duration >= 3600000 ? Math.floor(duration / 3600000) + 'h ' + Math.floor((duration % 3600000) / 60000) + 'm' : duration >= 60000 ? Math.floor(duration / 60000) + 'm ' + Math.floor((duration % 60000) / 1000) + 's' : Math.floor(duration / 1000) + 's') : 'Not recorded';
+    const card = document.createElement('article');
+    card.style.cssText = 'background:linear-gradient(145deg,#142236,#0e1726);border:1px solid ' + (won ? 'rgba(52,211,153,.28)' : 'rgba(248,113,113,.24)') + ';border-radius:15px;padding:14px;';
+    const top = document.createElement('div');
+    top.style.cssText = 'display:flex;justify-content:space-between;align-items:flex-start;gap:10px;';
+    const details = document.createElement('div');
+    details.style.cssText = 'min-width:0;';
+    const title = document.createElement('div');
+    title.style.cssText = 'font-size:.95rem;font-weight:900;color:#fff;';
+    title.textContent = match.gameName || 'WayBlock';
+    const modeLine = document.createElement('div');
+    modeLine.style.cssText = 'font-size:.75rem;color:var(--wb-text-sub);margin-top:5px;';
+    modeLine.textContent = match.modeLabel || 'Game mode not recorded';
+    const opponent = document.createElement('div');
+    opponent.style.cssText = 'font-size:.78rem;color:#cbd5e1;margin-top:9px;overflow-wrap:anywhere;';
+    opponent.textContent = 'Opponent: ' + (match.opponent || 'Not recorded');
+    details.append(title, modeLine, opponent);
+    const result = document.createElement('div');
+    result.style.cssText = 'flex:0 0 auto;padding:6px 10px;border-radius:9px;background:' + (won ? 'rgba(52,211,153,.13)' : 'rgba(248,113,113,.12)') + ';color:' + (won ? '#34d399' : '#f87171') + ';font-size:.72rem;font-weight:900;';
+    result.textContent = won ? '✓ WIN' : '✕ LOSS';
+    top.append(details, result);
+    const footer = document.createElement('div');
+    footer.style.cssText = 'display:flex;flex-wrap:wrap;gap:8px 14px;border-top:1px solid rgba(148,163,184,.14);padding-top:10px;margin-top:12px;color:var(--wb-text-sub);font-size:.7rem;';
+    const played = document.createElement('span');
+    played.textContent = '🗓 ' + dateText + ' · ' + timeText;
+    const elapsed = document.createElement('span');
+    elapsed.textContent = '◷ Duration: ' + durationText;
+    const points = document.createElement('span');
+    points.textContent = '★ ' + (won ? '+' : '−') + (match.scoreDiff || (won ? 12 : 8)) + ' pts';
+    footer.append(played, elapsed, points);
+    card.append(top, footer);
+    list.appendChild(card);
+  });
+}
+
 function switchNavTab(tab) {
-  ['homeView', 'profileView', 'fullMasteryRoadView', 'fullSettingsView', 'fullReferralView', 'fullGuideView', 'fullSupportView', 'lobbyChoiceView', 'hostJoinChoiceView', 'hostLobbyView', 'joinLobbyView', 'gameArenaView', 'localSetupView'].forEach(id => {
+  ['homeView', 'profileView', 'fullMasteryRoadView', 'fullSettingsView', 'fullReferralView', 'fullGuideView', 'fullSupportView', 'lobbyChoiceView', 'hostJoinChoiceView', 'hostLobbyView', 'joinLobbyView', 'gameArenaView', 'localSetupView', 'historyView'].forEach(id => {
     document.getElementById(id).classList.add('hidden');
   });
 
@@ -3007,8 +3082,9 @@ function switchNavTab(tab) {
     document.getElementById('tabPlay').classList.add('active');
     renderGlobalLeaderboard(document.getElementById('leaderboardSearch')?.value || '');
   } else if (tab === 'learn') {
-    document.getElementById('fullGuideView').classList.remove('hidden');
+    document.getElementById('historyView').classList.remove('hidden');
     document.getElementById('tabLearn').classList.add('active');
+    renderGameHistory();
   } else if (tab === 'profile') {
     document.getElementById('profileView').classList.remove('hidden');
     document.getElementById('tabProfile').classList.add('active');
@@ -3016,7 +3092,7 @@ function switchNavTab(tab) {
 }
 
 function switchView(viewId) {
-  ['homeView', 'profileView', 'fullMasteryRoadView', 'fullSettingsView', 'fullReferralView', 'fullGuideView', 'fullSupportView', 'lobbyChoiceView', 'hostJoinChoiceView', 'hostLobbyView', 'joinLobbyView', 'gameArenaView', 'localSetupView', 'leaderboardView'].forEach(id => {
+  ['homeView', 'profileView', 'fullMasteryRoadView', 'fullSettingsView', 'fullReferralView', 'fullGuideView', 'fullSupportView', 'lobbyChoiceView', 'hostJoinChoiceView', 'hostLobbyView', 'joinLobbyView', 'gameArenaView', 'localSetupView', 'leaderboardView', 'historyView'].forEach(id => {
     document.getElementById(id).classList.add('hidden');
   });
   document.getElementById(viewId).classList.remove('hidden');
@@ -3796,6 +3872,7 @@ let isOnline = false;
 let mode = 'move';
 let turn = 1;
 let gameOver = false;
+let currentGameStartedAt = 0;
 
 let p1 = { x: 4, y: 8, walls: 10, name: "Player 1", color: "#00d2ff" };
 let p2 = { x: 4, y: 0, walls: 10, name: "Player 2", color: "#f97316" };
@@ -3818,6 +3895,7 @@ function startLocalGame(selectedMode) {
 function bootGame(selectedMode, selectedTotalRounds) {
   recordQuestEvent('game');
   gameMode = selectedMode;
+  currentGameStartedAt = Date.now();
   totalRounds = selectedTotalRounds || 1;
   currentRound = 1;
   playerScores = { p1: 0, p2: 0, p3: 0 };
@@ -4223,6 +4301,9 @@ function showFinalTournamentWin() {
     opponent: oppString || "Opponent",
     isWin: isUserWinner,
     timestamp: Date.now(),
+    startedAt: currentGameStartedAt || Date.now(),
+    durationMs: currentGameStartedAt ? Math.max(0, Date.now() - currentGameStartedAt) : 0,
+    gameName: 'WayBlock',
     modeLabel: modeText,
     scoreDiff: isUserWinner ? (10 + Math.floor(Math.random() * 5)) : (6 + Math.floor(Math.random() * 4))
   });
