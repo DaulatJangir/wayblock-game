@@ -4961,5 +4961,95 @@ html body #leaderboardView .leaderboard-search:focus {
   }
 </style>
 
+
+<style id="profile-account-premium-layout">
+  /* Account/profile screen: reference-inspired layout using the app's charcoal + gold palette */
+  #profileView .top-bar,
+  #fullSettingsView .top-bar { margin-bottom: 22px; }
+  #profileView .profile-top-avatar-center {
+    display:grid !important;
+    grid-template-columns:76px minmax(0,1fr) auto;
+    grid-template-rows:auto auto;
+    align-items:center;
+    justify-items:start;
+    column-gap:16px;
+    row-gap:5px;
+    padding:22px 20px !important;
+    margin:0 0 18px !important;
+    border:1px solid #38342b !important;
+    border-radius:24px !important;
+    background:linear-gradient(180deg,#14191f 0%,#0e1319 100%) !important;
+    box-shadow:0 7px 20px rgba(0,0,0,.22),inset 0 1px 0 rgba(255,255,255,.025) !important;
+    text-align:left !important;
+  }
+  #profileView .profile-ring-avatar {
+    grid-column:1;grid-row:1 / span 2;
+    width:70px !important;height:70px !important;
+    display:grid;place-items:center;
+    border:1px solid rgba(245,196,91,.35) !important;
+    background:rgba(245,196,91,.07) !important;
+    box-shadow:inset 0 0 0 5px rgba(245,196,91,.025) !important;
+    color:#f5c45b !important;
+  }
+  #profileView .profile-name-edit-wrap {
+    grid-column:2 / span 2;grid-row:1;
+    display:flex;align-items:center;gap:8px;
+    color:#f7f8fa !important;font-size:1.18rem !important;font-weight:900;
+  }
+  #profileView #profileDisplayName { color:#f7f8fa !important; }
+  #profileView .profile-name-edit-wrap span:last-child { color:#f5c45b !important; }
+  #profileView .profile-since-text {
+    grid-column:2;grid-row:2;color:#a6adb7 !important;text-align:left !important;
+  }
+  #profileView .home-user-status {
+    grid-column:3;grid-row:2;color:#f5c45b !important;
+    font-size:.68rem !important;white-space:nowrap;
+  }
+  #profileView .home-rank-banner,
+  #profileView .stat-card,
+  #profileView .profile-section-box {
+    border:1px solid #38342b !important;
+    border-radius:20px !important;
+    background:linear-gradient(180deg,#14191f 0%,#0e1319 100%) !important;
+    box-shadow:0 7px 20px rgba(0,0,0,.20),inset 0 1px 0 rgba(255,255,255,.025) !important;
+  }
+  #profileView .hrb-tag,
+  #profileView .hrb-level-name,
+  #profileView .sec-title { color:#f7f8fa !important; }
+  #profileView .hrb-tag,
+  #profileView .sec-link { color:#f5c45b !important; }
+  #profileView .stat-card-label,
+  #profileView .profile-since-text { color:#a6adb7 !important; }
+  #profileView .stat-card-val { color:#f7f8fa !important; }
+  #profileView .achieve-hex {
+    border-color:rgba(245,196,91,.25) !important;
+    background:rgba(245,196,91,.08) !important;
+  }
+  #profileView .settings-row { border-bottom-color:rgba(160,153,132,.15) !important; }
+  #fullSettingsView .settings-group {
+    border:1px solid #38342b !important;border-radius:22px !important;
+    background:linear-gradient(180deg,#14191f 0%,#0e1319 100%) !important;
+    box-shadow:0 7px 20px rgba(0,0,0,.20),inset 0 1px 0 rgba(255,255,255,.025) !important;
+  }
+  #fullSettingsView .setting-name { color:#f7f8fa !important; }
+  #fullSettingsView .setting-desc { color:#a6adb7 !important; }
+  #fullSettingsView .settings-row { border-bottom-color:rgba(160,153,132,.15) !important; }
+  #fullSettingsView .toggle-slider { border-color:rgba(245,196,91,.28) !important; }
+  #fullSettingsView input:checked + .toggle-slider {
+    background:rgba(245,196,91,.22) !important;border-color:rgba(245,196,91,.55) !important;
+  }
+  #fullSettingsView input:checked + .toggle-slider:before {
+    background:#f5c45b !important;
+  }
+  #fullSettingsView .delete-account-clean-btn { color:#d98b80 !important; }
+  @media(max-width:390px) {
+    #profileView .profile-top-avatar-center { grid-template-columns:60px minmax(0,1fr);column-gap:12px;padding:18px 14px !important; }
+    #profileView .profile-ring-avatar { width:58px !important;height:58px !important; }
+    #profileView .profile-name-edit-wrap { grid-column:2; }
+    #profileView .profile-since-text { grid-column:2; }
+    #profileView .home-user-status { grid-column:2;grid-row:3; }
+  }
+</style>
+
 </body>
 </html>
