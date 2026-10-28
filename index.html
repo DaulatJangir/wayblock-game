@@ -3191,7 +3191,6 @@ function getMatchHistory() {
 function saveMatchRecord(match) {
   let matches = getMatchHistory();
   matches.unshift(match);
-  if (matches.length > 20) matches = matches.slice(0, 20);
   localStorage.setItem('wayblock_matches', JSON.stringify(matches));
 
   // Update real match counts
