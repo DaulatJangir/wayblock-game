@@ -1956,6 +1956,151 @@
 
 </style>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+<style id="unified-card-theme">
+  /* Unified premium card system inspired by the profile/mastery reference */
+  :root {
+    --wb-card: #10151b;
+    --wb-card-raised: #141a21;
+    --wb-card-border: #38342b;
+    --wb-card-border-soft: rgba(160, 153, 132, .20);
+    --wb-card-gold: #f5c45b;
+    --wb-card-title: #f7f8fa;
+    --wb-card-copy: #a6adb7;
+  }
+
+  .home-rank-banner,
+  .daily-card,
+  .learning-card,
+  .stat-card,
+  .profile-section-box,
+  .road-step-item,
+  .road-reward-box,
+  .settings-group,
+  .refer-teaser-card,
+  .guide-card,
+  .online-play-hero-card,
+  .online-mode-card,
+  .local-profile-card,
+  .lobby-player-card,
+  .lobby-feature-card,
+  .lobby-action-card,
+  .lobby-info-card,
+  .host-versus-card,
+  .host-join-choice-card,
+  .home-goal-card,
+  .match-dashboard-box,
+  .modal-box {
+    color: var(--wb-card-title);
+    background: linear-gradient(180deg, #14191f 0%, #0e1319 100%);
+    border: 1px solid var(--wb-card-border);
+    border-radius: 20px;
+    box-shadow: 0 7px 20px rgba(0,0,0,.22), inset 0 1px 0 rgba(255,255,255,.025);
+  }
+
+  .home-rank-banner,
+  .daily-card,
+  .learning-card,
+  .profile-section-box,
+  .settings-group,
+  .refer-teaser-card,
+  .guide-card,
+  .online-play-hero-card,
+  .online-mode-card,
+  .local-profile-card,
+  .lobby-player-card,
+  .lobby-feature-card,
+  .lobby-action-card,
+  .host-versus-card,
+  .host-join-choice-card,
+  .home-goal-card {
+    border-color: var(--wb-card-border);
+  }
+
+  .home-rank-banner:active,
+  .daily-card:active,
+  .learning-card:active,
+  .action-deck-card:active,
+  .lobby-feature-card:active,
+  .lobby-action-card:active,
+  .host-join-choice-card:active {
+    border-color: rgba(245,196,91,.62);
+  }
+
+  .home-rank-banner::after { display: none; }
+  .home-goal-card::before { border-color: rgba(245,196,91,.10); box-shadow: 0 0 0 15px rgba(245,196,91,.018), 0 0 0 31px rgba(245,196,91,.012); }
+
+  .home-rank-banner .hrb-tag,
+  .home-rank-banner .hrb-level-name,
+  .daily-title,
+  .sec-title,
+  .setting-name,
+  .guide-card h4,
+  .step-title,
+  .adc-title {
+    color: var(--wb-card-title);
+  }
+
+  .hrb-bottom-row,
+  .daily-sub,
+  .stat-card-label,
+  .step-sub,
+  .setting-desc,
+  .guide-card p,
+  .lobby-info-card p,
+  .profile-since-text,
+  .match-time {
+    color: var(--wb-card-copy);
+  }
+
+  .hrb-tag,
+  .hrb-level-name,
+  .hrb-bottom-row span:last-child,
+  .hrb-bottom-row .highlight,
+  .hrb-track-fill,
+  .home-goal-card .goal-reward-pill {
+    --card-accent: var(--wb-card-gold);
+  }
+
+  .hrb-track-container { background: #292a29; }
+  .hrb-track-fill { background: linear-gradient(90deg,#e9b84d,#f7d47b); }
+  .road-step-item.active-current {
+    border-color: rgba(245,196,91,.65);
+    background: linear-gradient(180deg,#191a1b 0%,#10151b 100%);
+    box-shadow: 0 0 18px rgba(245,196,91,.08), inset 0 1px 0 rgba(255,255,255,.025);
+  }
+  .road-step-item.completed {
+    border-color: rgba(88,190,145,.35);
+    background: linear-gradient(180deg,#121a1a 0%,#0e1518 100%);
+  }
+  .stat-card-val { color: var(--wb-card-title); }
+  .step-node-badge { background: #24272a; border: 1px solid rgba(255,255,255,.06); }
+  .profile-section-box .match-history-list { gap: 12px; }
+  .settings-row { border-bottom-color: rgba(255,255,255,.07); }
+
+  /* Keep game-mode cards legible while matching the same dark premium shell */
+  .action-deck-card,
+  .card-online,
+  .card-ai,
+  .card-local,
+  .card-host,
+  .card-join {
+    background: linear-gradient(180deg,#171c23 0%,#10151b 100%) !important;
+    border: 1px solid var(--wb-card-border);
+    border-radius: 20px;
+    box-shadow: 0 7px 20px rgba(0,0,0,.22), inset 0 1px 0 rgba(255,255,255,.025);
+  }
+  .adc-icon-box {
+    background: rgba(245,196,91,.08);
+    border: 1px solid rgba(245,196,91,.18);
+  }
+  .adc-title { color: #f7f8fa; }
+  .adc-sub { color: #a6adb7; opacity: 1; }
+  .adc-chevron { color: var(--wb-card-gold); }
+  .online-mode-card,
+  .lobby-action-card { transition: transform .15s ease, border-color .15s ease, box-shadow .15s ease; }
+</style>
+
 </head>
 <body>
 
