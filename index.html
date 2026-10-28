@@ -2222,7 +2222,7 @@
   </div>
 
   <div class="action-deck">
-    <div class="action-deck-card card-ai" onclick="startLocalGame('ai')">
+    <div class="action-deck-card card-ai" onclick="openAIDifficultyModal()">
       <div class="adc-left">
         <div class="adc-icon-box">🤖</div>
         <div>
@@ -3039,6 +3039,28 @@
     <p style="color:var(--wb-text-sub); font-size:0.82rem; margin-bottom:14px;" id="finalTourneySub">Tournament Completed</p>
     <div id="podiumList" style="margin:16px 0;"></div>
     <button class="primary-action-btn" onclick="exitToHome()">Return to Menu</button>
+  </div>
+</div>
+
+<!-- VS AI Difficulty Selection -->
+<div class="modal-overlay hidden" id="aiDifficultyModal">
+  <div class="modal-box" style="border:1px solid rgba(251,191,36,.38); background:linear-gradient(155deg,#171a1c,#101214); box-shadow:0 18px 48px rgba(0,0,0,.42);">
+    <div style="font-size:2rem; margin-bottom:8px;">🤖</div>
+    <div style="font-size:.68rem; font-weight:900; letter-spacing:1.8px; color:#e3bd62; margin-bottom:7px;">CHOOSE YOUR CHALLENGE</div>
+    <h2 style="font-size:1.35rem; color:#f7f5ef; margin-bottom:7px;">Play vs AI</h2>
+    <p style="font-size:.82rem; line-height:1.5; color:#b9bdc3; margin-bottom:18px;">Choose how challenging the computer opponent should be.</p>
+    <div style="display:grid; gap:10px; text-align:left;">
+      <button onclick="startAIGame('easy')" style="display:flex; align-items:center; gap:12px; padding:13px; border-radius:14px; border:1px solid #315443; background:linear-gradient(110deg,#17251f,#151a19); color:#f5f5ef; text-align:left; cursor:pointer;">
+        <span style="font-size:1.4rem;">🟢</span><span style="flex:1;"><strong style="display:block; font-size:.95rem;">Easy</strong><small style="display:block; color:#a9b6ad; margin-top:3px;">Relaxed game with simpler moves</small></span><span style="color:#83d5a6;">›</span>
+      </button>
+      <button onclick="startAIGame('medium')" style="display:flex; align-items:center; gap:12px; padding:13px; border-radius:14px; border:1px solid #62512b; background:linear-gradient(110deg,#282319,#191816); color:#f5f5ef; text-align:left; cursor:pointer;">
+        <span style="font-size:1.4rem;">🟡</span><span style="flex:1;"><strong style="display:block; font-size:.95rem;">Medium</strong><small style="display:block; color:#c7b98e; margin-top:3px;">Balanced movement and tactical walls</small></span><span style="color:#e3bd62;">›</span>
+      </button>
+      <button onclick="startAIGame('hard')" style="display:flex; align-items:center; gap:12px; padding:13px; border-radius:14px; border:1px solid #653d38; background:linear-gradient(110deg,#2b1d1c,#191516); color:#f5f5ef; text-align:left; cursor:pointer;">
+        <span style="font-size:1.4rem;">🔴</span><span style="flex:1;"><strong style="display:block; font-size:.95rem;">Hard</strong><small style="display:block; color:#d4a39c; margin-top:3px;">Aggressive blocking and shortest-path play</small></span><span style="color:#ef9b8f;">›</span>
+      </button>
+    </div>
+    <button onclick="closeAIDifficultyModal()" style="width:100%; margin-top:14px; padding:10px; border:1px solid #353a40; border-radius:12px; background:#111416; color:#b9bdc3; font-weight:700; cursor:pointer;">Cancel</button>
   </div>
 </div>
 
@@ -4203,6 +4225,7 @@ const CELL_SIZE = (360 - (BOARD_PADDING * 2) - (GAP * (N - 1))) / N;
 const STEP = CELL_SIZE + GAP;
 const CENTER_X = 4, CENTER_Y = 4;
 
+let aiDifficulty = 'medium';
 let gameMode = 'ai';
 let isOnline = false;
 let mode = 'move';
@@ -4218,6 +4241,20 @@ let p4 = { x: 8, y: 4, walls: 10, name: "Player 4", color: "#f43f5e" };
 let segH = new Map();
 let segV = new Map();
 let hoverDot = null;
+
+function openAIDifficultyModal() {
+  const modal = document.getElementById('aiDifficultyModal');
+  if (modal) modal.classList.remove('hidden');
+}
+function closeAIDifficultyModal() {
+  const modal = document.getElementById('aiDifficultyModal');
+  if (modal) modal.classList.add('hidden');
+}
+function startAIGame(difficulty) {
+  aiDifficulty = ['easy', 'medium', 'hard'].includes(difficulty) ? difficulty : 'medium';
+  closeAIDifficultyModal();
+  startLocalGame('ai');
+}
 
 function startLocalGame(selectedMode) {
   isOnline = false;
@@ -4677,7 +4714,7 @@ function switchTurn(localTriggered = false) {
 
 // Tactical AI
 function aiSmartTurn() {
-  if (gameOver) return;
+  if (gameOver || gameMode !== 'ai' || turn !== 2) return;
 
   const targetAi = (x, y) => y === 8;
   const targetHuman = (x, y) => y === 0;
@@ -4685,8 +4722,25 @@ function aiSmartTurn() {
   const aiDist = getShortestDistance(p2, targetAi);
   const humanDist = getShortestDistance(p1, targetHuman);
 
+  // Easy: choose a legal move at random and do not use tactical walls.
+  if (aiDifficulty === 'easy') {
+    const moves = getValidMoves(p2);
+    if (moves.length) {
+      const move = moves[Math.floor(Math.random() * moves.length)];
+      p2.x = move.x;
+      p2.y = move.y;
+    }
+    draw();
+    if (checkWin()) return;
+    switchTurn(true);
+    return;
+  }
+
   let placedWall = false;
-  if (p2.walls > 0 && (humanDist <= 4 || humanDist < aiDist)) {
+  const wallTrigger = aiDifficulty === 'hard'
+    ? (humanDist <= aiDist + 2 || humanDist <= 3)
+    : (humanDist <= 4 || humanDist < aiDist);
+  if (p2.walls > 0 && wallTrigger) {
     let bestWall = null;
     let maxDistIncrease = 0;
 
