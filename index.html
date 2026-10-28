@@ -1338,6 +1338,39 @@
   }
 
 
+
+  /* Global leaderboard */
+  .global-leaderboard { padding-bottom: 20px; }
+  .global-leaderboard-header { display:flex;align-items:center;gap:12px;margin:4px 0 20px; }
+  .global-leaderboard-header .lobby-heading { flex:1; }
+  .leaderboard-hero { position:relative;overflow:hidden;padding:22px 20px;margin-bottom:16px;border:1px solid rgba(0,210,255,.22);border-radius:24px;background:radial-gradient(ellipse at 90% 0%,rgba(0,210,255,.16),transparent 45%),linear-gradient(145deg,#172631,#101720 70%,#19232d); }
+  .leaderboard-kicker { color:#7ddff2;font-size:.62rem;font-weight:900;letter-spacing:2px; }
+  .leaderboard-hero-title { margin-top:8px;color:#f7fbff;font-size:1.55rem;font-weight:900;letter-spacing:-.6px; }
+  .leaderboard-hero-sub { margin-top:6px;color:#a9b8c7;font-size:.76rem;line-height:1.5; }
+  .leaderboard-summary { display:flex;gap:10px;margin-top:17px; }
+  .leaderboard-summary-item { flex:1;padding:11px 12px;border:1px solid rgba(255,255,255,.08);border-radius:14px;background:rgba(5,12,20,.32); }
+  .leaderboard-summary-item strong { display:block;color:#fff;font-size:1.08rem;font-weight:900; }
+  .leaderboard-summary-item span { display:block;margin-top:3px;color:#8f9eac;font-size:.57rem;font-weight:800;letter-spacing:1px; }
+  .leaderboard-demo-note { display:flex;align-items:flex-start;gap:9px;padding:11px 12px;margin-bottom:14px;border:1px solid rgba(240,190,90,.17);border-radius:13px;background:rgba(240,190,90,.055);color:#c7b98f;font-size:.68rem;line-height:1.45; }
+  .leaderboard-demo-note i { color:#e8c773;margin-top:2px; }
+  .leaderboard-list-head { display:flex;align-items:center;justify-content:space-between;margin:0 3px 10px;color:#aeb9c7;font-size:.65rem;font-weight:900;letter-spacing:1.4px; }
+  .leaderboard-search { width:100%;box-sizing:border-box;margin-bottom:12px;padding:12px 14px;border:1px solid rgba(166,190,209,.16);border-radius:14px;outline:none;background:#111923;color:#f4f8fb;font:inherit;font-size:.8rem; }
+  .leaderboard-search:focus { border-color:rgba(0,210,255,.55);box-shadow:0 0 0 3px rgba(0,210,255,.07); }
+  .leaderboard-rows { display:flex;flex-direction:column;gap:7px; }
+  .leaderboard-row { display:flex;align-items:center;gap:11px;padding:11px 12px;border:1px solid rgba(174,194,213,.09);border-radius:15px;background:linear-gradient(110deg,rgba(25,33,43,.98),rgba(16,22,30,.98)); }
+  .leaderboard-rank { width:27px;flex:0 0 27px;text-align:center;color:#8392a3;font-size:.76rem;font-weight:900; }
+  .leaderboard-row:nth-child(1) .leaderboard-rank { color:#f3cf70; }
+  .leaderboard-row:nth-child(2) .leaderboard-rank { color:#d9e1ea; }
+  .leaderboard-row:nth-child(3) .leaderboard-rank { color:#d69a6c; }
+  .leaderboard-avatar { width:38px;height:38px;flex:0 0 38px;display:flex;align-items:center;justify-content:center;border:1px solid rgba(0,210,255,.16);border-radius:13px;background:linear-gradient(145deg,#203e4b,#172630);color:#9be9f6;font-size:.7rem;font-weight:900; }
+  .leaderboard-player-copy { flex:1;min-width:0; }
+  .leaderboard-player-name { overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#f0f4f8;font-size:.78rem;font-weight:850; }
+  .leaderboard-player-meta { margin-top:4px;color:#8998a8;font-size:.62rem; }
+  .leaderboard-score { text-align:right;color:#f0cc76;font-size:.9rem;font-weight:900;white-space:nowrap; }
+  .leaderboard-score span { display:block;margin-top:3px;color:#8d9aab;font-size:.53rem;letter-spacing:1px; }
+  .leaderboard-empty { padding:25px 12px;text-align:center;color:#96a4b3;font-size:.8rem; }
+  @media(max-width:380px) { .leaderboard-hero { padding:19px 16px; } .leaderboard-row { gap:8px;padding:10px 9px; } .leaderboard-avatar { width:34px;height:34px;flex-basis:34px; } }
+
   /* Online lobby redesign */
   .lobby-top-bar { display:flex; align-items:center; gap:12px; margin-bottom:20px; }
   .lobby-heading { flex:1; font-size:1.16rem; font-weight:850; letter-spacing:-.35px; color:#f5f6fa; }
@@ -2630,6 +2663,30 @@
   </div>
 </div>
 
+
+<!-- ================= GLOBAL LEADERBOARD ================= -->
+<div class="view-container hidden global-leaderboard" id="leaderboardView">
+  <div class="global-leaderboard-header">
+    <div class="icon-circle-btn" onclick="switchNavTab('home')" aria-label="Back to Play">←</div>
+    <div class="lobby-heading">Global Leaderboard</div>
+    <div class="icon-circle-btn lobby-profile-icon" aria-label="Top players"><i class="fa-solid fa-trophy" aria-hidden="true"></i></div>
+  </div>
+  <section class="leaderboard-hero">
+    <div class="leaderboard-kicker"><i class="fa-solid fa-earth-americas" aria-hidden="true"></i> WAYBLOCK GLOBAL RANKING</div>
+    <div class="leaderboard-hero-title">Top players</div>
+    <div class="leaderboard-hero-sub">See how the community stacks up. Rankings refresh from this demo leaderboard.</div>
+    <div class="leaderboard-summary">
+      <div class="leaderboard-summary-item"><strong id="leaderboardPlayerCount">100</strong><span>PLAYERS</span></div>
+      <div class="leaderboard-summary-item"><strong id="leaderboardTopScore">—</strong><span>TOP SCORE</span></div>
+      <div class="leaderboard-summary-item"><strong id="leaderboardCurrentRank">—</strong><span>YOUR RANK</span></div>
+    </div>
+  </section>
+  <div class="leaderboard-demo-note"><i class="fa-solid fa-circle-info" aria-hidden="true"></i><span>Demo data: these 100 sample profiles and scores are placeholders, not real player records. A shared backend is needed for real global rankings.</span></div>
+  <div class="leaderboard-list-head"><span>PLAYER RANKINGS</span><span>POINTS</span></div>
+  <input class="leaderboard-search" id="leaderboardSearch" type="search" placeholder="Search player names…" aria-label="Search leaderboard players" oninput="renderGlobalLeaderboard(this.value)">
+  <div class="leaderboard-rows" id="leaderboardRows"></div>
+</div>
+
 <!-- ================= 4-TAB DOCK: PLAY, LEADERBOARD, RANK, PROFILE ================= -->
 <div class="bottom-nav-dock" id="bottomNavDock">
   <div class="nav-tab-item active" id="tabHome" onclick="switchNavTab('home')">
@@ -2946,8 +3003,9 @@ function switchNavTab(tab) {
     document.getElementById('homeView').classList.remove('hidden');
     document.getElementById('tabHome').classList.add('active');
   } else if (tab === 'play') {
-    document.getElementById('lobbyChoiceView').classList.remove('hidden');
+    document.getElementById('leaderboardView').classList.remove('hidden');
     document.getElementById('tabPlay').classList.add('active');
+    renderGlobalLeaderboard(document.getElementById('leaderboardSearch')?.value || '');
   } else if (tab === 'learn') {
     document.getElementById('fullGuideView').classList.remove('hidden');
     document.getElementById('tabLearn').classList.add('active');
@@ -2958,7 +3016,7 @@ function switchNavTab(tab) {
 }
 
 function switchView(viewId) {
-  ['homeView', 'profileView', 'fullMasteryRoadView', 'fullSettingsView', 'fullReferralView', 'fullGuideView', 'fullSupportView', 'lobbyChoiceView', 'hostLobbyView', 'joinLobbyView', 'gameArenaView', 'localSetupView'].forEach(id => {
+  ['homeView', 'profileView', 'fullMasteryRoadView', 'fullSettingsView', 'fullReferralView', 'fullGuideView', 'fullSupportView', 'lobbyChoiceView', 'hostJoinChoiceView', 'hostLobbyView', 'joinLobbyView', 'gameArenaView', 'localSetupView', 'leaderboardView'].forEach(id => {
     document.getElementById(id).classList.add('hidden');
   });
   document.getElementById(viewId).classList.remove('hidden');
@@ -2990,6 +3048,41 @@ function submitSupportTicket(e) {
   displayToast("Support Ticket", "Ticket submitted! Our developers will review it.");
   document.getElementById('ticketMessage').value = '';
   setTimeout(() => { switchNavTab('profile'); }, 1200);
+}
+
+
+const GLOBAL_LEADERBOARD_NAMES = ["NovaKnight","PixelRider","WallWizard","BlueFalcon","ShadowGrid","CyanVortex","RookRunner","NeonFox","BoardBlitz","LunarMove","FrostByte","QuantumPawn","StormBuilder","EchoKnight","RapidRook","SolarShift","MysticGrid","AquaStriker","NightOwlWB","TurboTactician","SilverBishop","CrimsonWall","OrbitPlayer","ZenMaster","SkylineAce","PhantomMove","GlitchHunter","CloudRook","ArcticPawn","VividKnight","ThunderTile","PixelPilot","CometGamer","IronStrategy","JadeRunner","BlazeBoard","MidnightRook","CrystalMove","HyperPawn","NovaTactician","SilentStorm","CopperKnight","PrismPlayer","RocketRook","MapleGrid","BlueComet","RapidTiler","StarboardAce","DigitalDuelist","WaveRider","AmberKnight","GhostGrid","MintyMoves","PolarPawn","CosmicRook","VectorViper","LuckyLancer","ElectricEagle","MazeMaster","SapphireShift","RogueRook","CobaltClash","BrightBishop","OrbitAce","NimbleNova","WallCrusher","PixelPhantom","KineticKnight","SolarPawn","FableFox","GlacierGrid","TidalTactician","GoldenRook","CircuitSage","VelvetVortex","TurboTile","MoonlitMove","PioneerPawn","DuskDuelist","EmeraldEcho","RocketKnight","PrismPawn","StealthStriker","BlueBlizzard","RisingRook","FierceFalcon","QuantumQuest","NeonNomad","LuckyGrid","CometClash","AriaMoves","MaxBoard","IvyKnight","LeoRook","MiraGrid","AidenAce","ZaraPawn","KaiTactician","RiyaRider","DevDuelist"];
+const GLOBAL_LEADERBOARD_DATA = GLOBAL_LEADERBOARD_NAMES.map((name, index) => ({
+  name,
+  points: 9850 - index * 83 + ((index * 37) % 61),
+  wins: Math.max(8, 146 - index * 1.25 + ((index * 7) % 13)),
+  matches: Math.max(12, 182 - index + ((index * 11) % 23))
+})).sort((a, b) => b.points - a.points).map((player, index) => ({ ...player, rank: index + 1 }));
+
+function renderGlobalLeaderboard(searchTerm = '') {
+  const rowsEl = document.getElementById('leaderboardRows');
+  if (!rowsEl) return;
+  const query = String(searchTerm || '').trim().toLowerCase();
+  const filtered = GLOBAL_LEADERBOARD_DATA.filter(player => player.name.toLowerCase().includes(query));
+  const countEl = document.getElementById('leaderboardPlayerCount');
+  const topScoreEl = document.getElementById('leaderboardTopScore');
+  const rankEl = document.getElementById('leaderboardCurrentRank');
+  if (countEl) countEl.textContent = GLOBAL_LEADERBOARD_DATA.length;
+  if (topScoreEl) topScoreEl.textContent = GLOBAL_LEADERBOARD_DATA[0].points.toLocaleString();
+  if (rankEl) rankEl.textContent = '—';
+  if (!filtered.length) {
+    rowsEl.innerHTML = '<div class="leaderboard-empty">No players match that name.</div>';
+    return;
+  }
+  rowsEl.innerHTML = filtered.map(player => {
+    const initials = player.name.split(/(?=[A-Z])/).filter(Boolean).slice(0, 2).map(part => part[0]).join('').toUpperCase() || player.name.slice(0, 2).toUpperCase();
+    return '<div class="leaderboard-row">' +
+      '<div class="leaderboard-rank">#' + player.rank + '</div>' +
+      '<div class="leaderboard-avatar">' + initials + '</div>' +
+      '<div class="leaderboard-player-copy"><div class="leaderboard-player-name">' + player.name + '</div><div class="leaderboard-player-meta">' + Math.round(player.wins) + ' wins · ' + player.matches + ' matches</div></div>' +
+      '<div class="leaderboard-score">' + player.points.toLocaleString() + '<span>POINTS</span></div>' +
+      '</div>';
+  }).join('');
 }
 
 // Profile Initialization with Dynamic Creation Date & Permanent ID
