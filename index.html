@@ -2101,6 +2101,63 @@
   .lobby-action-card { transition: transform .15s ease, border-color .15s ease, box-shadow .15s ease; }
 </style>
 
+
+<style id="leaderboard-history-premium-theme">
+  /* Match leaderboard and history surfaces to the reference profile card */
+  #leaderboardView .leaderboard-hero {
+    border: 1px solid #38342b !important;
+    border-radius: 20px !important;
+    background: linear-gradient(180deg,#14191f 0%,#0e1319 100%) !important;
+    box-shadow: 0 7px 20px rgba(0,0,0,.22), inset 0 1px 0 rgba(255,255,255,.025) !important;
+  }
+  #leaderboardView .leaderboard-kicker { color: #f5c45b !important; }
+  #leaderboardView .leaderboard-hero-title,
+  #leaderboardView .leaderboard-summary-item strong { color: #f7f8fa !important; }
+  #leaderboardView .leaderboard-hero-sub,
+  #leaderboardView .leaderboard-summary-item span,
+  #leaderboardView .leaderboard-list-head { color: #a6adb7 !important; }
+  #leaderboardView .leaderboard-summary-item {
+    border-color: rgba(160,153,132,.18) !important;
+    border-radius: 14px !important;
+    background: rgba(255,255,255,.025) !important;
+  }
+  #leaderboardView .leaderboard-search {
+    border-color: rgba(160,153,132,.22) !important;
+    background: #10151b !important;
+    color: #f7f8fa !important;
+  }
+  #leaderboardView .leaderboard-search:focus {
+    border-color: rgba(245,196,91,.55) !important;
+    box-shadow: 0 0 0 3px rgba(245,196,91,.07) !important;
+  }
+  #leaderboardView .leaderboard-row {
+    border-color: rgba(160,153,132,.17) !important;
+    border-radius: 15px !important;
+    background: linear-gradient(180deg,#14191f 0%,#0e1319 100%) !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,.16), inset 0 1px 0 rgba(255,255,255,.02) !important;
+  }
+  #leaderboardView .leaderboard-avatar {
+    border-color: rgba(245,196,91,.2) !important;
+    background: rgba(245,196,91,.07) !important;
+    color: #f5c45b !important;
+  }
+  #historyView [style*="linear-gradient(145deg,#14283a,#101a2a)"] {
+    background: linear-gradient(180deg,#14191f 0%,#0e1319 100%) !important;
+    border-color: #38342b !important;
+    box-shadow: 0 7px 20px rgba(0,0,0,.18), inset 0 1px 0 rgba(255,255,255,.025) !important;
+  }
+  #historyView [style*="linear-gradient(145deg,#14283a,#101a2a)"] div[id="historyTotalWins"] { color: #f5c45b !important; }
+  #historyView [style*="linear-gradient(145deg,#14283a,#101a2a)"] div[id="historyTotalLosses"] { color: #f7f8fa !important; }
+  #historyView [style*="YOUR ACTIVITY"] { color: #f5c45b !important; }
+  #historyView [style*="Completed matches"] { color: #a6adb7 !important; }
+  #historyView [style*="RECENT MATCHES"] { color: #f7f8fa !important; }
+  #historyView #gameHistoryList > div {
+    border-color: rgba(160,153,132,.18) !important;
+    background: linear-gradient(180deg,#14191f 0%,#0e1319 100%) !important;
+    box-shadow: 0 5px 16px rgba(0,0,0,.18), inset 0 1px 0 rgba(255,255,255,.02) !important;
+  }
+</style>
+
 </head>
 <body>
 
