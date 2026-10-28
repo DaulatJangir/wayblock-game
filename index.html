@@ -4909,5 +4909,31 @@ function renderWayblockHeaderStats(){
 document.addEventListener('DOMContentLoaded',renderWayblockHeaderStats);
 </script>
 
+
+<style id="leaderboard-final-theme-override">
+/* Final high-specificity override: no blue/cyan surfaces in leaderboard cards */
+html body #leaderboardView section.leaderboard-hero,
+html body #leaderboardView .leaderboard-row,
+html body #leaderboardView .leaderboard-summary-item,
+html body #leaderboardView input.leaderboard-search {
+  background: linear-gradient(180deg,#14191f 0%,#0e1319 100%) !important;
+  border-color: #38342b !important;
+  box-shadow: 0 6px 18px rgba(0,0,0,.20), inset 0 1px 0 rgba(255,255,255,.025) !important;
+}
+html body #leaderboardView section.leaderboard-hero { border-radius:20px !important; }
+html body #leaderboardView .leaderboard-row { border-radius:15px !important; }
+html body #leaderboardView .leaderboard-summary-item { border-color:rgba(160,153,132,.18) !important; }
+html body #leaderboardView .leaderboard-kicker { color:#f5c45b !important; }
+html body #leaderboardView .leaderboard-avatar {
+  background:rgba(245,196,91,.07) !important;
+  border-color:rgba(245,196,91,.24) !important;
+  color:#f5c45b !important;
+}
+html body #leaderboardView .leaderboard-search:focus {
+  border-color:rgba(245,196,91,.55) !important;
+  box-shadow:0 0 0 3px rgba(245,196,91,.07) !important;
+}
+</style>
+
 </body>
 </html>
