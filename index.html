@@ -5343,6 +5343,47 @@ function closeAchievementsModal(){const m=document.getElementById('achievementsM
     #exitConfirmModal .exit-confirm-box { padding: 23px 17px 18px; border-radius: 21px !important; }
   }
 
+
+  /* Board action controls — shared gold theme for every game mode */
+  .bottom-play-controls {
+    width: min(360px, calc(100% - 24px)) !important;
+    gap: 10px !important;
+    margin: 12px auto 4px !important;
+  }
+  .bottom-play-controls .wb-control-btn {
+    min-height: 46px;
+    padding: 11px 7px !important;
+    border: 1px solid #48402e !important;
+    border-radius: 14px !important;
+    background: linear-gradient(155deg,#202223,#131516) !important;
+    color: #d1d0c8 !important;
+    font-size: .82rem;
+    font-weight: 850;
+    letter-spacing: .1px;
+    box-shadow: 0 5px 13px rgba(0,0,0,.2), inset 0 1px 0 rgba(255,255,255,.025);
+    transition: background .18s,border-color .18s,color .18s,box-shadow .18s,transform .18s;
+  }
+  .bottom-play-controls .wb-control-btn:hover {
+    border-color: #9b7c39 !important;
+    color: #f7f1df !important;
+    transform: translateY(-1px);
+  }
+  .bottom-play-controls .wb-control-btn.active {
+    background: linear-gradient(110deg,#d5a83f 0%,#f0c968 52%,#c9962e 100%) !important;
+    border-color: #e4bd5c !important;
+    color: #17140d !important;
+    box-shadow: 0 6px 17px rgba(0,0,0,.24), 0 0 14px rgba(213,168,63,.12), inset 0 1px 0 rgba(255,255,255,.25) !important;
+  }
+  .bottom-play-controls .wb-control-btn:focus-visible {
+    outline: 2px solid #e3bd62;
+    outline-offset: 3px;
+  }
+  .bottom-play-controls .wb-control-btn:active { transform: scale(.98); }
+  @media (max-width: 390px) {
+    .bottom-play-controls { gap: 6px !important; }
+    .bottom-play-controls .wb-control-btn { font-size: .76rem; padding-left: 3px !important; padding-right: 3px !important; }
+  }
+
 </style>
 
 </body>
