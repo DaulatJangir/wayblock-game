@@ -3577,6 +3577,8 @@ function cancelNetworkSession() {
 function initHostView(selectedRounds) {
   activeHostFlow = (typeof selectedRounds === 'number') ? 'create-room' : 'classic';
   const isCreateRoomFlow = activeHostFlow === 'create-room';
+  const duelAnimationCard = document.querySelector('.host-versus-card');
+  if (duelAnimationCard) duelAnimationCard.classList.toggle('hidden', !isCreateRoomFlow);
   switchView('hostLobbyView');
   document.getElementById('incomingReqBox').classList.add('hidden');
   document.getElementById('btnStartOnline').classList.add('hidden');
