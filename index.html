@@ -3023,7 +3023,7 @@ function renderGameHistory() {
   }
   history.forEach(match => {
     const won = !!match.isWin;
-    const date = new Date(Number(match.timestamp || match.startedAt || Date.now()));
+    const date = new Date(Number(match.startedAt || match.timestamp || Date.now()));
     const dateText = date.toLocaleDateString(undefined, {month:'short', day:'numeric', year:'numeric'});
     const timeText = date.toLocaleTimeString(undefined, {hour:'numeric', minute:'2-digit'});
     const duration = Number(match.durationMs || 0);
@@ -3063,7 +3063,7 @@ function renderGameHistory() {
 }
 
 function switchNavTab(tab) {
-  ['homeView', 'profileView', 'fullMasteryRoadView', 'fullSettingsView', 'fullReferralView', 'fullGuideView', 'fullSupportView', 'lobbyChoiceView', 'hostJoinChoiceView', 'hostLobbyView', 'joinLobbyView', 'gameArenaView', 'localSetupView', 'historyView'].forEach(id => {
+  ['homeView', 'profileView', 'fullMasteryRoadView', 'fullSettingsView', 'fullReferralView', 'fullGuideView', 'fullSupportView', 'lobbyChoiceView', 'hostJoinChoiceView', 'hostLobbyView', 'joinLobbyView', 'gameArenaView', 'localSetupView', 'leaderboardView', 'historyView'].forEach(id => {
     document.getElementById(id).classList.add('hidden');
   });
 
