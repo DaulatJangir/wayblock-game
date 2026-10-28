@@ -4937,25 +4937,26 @@ html body #leaderboardView .leaderboard-search:focus {
 
 
 <style id="bottom-nav-gold-active-theme">
-  /* Selected navigation tab uses the app's warm gold accent, without blue glow */
+  /* Keep the active navigation state minimal: gold text/icon glow only */
   html body .bottom-nav-dock .nav-tab-item.active {
     color: #f5c45b !important;
-    background: rgba(245,196,91,.055) !important;
-    border-color: rgba(245,196,91,.14) !important;
+    background: transparent !important;
+    border-color: transparent !important;
     box-shadow: none !important;
   }
   html body .bottom-nav-dock .nav-tab-item.active .nav-icon {
     color: #f5c45b !important;
-    filter: none !important;
-    text-shadow: 0 0 8px rgba(245,196,91,.16) !important;
+    filter: drop-shadow(0 0 7px rgba(245,196,91,.48)) !important;
+    text-shadow: none !important;
   }
   html body .bottom-nav-dock .nav-tab-item:not(.active) {
     color: #858da0 !important;
     background: transparent !important;
+    border-color: transparent !important;
     box-shadow: none !important;
   }
   html body .bottom-nav-dock .nav-tab-item:active {
-    background: rgba(245,196,91,.07) !important;
+    background: transparent !important;
     box-shadow: none !important;
   }
 </style>
