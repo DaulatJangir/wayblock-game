@@ -2373,21 +2373,17 @@
       <span class="sec-link" onclick="openAchievementsModal()">View All</span>
     </div>
     <div class="achieve-row">
-      <div class="achieve-item">
-        <div class="achieve-hex" style="background:#b45309; border:1px solid #fbbf24;">🏆</div>
-        <span class="achieve-title">First Win</span>
+      <div class="achieve-item" data-achievement-id="first-win">
+        <div class="achieve-hex">🏆</div><span class="achieve-title">First Win</span>
       </div>
-      <div class="achieve-item">
-        <div class="achieve-hex" style="background:#1d4ed8; border:1px solid #60a5fa;">⭐</div>
-        <span class="achieve-title">5 Matches</span>
+      <div class="achieve-item" data-achievement-id="five-matches">
+        <div class="achieve-hex">⭐</div><span class="achieve-title">5 Matches</span>
       </div>
-      <div class="achieve-item">
-        <div class="achieve-hex" style="background:#6d28d9; border:1px solid #c084fc;">🌟</div>
-        <span class="achieve-title">Streak 5</span>
+      <div class="achieve-item" data-achievement-id="streak-five">
+        <div class="achieve-hex">🌟</div><span class="achieve-title">Streak 5</span>
       </div>
-      <div class="achieve-item">
-        <div class="achieve-hex" style="background:#047857; border:1px solid #34d399;">🎖️</div>
-        <span class="achieve-title">Strategist</span>
+      <div class="achieve-item" data-achievement-id="strategist">
+        <div class="achieve-hex">🎖️</div><span class="achieve-title">Strategist</span>
       </div>
     </div>
   </div>
@@ -3492,6 +3488,7 @@ function renderProfileStats() {
   if (statWinRateEl) statWinRateEl.innerText = `${winRate}%`;
   if (statStreakEl) statStreakEl.innerText = bestStreak;
   if (homeStreakEl) homeStreakEl.innerText = bestStreak;
+  if (typeof renderProfileAchievements === 'function') renderProfileAchievements();
 
   // Keep the online lobby summary synced with the player's local profile and stats.
   const lobbyNameEl = document.getElementById('lobbyDisplayName');
@@ -5046,6 +5043,8 @@ html body #leaderboardView .leaderboard-search:focus {
   #profileView .stat-card-label,
   #profileView .profile-since-text { color:#a6adb7 !important; }
   #profileView .stat-card-val { color:#f7f8fa !important; }
+  #profileView .achieve-item.achievement-locked .achieve-hex{filter:grayscale(1);opacity:.62}
+  #profileView .achieve-item.achievement-unlocked .achieve-title{color:#f5c45b}
   #profileView .achieve-hex {
     border-color:rgba(245,196,91,.25) !important;
     background:rgba(245,196,91,.08) !important;
@@ -5131,26 +5130,44 @@ html body #leaderboardView .leaderboard-search:focus {
 .achievement-entry.unlocked .achievement-status{color:#f5c45b}
 </style>
 <script id="achievements-modal-logic">
-function openAchievementsModal(){
+function getAchievementDefinitions(){
   const history = typeof getMatchHistory === 'function' ? getMatchHistory() : [];
-  const wins = Math.max(Number(localStorage.getItem('wayblock_wins')||0), history.filter(m=>m.isWin).length);
-  const matches = Math.max(Number(localStorage.getItem('wayblock_total_matches')||0), history.length);
-  const losses = Math.max(0,matches-wins);
-  const streak = Number(localStorage.getItem('wayblock_best_streak')||0);
-  const defs = [
-    {name:'First Win',icon:'🏆',desc:'Win your first match.',ok:wins>=1},
-    {name:'5 Matches',icon:'⭐',desc:'Play 5 matches.',ok:matches>=5},
-    {name:'Streak 5',icon:'🌟',desc:'Reach a 5-win streak.',ok:streak>=5},
-    {name:'Strategist',icon:'🎖️',desc:'Win 10 matches.',ok:wins>=10},
-    {name:'Getting Started',icon:'♟️',desc:'Play your first match.',ok:matches>=1},
-    {name:'10 Matches',icon:'🎯',desc:'Play 10 matches.',ok:matches>=10},
-    {name:'25 Matches',icon:'🧩',desc:'Play 25 matches.',ok:matches>=25},
-    {name:'50 Matches',icon:'🏅',desc:'Play 50 matches.',ok:matches>=50},
-    {name:'5 Wins',icon:'🥉',desc:'Win 5 matches.',ok:wins>=5},
-    {name:'25 Wins',icon:'🥈',desc:'Win 25 matches.',ok:wins>=25},
-    {name:'50 Wins',icon:'🥇',desc:'Win 50 matches.',ok:wins>=50},
-    {name:'Comeback Player',icon:'🛡️',desc:'Finish 5 losses and keep playing.',ok:losses>=5&&matches>losses}
+  // Match history is the source of truth; do not infer unlocks from stale counters.
+  const wins = history.filter(m => m && m.isWin === true).length;
+  const matches = history.length;
+  let streak = 0, bestStreak = 0;
+  history.slice().reverse().forEach(m => {
+    if (m && m.isWin === true) { streak++; bestStreak = Math.max(bestStreak, streak); }
+    else streak = 0;
+  });
+  return [
+    {id:'first-win',name:'First Win',icon:'🏆',desc:'Win your first match.',ok:wins>=1},
+    {id:'five-matches',name:'5 Matches',icon:'⭐',desc:'Play 5 matches.',ok:matches>=5},
+    {id:'streak-five',name:'Streak 5',icon:'🌟',desc:'Reach a 5-win streak.',ok:bestStreak>=5},
+    {id:'strategist',name:'Strategist',icon:'🎖️',desc:'Win 10 matches.',ok:wins>=10},
+    {id:'getting-started',name:'Getting Started',icon:'♟️',desc:'Play your first match.',ok:matches>=1},
+    {id:'ten-matches',name:'10 Matches',icon:'🎯',desc:'Play 10 matches.',ok:matches>=10},
+    {id:'twenty-five-matches',name:'25 Matches',icon:'🧩',desc:'Play 25 matches.',ok:matches>=25},
+    {id:'fifty-matches',name:'50 Matches',icon:'🏅',desc:'Play 50 matches.',ok:matches>=50},
+    {id:'five-wins',name:'5 Wins',icon:'🥉',desc:'Win 5 matches.',ok:wins>=5},
+    {id:'twenty-five-wins',name:'25 Wins',icon:'🥈',desc:'Win 25 matches.',ok:wins>=25},
+    {id:'fifty-wins',name:'50 Wins',icon:'🥇',desc:'Win 50 matches.',ok:wins>=50},
+    {id:'comeback-player',name:'Comeback Player',icon:'🛡️',desc:'Finish 5 losses and keep playing.',ok:history.filter(m=>m && m.isWin===false).length>=5 && matches>history.filter(m=>m && m.isWin===false).length}
   ];
+}
+function renderProfileAchievements(){
+  const defs = getAchievementDefinitions();
+  document.querySelectorAll('#profileView [data-achievement-id]').forEach(item=>{
+    const a=defs.find(x=>x.id===item.dataset.achievementId);
+    if(!a)return;
+    item.classList.toggle('achievement-unlocked',a.ok);
+    item.classList.toggle('achievement-locked',!a.ok);
+    const icon=item.querySelector('.achieve-hex');
+    if(icon){icon.style.background=a.ok?'rgba(245,196,91,.10)':'rgba(255,255,255,.025)';icon.style.border=a.ok?'1px solid rgba(245,196,91,.45)':'1px solid rgba(160,153,132,.18)';icon.style.filter=a.ok?'none':'grayscale(1)';}
+  });
+}
+function openAchievementsModal(){
+  const defs = getAchievementDefinitions();
   const unlocked=defs.filter(a=>a.ok).length;
   const progress=document.getElementById('achievementsProgress');
   const list=document.getElementById('allAchievementsList');
