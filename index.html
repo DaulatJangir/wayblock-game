@@ -2451,9 +2451,6 @@
     <span style="color:var(--wb-text-sub); font-size:1.1rem;">›</span>
   </div>
 
-  <button class="primary-action-btn" onclick="startLocalGame('ai')">
-    <span>▶</span> <span id="btnContinueStageText">Continue Stage 3</span>
-  </button>
 </div>
 
 <!-- ================= 4. FULL-PAGE: SETTINGS (CLEAN BUTTON) ================= -->
@@ -3102,12 +3099,10 @@ function updateLevelUI() {
 
   // Mastery Road Screen updates
   const roadBadge = document.getElementById('roadBadgeFraction');
-  const roadBtn = document.getElementById('btnContinueStageText');
   const rewardNext = document.getElementById('rewardTitleNext');
   const rewardDesc = document.getElementById('rewardUnlockDesc');
 
   if (roadBadge) roadBadge.innerText = `🏆 ${data.stageIndex} / 6`;
-  if (roadBtn) roadBtn.innerText = `Continue Stage ${data.stageIndex}`;
 
   if (rewardNext && rewardDesc) {
     if (data.nextTier) {
