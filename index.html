@@ -3885,6 +3885,9 @@ function initHostView(selectedRounds) {
   peer = new Peer(`wb-${roomCode}`, { debug: 1 });
 
   peer.on('connection', (c) => {
+    c.on('open', () => {
+      if (activeHostFlow === 'create-room') c.send({ type: 'room_preview', profile: getRoomHostProfile() });
+    });
     c.on('data', (data) => {
       if (data.type === 'join_request') {
         if (confirmedGuests.length >= (activeHostFlow === 'create-room' ? 1 : 2)) {
@@ -3893,7 +3896,12 @@ function initHostView(selectedRounds) {
         }
         candidateGuest = { conn: c, name: data.senderName };
         document.getElementById('candidateName').innerText = data.senderName;
-        document.getElementById('incomingReqBox').classList.remove('hidden');
+        if (activeHostFlow === 'create-room') {
+          acceptCandidate();
+          setTimeout(() => { if (confirmedGuests.length === 1 && activeHostFlow === 'create-room') launchOnlineMatch(); }, 350);
+        } else {
+          document.getElementById('incomingReqBox').classList.remove('hidden');
+        }
       } else if (data.type === 'sync_action') {
         handleRemoteAction(data);
         relayToOtherGuests(c, data);
@@ -4021,29 +4029,56 @@ function refreshOpenRooms(){
     openRoomsProbe.on('error',()=>{if(token!==openRoomsRefreshToken)return;list.innerHTML='<div class="open-rooms-empty">Could not refresh rooms. Tap ↻ to try again.</div>';try{openRoomsProbe.destroy();}catch(e){}openRoomsProbe=null;});
   }catch(e){list.innerHTML='<div class="open-rooms-empty">Could not refresh rooms. Tap ↻ to try again.</div>';}
 }
+let pendingDiscoveredRoomId = null;
+let pendingRoomHostProfile = null;
+function getRoomHostProfile() {
+  const history = getMatchHistory();
+  const wins = Math.max(0, Number(localStorage.getItem('wayblock_wins') || history.filter(m => m.isWin).length));
+  const matches = Math.max(history.length, Number(localStorage.getItem('wayblock_total_matches') || 0));
+  return { name: (localStorage.getItem('wayblock_username') || playerName || 'Player').trim(), wins, losses: Math.max(0, matches - wins), winRate: matches ? Math.round((wins / matches) * 100) : 0, matches };
+}
+function showRoomHostPreview(profile) {
+  pendingRoomHostProfile = profile || { name: 'Room host', wins: 0, losses: 0, winRate: 0 };
+  document.getElementById('roomPreviewName').textContent = pendingRoomHostProfile.name || 'Room host';
+  document.getElementById('roomPreviewWins').textContent = Number(pendingRoomHostProfile.wins) || 0;
+  document.getElementById('roomPreviewRate').textContent = (Number(pendingRoomHostProfile.winRate) || 0) + '%';
+  document.getElementById('roomPreviewLosses').textContent = Number(pendingRoomHostProfile.losses) || 0;
+  document.getElementById('roomHostPreviewModal').classList.remove('hidden');
+}
+function confirmDiscoveredRoomJoin() {
+  document.getElementById('roomHostPreviewModal').classList.add('hidden');
+  if (!clientConn || !clientConn.open) {
+    displayToast('Room unavailable', 'Connection closed. Please refresh open rooms and try again.');
+    return;
+  }
+  document.getElementById('joinStatusNotice').innerText = 'Joining room…';
+  clientConn.send({ type: 'join_request', senderName: playerName });
+}
 function joinDiscoveredRoom(roomId,button){
   if(peer){try{peer.destroy();}catch(e){}peer=null;}
   if(clientConn){try{clientConn.close();}catch(e){}clientConn=null;}
+  pendingDiscoveredRoomId = roomId;
+  pendingRoomHostProfile = null;
   switchView('joinLobbyView');
   document.getElementById('joinInputCode').value=roomId.replace(/^wb-/,'');
-  document.getElementById('joinStatusNotice').innerText='Connecting to open room…';
+  document.getElementById('joinStatusNotice').innerText='Connecting to room to load player details…';
   if(typeof Peer==='undefined'){document.getElementById('joinStatusNotice').innerText='Online connection is unavailable.';return;}
   peer=new Peer({debug:1});
   peer.on('open',()=>{
     clientConn=peer.connect(roomId,{reliable:true});
     clientConn.on('open',()=>{
-      document.getElementById('joinStatusNotice').innerText='Join request sent! Waiting for host approval…';
-      clientConn.send({type:'join_request',senderName:playerName});
+      document.getElementById('joinStatusNotice').innerText='Room connected. Review the host profile to continue.';
     });
     clientConn.on('data',data=>{
-      if(data.type==='join_accepted'){myRole=data.assignedRole;document.getElementById('joinStatusNotice').innerText='Accepted! Waiting for the host to start the match…';}
-      else if(data.type==='join_rejected'){document.getElementById('joinStatusNotice').innerText=data.reason||'This room is no longer available.';}
-      else if(data.type==='start_game'){p1.name=data.names.p1;p2.name=data.names.p2;p3.name=data.names.p3;totalRounds=data.rounds||1;bootGame(data.mode,totalRounds);}
+      if(data.type==='room_preview'){showRoomHostPreview(data.profile);}
+      else if(data.type==='join_accepted'){myRole=data.assignedRole;document.getElementById('joinStatusNotice').innerText='Accepted! Starting the match…';}
+      else if(data.type==='join_rejected'){document.getElementById('roomHostPreviewModal').classList.add('hidden');document.getElementById('joinStatusNotice').innerText=data.reason||'This room is no longer available.';}
+      else if(data.type==='start_game'){document.getElementById('roomHostPreviewModal').classList.add('hidden');p1.name=data.names.p1;p2.name=data.names.p2;p3.name=data.names.p3;totalRounds=data.rounds||1;bootGame(data.mode,totalRounds);}
       else if(data.type==='sync_action'){handleRemoteAction(data);}
     });
-    clientConn.on('error',()=>{document.getElementById('joinStatusNotice').innerText='Could not join this room. It may have closed.';});
+    clientConn.on('error',()=>{document.getElementById('roomHostPreviewModal').classList.add('hidden');document.getElementById('joinStatusNotice').innerText='Could not join this room. It may have closed.';});
   });
-  peer.on('error',()=>{document.getElementById('joinStatusNotice').innerText='This room is no longer available.';});
+  peer.on('error',()=>{document.getElementById('roomHostPreviewModal').classList.add('hidden');document.getElementById('joinStatusNotice').innerText='This room is no longer available.';});
 }
 
 let createRoomRounds = 1;
@@ -5051,5 +5086,31 @@ html body #leaderboardView .leaderboard-search:focus {
   }
 </style>
 
+
+<div class="create-room-overlay hidden" id="roomHostPreviewModal" role="dialog" aria-modal="true" aria-labelledby="roomPreviewHeading">
+  <div class="create-room-window room-preview-window">
+    <div class="create-room-header"><div class="create-room-kicker">WAYBLOCK PLAYER PROFILE</div><div class="create-room-heading" id="roomPreviewHeading">Meet your opponent</div><p>Review the host's match record before starting the duel.</p></div>
+    <div class="create-room-body">
+      <div class="room-preview-player"><div class="room-preview-avatar">♟</div><strong id="roomPreviewName">Room host</strong></div>
+      <div class="room-preview-stats">
+        <div><strong id="roomPreviewWins">0</strong><span>WINS</span></div>
+        <div><strong id="roomPreviewRate">0%</strong><span>WIN RATE</span></div>
+        <div><strong id="roomPreviewLosses">0</strong><span>LOSSES</span></div>
+      </div>
+      <button type="button" class="primary-action-btn create-room-start" onclick="confirmDiscoveredRoomJoin()">Okay <span>→</span></button>
+    </div>
+  </div>
+</div>
+
+<style id="room-host-preview-theme">
+.room-preview-window{background:linear-gradient(180deg,#14191f 0%,#0e1319 100%);border-color:#38342b}
+.room-preview-window .create-room-header{background:linear-gradient(180deg,rgba(245,196,91,.055),transparent);border-bottom-color:rgba(160,153,132,.16)}
+.room-preview-window .create-room-kicker{color:#f5c45b}
+.room-preview-player{display:flex;align-items:center;gap:12px;margin-bottom:15px;color:#f7f8fa;font-size:1rem}
+.room-preview-avatar{display:grid;place-items:center;width:48px;height:48px;border:1px solid rgba(245,196,91,.25);border-radius:15px;background:rgba(245,196,91,.07);color:#f5c45b;font-size:1.35rem}
+.room-preview-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-bottom:18px}
+.room-preview-stats>div{display:flex;flex-direction:column;gap:4px;padding:12px 7px;border:1px solid rgba(160,153,132,.18);border-radius:13px;background:rgba(255,255,255,.02)}
+.room-preview-stats strong{font-size:1.25rem;color:#f7f8fa}.room-preview-stats span{font-size:.58rem;font-weight:900;letter-spacing:.5px;color:#a6adb7}
+</style>
 </body>
 </html>
