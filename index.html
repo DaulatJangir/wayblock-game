@@ -2092,6 +2092,27 @@
     }
   }
 
+
+  /* Wallet icon treatment using Font Awesome's official solid wallet glyph */
+  .wallet-hero-icon {
+    width: 68px;
+    height: 68px;
+    margin: 0 auto 4px;
+    display: grid;
+    place-items: center;
+    border-radius: 22px;
+    color: #f7c65b;
+    font-size: 1.9rem;
+    background: linear-gradient(145deg, rgba(247,198,91,.19), rgba(247,198,91,.055));
+    border: 1px solid rgba(247,198,91,.35);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.07), 0 8px 24px rgba(0,0,0,.18);
+  }
+  #walletMethodUPI, #walletMethodBank {
+    border: 1px solid var(--wb-border) !important;
+    background: var(--wb-surface) !important;
+    color: var(--wb-text) !important;
+  }
+
 </style>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 
@@ -2740,7 +2761,7 @@
     <div style="width:36px;"></div>
   </div>
   <div class="profile-section-box" style="text-align:center;padding:26px 18px;border-color:rgba(74,222,128,.28);">
-    <div style="font-size:2.2rem;">👛</div>
+    <div class="wallet-hero-icon" aria-hidden="true"><i class="fa-solid fa-wallet"></i></div>
     <div style="font-size:.75rem;letter-spacing:1.5px;color:var(--wb-text-sub);font-weight:800;margin-top:8px;">WALLET BALANCE</div>
     <div id="walletPageBalance" style="font-size:2.5rem;font-weight:900;color:#86efac;margin:8px 0;">₹0</div>
     <div id="walletPagePoints" style="font-size:.85rem;color:var(--wb-text-sub);">100 points</div>
@@ -3920,6 +3941,18 @@ function renderWalletPage() {
   const points = document.getElementById('walletPagePoints');
   if (balance) balance.textContent = '₹' + getWalletDemoBalance().toLocaleString('en-IN');
   if (points) points.textContent = getProfilePoints().toLocaleString('en-IN') + ' points';
+  const upi = document.getElementById('walletUPIForm');
+  const bank = document.getElementById('walletBankForm');
+  const upiButton = document.getElementById('walletMethodUPI');
+  const bankButton = document.getElementById('walletMethodBank');
+  if (upi) upi.style.display = 'none';
+  if (bank) bank.style.display = 'none';
+  [upiButton, bankButton].forEach(button => {
+    if (!button) return;
+    button.style.borderColor = 'var(--wb-border)';
+    button.style.background = 'var(--wb-surface)';
+    button.style.color = 'var(--wb-text)';
+  });
   const notice = document.getElementById('walletWithdrawalNotice');
   if (notice) notice.style.display = 'none';
 }
