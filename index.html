@@ -2132,6 +2132,19 @@
 .host-room-settings{margin-top:14px;padding:16px;border:1px solid var(--wb-border);border-radius:19px;background:var(--wb-surface)}
 .host-settings-heading{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:13px}.host-settings-heading>div{display:flex;flex-direction:column;gap:4px}.host-settings-heading strong{font-size:.88rem}.host-settings-heading>div span{font-size:.68rem;color:var(--wb-text-sub)}.host-settings-lock{font-size:.58rem;font-weight:900;letter-spacing:.3px;color:var(--wb-cyan);white-space:nowrap}
 .host-round-pills{display:flex;gap:8px}.host-round-pills .wb-control-btn{flex:1;min-width:0}
+/* Host lobby: unify every remaining cyan/blue accent with the app's navy-and-gold palette. */
+.host-search-view .host-settings-lock{color:var(--wb-gold)!important}
+.host-search-view .host-search-brand-dot{background:var(--wb-gold)!important;box-shadow:0 0 12px rgba(251,191,36,.65)!important}
+.host-search-view .host-room-code-card{border-color:rgba(251,191,36,.42)!important}
+.host-search-view .host-room-code-label,.host-search-view .host-room-ready-label{color:var(--wb-gold)!important}
+.host-search-view .host-search-progress span{background:linear-gradient(90deg,#b88624,#fbbf24,#f6d477)!important;box-shadow:0 0 12px rgba(251,191,36,.35)!important}
+.host-search-view .host-round-pills .wb-control-btn.active,
+.host-search-view .host-round-pills .wb-control-btn[aria-pressed="true"]{border-color:#e0b84f!important;background:linear-gradient(110deg,#d5a83f 0%,#f0c968 52%,#c9962e 100%)!important;color:#17140d!important;box-shadow:0 0 16px rgba(245,196,91,.14)!important}
+.host-search-view .host-round-pills .wb-control-btn{border-color:#383a3b!important;background:linear-gradient(180deg,#1b1e20,#141719)!important;color:#b9bdc5!important}
+.host-search-view .host-round-pills .wb-control-btn.active,
+.host-search-view .host-round-pills .wb-control-btn[aria-pressed="true"]{color:#17140d!important}
+.host-search-view .host-share-mini{border-color:rgba(251,191,36,.25)!important}
+.host-search-view .host-versus-mark{color:var(--wb-gold)!important}
 /* Stacked player roster: each participant gets a clear, readable row. */
 #hostRosterBox:not(.hidden){display:grid;grid-template-columns:minmax(0,1fr);gap:9px;margin-top:14px;width:100%;min-width:0}
 .host-roster-player{display:flex;align-items:center;gap:11px;min-width:0;padding:11px 12px;border:1px solid rgba(148,163,184,.17);border-radius:14px;background:linear-gradient(110deg,rgba(30,45,77,.68),rgba(14,23,42,.96));box-shadow:inset 0 1px 0 rgba(255,255,255,.035)}
