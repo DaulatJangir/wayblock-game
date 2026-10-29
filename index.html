@@ -4865,45 +4865,89 @@ function initJoinView() {
 }
 
 function sendJoinRequest() {
-  const code = document.getElementById('joinInputCode').value.trim();
-  if (code.length < 5) {
-    document.getElementById('joinStatusNotice').innerText = 'Please enter a 5-digit code.';
+  const status = document.getElementById('joinStatusNotice');
+  const input = document.getElementById('joinInputCode');
+  const code = (input?.value || '').replace(/\\D/g, '').trim();
+
+  if (code.length !== 5) {
+    status.innerText = 'Please enter the 5-digit host code.';
+    input?.focus();
+    return;
+  }
+  if (typeof Peer === 'undefined') {
+    status.innerText = 'Online connection is unavailable. Please refresh and try again.';
     return;
   }
 
-  document.getElementById('joinStatusNotice').innerText = 'Connecting to host...';
-  if (peer) peer.destroy();
-  peer = new Peer({ debug: 1 });
+  // Reset any previous attempt so the new room code is used immediately.
+  if (clientConn) { try { clientConn.close(); } catch (e) {} clientConn = null; }
+  if (peer) { try { peer.destroy(); } catch (e) {} peer = null; }
 
-  peer.on('open', () => {
-    clientConn = peer.connect(`wb-${code}`, { reliable: true });
+  let requestSent = false;
+  let connectionTimer = null;
+  const setStatus = message => { if (status) status.innerText = message; };
+  const failConnection = message => {
+    if (connectionTimer) { clearTimeout(connectionTimer); connectionTimer = null; }
+    setStatus(message);
+    if (clientConn && !clientConn.open) { try { clientConn.close(); } catch (e) {} }
+  };
 
-    clientConn.on('open', () => {
-      document.getElementById('joinStatusNotice').innerText = 'Request sent! Waiting for Host approval...';
-      clientConn.send({ type: 'join_request', senderName: playerName });
+  setStatus('Connecting to host…');
+  connectionTimer = setTimeout(() => {
+    if (!requestSent) failConnection('Could not connect. Check the 5-digit code and make sure the host room is still open.');
+  }, 12000);
+
+  try {
+    peer = new Peer({ debug: 1 });
+    peer.on('open', () => {
+      if (!peer || peer.destroyed) return;
+      setStatus('Found network. Connecting to room…');
+      clientConn = peer.connect('wb-' + code, { reliable: true });
+
+      clientConn.on('open', () => {
+        if (requestSent) return;
+        requestSent = true;
+        if (connectionTimer) { clearTimeout(connectionTimer); connectionTimer = null; }
+        setStatus('Join request sent! Waiting for host…');
+        clientConn.send({ type: 'join_request', senderName: playerName });
+      });
+
+      clientConn.on('data', data => {
+        if (data.type === 'join_accepted') {
+          myRole = data.assignedRole;
+          setStatus('Accepted as Player ' + myRole + '! Waiting for match to start…');
+        } else if (data.type === 'join_rejected') {
+          setStatus(data.reason || 'The host rejected the join request.');
+        } else if (data.type === 'start_game') {
+          p1.name = data.names.p1;
+          p2.name = data.names.p2;
+          p3.name = data.names.p3;
+          totalRounds = data.rounds || 1;
+          bootGame(data.mode, totalRounds);
+        } else if (data.type === 'sync_action') {
+          handleRemoteAction(data);
+        }
+      });
+
+      clientConn.on('error', () => {
+        failConnection('Could not connect to that room. Check the code and try again.');
+      });
+      clientConn.on('close', () => {
+        if (requestSent && document.getElementById('joinLobbyView') && !document.getElementById('joinLobbyView').classList.contains('hidden')) {
+          setStatus('Connection to the host was closed. Please try joining again.');
+        }
+      });
     });
 
-    clientConn.on('data', (data) => {
-      if (data.type === 'join_accepted') {
-        myRole = data.assignedRole;
-        document.getElementById('joinStatusNotice').innerText = `Accepted as Player ${myRole}! Waiting for launch...`;
-      } else if (data.type === 'join_rejected') {
-        document.getElementById('joinStatusNotice').innerText = data.reason || 'Host rejected request.';
-      } else if (data.type === 'start_game') {
-        p1.name = data.names.p1;
-        p2.name = data.names.p2;
-        p3.name = data.names.p3;
-        totalRounds = data.rounds || 1;
-        bootGame(data.mode, totalRounds);
-      } else if (data.type === 'sync_action') {
-        handleRemoteAction(data);
-      }
+    peer.on('error', err => {
+      const message = err && err.type === 'peer-unavailable'
+        ? 'Room not found. Check the code and make sure the host is online.'
+        : 'Online connection failed. Please try again.';
+      failConnection(message);
     });
-  });
-
-  peer.on('error', () => {
-    document.getElementById('joinStatusNotice').innerText = 'Room not found. Check code & Wi-Fi.';
-  });
+  } catch (err) {
+    failConnection('Could not start the online connection. Please refresh and try again.');
+  }
 }
 
 function broadcastAction(payload) {
