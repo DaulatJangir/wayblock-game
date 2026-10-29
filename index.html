@@ -2132,6 +2132,20 @@
 .host-room-settings{margin-top:14px;padding:16px;border:1px solid var(--wb-border);border-radius:19px;background:var(--wb-surface)}
 .host-settings-heading{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:13px}.host-settings-heading>div{display:flex;flex-direction:column;gap:4px}.host-settings-heading strong{font-size:.88rem}.host-settings-heading>div span{font-size:.68rem;color:var(--wb-text-sub)}.host-settings-lock{font-size:.58rem;font-weight:900;letter-spacing:.3px;color:var(--wb-cyan);white-space:nowrap}
 .host-round-pills{display:flex;gap:8px}.host-round-pills .wb-control-btn{flex:1;min-width:0}
+/* Stacked player roster: each participant gets a clear, readable row. */
+#hostRosterBox:not(.hidden){display:grid;grid-template-columns:minmax(0,1fr);gap:9px;margin-top:14px;width:100%;min-width:0}
+.host-roster-player{display:flex;align-items:center;gap:11px;min-width:0;padding:11px 12px;border:1px solid rgba(148,163,184,.17);border-radius:14px;background:linear-gradient(110deg,rgba(30,45,77,.68),rgba(14,23,42,.96));box-shadow:inset 0 1px 0 rgba(255,255,255,.035)}
+.host-roster-host{border-color:rgba(0,210,255,.3)}
+.host-roster-guest{border-color:rgba(251,191,36,.28)}
+.host-roster-avatar{display:grid;place-items:center;flex:0 0 36px;width:36px;height:36px;border-radius:11px;background:linear-gradient(145deg,#164e63,#0e7490);color:#a5f3fc;font-size:1.1rem}
+.host-roster-guest .host-roster-avatar{background:linear-gradient(145deg,#854d0e,#b45309);color:#fef3c7}
+.host-roster-info{display:flex;flex:1;flex-direction:column;gap:3px;min-width:0}
+.host-roster-info strong{overflow:hidden;color:var(--wb-text);font-size:.83rem;font-weight:850;text-overflow:ellipsis;white-space:nowrap}
+.host-roster-info small{color:var(--wb-text-sub);font-size:.67rem}
+.host-roster-role{flex:0 0 auto;padding:6px 8px;border:1px solid;border-radius:8px;font-size:.62rem;font-weight:950;letter-spacing:.25px;white-space:nowrap}
+.host-roster-role-host{border-color:rgba(0,210,255,.28);background:rgba(0,210,255,.09);color:#67e8f9}
+.host-roster-role-guest{border-color:rgba(251,191,36,.3);background:rgba(251,191,36,.09);color:#fcd34d}
+@media(max-width:360px){.host-roster-player{gap:8px;padding:9px}.host-roster-role{padding:5px 6px;font-size:.57rem}.host-roster-avatar{flex-basis:32px;width:32px;height:32px}}
 .host-incoming-request{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:13px;padding:12px;border:1px solid rgba(245,158,11,.35);border-radius:14px;background:rgba(245,158,11,.07)}.host-request-copy{display:flex;flex:1 1 100%;flex-direction:column;gap:4px}.host-request-copy strong{font-size:.82rem}.host-request-copy>span{font-size:.7rem;color:var(--wb-text-sub)}.host-accept-btn{flex:1;padding:10px;font-size:.8rem}.host-decline-btn{padding:10px 13px;border:1px solid var(--wb-border);border-radius:11px;background:#111d33;color:#cbd5e1;font-weight:800}
 .host-search-actions{margin-top:14px}.host-cancel-room{width:100%;margin-top:10px;padding:11px;border:1px solid rgba(239,68,68,.2);border-radius:12px;background:transparent;color:#f87171;font-size:.78rem;font-weight:800;cursor:pointer}
 @keyframes hostPageEnter{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}@keyframes duelPlayerEnter{from{opacity:0;transform:translateY(15px) scale(.94)}to{opacity:1;transform:translateY(0) scale(1)}}@keyframes questionPulse{0%,100%{box-shadow:0 0 0 5px rgba(100,116,139,.05),0 0 15px rgba(0,210,255,.04);transform:scale(1)}50%{box-shadow:0 0 0 11px rgba(100,116,139,.06),0 0 28px rgba(0,210,255,.15);transform:scale(1.04)}}@keyframes searchBlink{0%,100%{opacity:.35}50%{opacity:1}}@keyframes dotBounce{0%,70%,100%{opacity:.3;transform:translateY(0)}35%{opacity:1;transform:translateY(-3px)}}@keyframes searchProgress{0%{transform:translateX(-110%)}100%{transform:translateX(320%)}}
@@ -4634,12 +4648,27 @@ function initHostView(selectedRounds) {
   confirmedGuests = [];
   setTotalRounds(typeof selectedRounds === 'number' ? selectedRounds : 1);
 
-  document.getElementById('hostRosterBox').innerHTML = `
-    <div style="display:flex; justify-content:space-between; padding:10px 14px; background:#142038; border-radius:10px; font-weight:700;">
-      <span>${playerName} (You)</span><span style="color:#00d2ff;">P1 (HOST)</span>
-    </div>
-  `;
-  document.getElementById('hostRosterBox').style.display = isCreateRoomFlow ? 'none' : 'flex';
+  document.getElementById('hostRosterBox').innerHTML = '';
+  document.getElementById('hostRosterBox').style.display = isCreateRoomFlow ? 'none' : 'grid';
+  if (!isCreateRoomFlow) {
+    const hostRow = document.createElement('div');
+    hostRow.className = 'host-roster-player host-roster-host';
+    const avatar = document.createElement('span');
+    avatar.className = 'host-roster-avatar';
+    avatar.textContent = '♟';
+    const info = document.createElement('span');
+    info.className = 'host-roster-info';
+    const name = document.createElement('strong');
+    name.textContent = playerName + ' (You)';
+    const detail = document.createElement('small');
+    detail.textContent = 'Room creator';
+    info.append(name, detail);
+    const role = document.createElement('span');
+    role.className = 'host-roster-role host-roster-role-host';
+    role.textContent = 'P1 · HOST';
+    hostRow.append(avatar, info, role);
+    document.getElementById('hostRosterBox').appendChild(hostRow);
+  }
 
   const roomCode = Math.floor(10000 + Math.random() * 90000).toString();
   document.getElementById('hostCodeDisplay').innerText = roomCode;
@@ -4704,11 +4733,21 @@ function acceptCandidate() {
     const guest = confirmedGuests[confirmedGuests.length - 1];
     if (roster && guest) {
       const row = document.createElement('div');
-      row.style.cssText = 'display:flex;justify-content:space-between;padding:10px 14px;background:#142038;border-radius:10px;font-weight:700;';
-      row.innerHTML = '<span></span><span></span>';
-      row.children[0].textContent = guest.name;
-      row.children[1].textContent = 'P' + slot + ' (GUEST)';
-      row.children[1].style.color = slot === 2 ? 'var(--wb-orange)' : 'var(--wb-green)';
+      row.className = 'host-roster-player host-roster-guest';
+      const avatar = document.createElement('span');
+      avatar.className = 'host-roster-avatar';
+      avatar.textContent = '♟';
+      const info = document.createElement('span');
+      info.className = 'host-roster-info';
+      const name = document.createElement('strong');
+      name.textContent = guest.name;
+      const detail = document.createElement('small');
+      detail.textContent = 'Joined your room';
+      info.append(name, detail);
+      const role = document.createElement('span');
+      role.className = 'host-roster-role host-roster-role-guest';
+      role.textContent = 'P' + slot + ' · GUEST';
+      row.append(avatar, info, role);
       roster.appendChild(row);
     }
   }
