@@ -2243,6 +2243,27 @@
     box-shadow: 0 0 0 4px rgba(245,196,91,.06) !important;
   }
 </style>
+<style id="profile-achievement-locked-state">
+  #profileView .achieve-item.achievement-locked .achieve-hex {
+    filter: grayscale(1) !important;
+    opacity: .38 !important;
+    box-shadow: none !important;
+    border-color: rgba(160,153,132,.14) !important;
+  }
+  #profileView .achieve-item.achievement-locked .achieve-title {
+    color: #747b86 !important;
+    opacity: .72;
+  }
+  #profileView .achieve-item.achievement-unlocked .achieve-hex {
+    filter: none !important;
+    opacity: 1 !important;
+    box-shadow: 0 0 14px rgba(245,196,91,.18), 0 4px 12px rgba(0,0,0,.3) !important;
+  }
+  #profileView .achieve-item.achievement-unlocked .achieve-title {
+    color: #f5c45b !important;
+    opacity: 1;
+  }
+</style>
 </head>
 <body>
 
@@ -2545,7 +2566,7 @@
 <!-- ================= 4. FULL-PAGE: SETTINGS (CLEAN BUTTON) ================= -->
 <div class="view-container hidden" id="fullSettingsView">
   <div class="top-bar">
-    <div class="icon-circle-btn" onclick="switchNavTab('profile')">←</div>
+    <div class="icon-circle-btn" onclick="closeFullSettingsPage()">←</div>
     <div class="brand-header-text" style="font-size:1.15rem;">Settings</div>
     <div style="width:36px;"></div>
   </div>
@@ -3479,7 +3500,14 @@ window.addEventListener('popstate', () => {
 
 // Full-Page Transition Handlers
 function openFullMasteryRoadPage() { switchView('fullMasteryRoadView'); }
-function openFullSettingsPage() { switchView('fullSettingsView'); }
+let settingsReturnTab = 'profile';
+function openFullSettingsPage() {
+  settingsReturnTab = !document.getElementById('homeView')?.classList.contains('hidden') ? 'home' : 'profile';
+  switchView('fullSettingsView');
+}
+function closeFullSettingsPage() {
+  switchNavTab(settingsReturnTab);
+}
 function openFullReferralPage() { 
   document.getElementById('referralCodeText').innerText = profileId;
   switchView('fullReferralView'); 
