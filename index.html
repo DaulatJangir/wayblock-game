@@ -1984,6 +1984,114 @@
 @media(min-width:520px){#fullSupportView{max-width:520px;margin:0 auto}}
 @media(prefers-reduced-motion:reduce){#fullSupportView *{transition:none!important}}
 
+
+  /* Premium visual polish: richer surfaces, crisp borders, and consistent controls */
+  :root {
+    --wb-bg: #070b14;
+    --wb-surface: #101827;
+    --wb-surface-elevated: #172338;
+    --wb-border: rgba(148, 163, 184, .22);
+    --wb-border-light: rgba(255, 255, 255, .10);
+    --wb-gold: #f7c65b;
+    --wb-amber: #f3a93b;
+    --wb-text-sub: #a7b4c8;
+    --wb-text-muted: #7e8ba2;
+  }
+  body {
+    background:
+      radial-gradient(ellipse at 50% -15%, rgba(247,198,91,.12), transparent 42%),
+      radial-gradient(ellipse at 100% 30%, rgba(35,115,180,.09), transparent 38%),
+      var(--wb-bg);
+  }
+  .view-container { gap: 2px; }
+  .profile-section-box, .stat-card, .settings-group, .road-reward-box,
+  .achievement-card, .history-card, .game-mode-card, .profile-card {
+    background: linear-gradient(145deg, rgba(23,35,56,.96), rgba(13,22,37,.98));
+    border: 1px solid rgba(148,163,184,.20);
+    box-shadow: 0 10px 28px rgba(0,0,0,.18), inset 0 1px 0 rgba(255,255,255,.035);
+  }
+  .profile-section-box {
+    border-radius: 20px;
+    padding: 16px;
+    margin-bottom: 14px;
+  }
+  .stat-card { border-radius: 16px; }
+  .top-bar { margin-bottom: 16px; }
+  .brand-header-text { text-shadow: 0 2px 18px rgba(247,198,91,.10); }
+  .icon-circle-btn, .secondary-action-btn {
+    border-color: rgba(148,163,184,.25);
+    background: linear-gradient(145deg, #18253a, #101827);
+    transition: transform .18s ease, border-color .18s ease, background .18s ease, box-shadow .18s ease;
+  }
+  .icon-circle-btn:active, .primary-action-btn:active, .secondary-action-btn:active {
+    transform: scale(.98);
+  }
+  .primary-action-btn {
+    border: 1px solid rgba(247,198,91,.52);
+    background: linear-gradient(135deg, #f7c65b, #e9a83d);
+    color: #17130a;
+    font-weight: 850;
+    box-shadow: 0 7px 18px rgba(233,168,61,.14), inset 0 1px 0 rgba(255,255,255,.35);
+  }
+  .secondary-action-btn { color: #e7edf6; }
+  input, select, textarea {
+    border-color: rgba(148,163,184,.28) !important;
+    background: rgba(6,12,22,.72) !important;
+    color: var(--wb-text) !important;
+    transition: border-color .18s ease, box-shadow .18s ease;
+  }
+  input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: rgba(247,198,91,.9) !important;
+    box-shadow: 0 0 0 3px rgba(247,198,91,.13);
+  }
+  .sec-title { letter-spacing: .055em; }
+  #fullWalletView .profile-section-box:first-of-type {
+    position: relative;
+    overflow: hidden;
+    background:
+      radial-gradient(ellipse at 50% 0%, rgba(74,222,128,.15), transparent 58%),
+      linear-gradient(145deg, #172b2b, #101c27 72%);
+    border: 1px solid rgba(74,222,128,.34);
+    box-shadow: 0 14px 34px rgba(0,0,0,.24), inset 0 1px 0 rgba(255,255,255,.06);
+  }
+  #walletPageBalance {
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -.045em;
+    text-shadow: 0 0 24px rgba(74,222,128,.14);
+  }
+  #walletMethodUPI, #walletMethodBank {
+    min-height: 46px;
+    border-radius: 14px;
+    font-weight: 800;
+  }
+  #walletUPIForm, #walletBankForm {
+    padding: 16px;
+    border: 1px solid rgba(148,163,184,.18);
+    border-radius: 16px;
+    background: rgba(4,10,19,.35);
+  }
+  #walletUPIForm label, #walletBankForm label {
+    margin-bottom: -7px;
+    letter-spacing: .01em;
+  }
+  #walletUPIForm input, #walletBankForm input {
+    min-height: 46px;
+    border-radius: 12px !important;
+  }
+  #walletWithdrawalNotice {
+    border-color: rgba(247,198,91,.38) !important;
+    background: linear-gradient(135deg, rgba(247,198,91,.12), rgba(247,198,91,.055)) !important;
+    border-radius: 14px !important;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .profile-section-box, .stat-card { transition: border-color .2s ease, transform .2s ease, box-shadow .2s ease; }
+    .profile-section-box:hover, .stat-card:hover {
+      border-color: rgba(247,198,91,.28);
+      box-shadow: 0 13px 30px rgba(0,0,0,.23), inset 0 1px 0 rgba(255,255,255,.04);
+    }
+  }
+
 </style>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 
@@ -2622,7 +2730,6 @@
     <div class="sec-title" style="margin-bottom:14px;">REWARD MILESTONES</div>
     <div id="pointsRewardsMilestones" style="display:flex;flex-direction:column;gap:10px;"></div>
   </div>
-  <p style="font-size:.72rem;line-height:1.5;color:var(--wb-text-sub);padding:0 4px;">Wallet rewards shown here are a local app demonstration and are not real cash, withdrawable funds, or a promise of payment. A verified rewards backend and payout system would be required for real-money rewards.</p>
 </div>
 
 <!-- ================= WALLET PAGE ================= -->
@@ -2665,7 +2772,6 @@
     </div>
     <div id="walletWithdrawalNotice" role="status" style="display:none;margin-top:14px;padding:12px;border-radius:10px;background:rgba(245,196,91,.08);border:1px solid rgba(245,196,91,.24);font-size:.8rem;line-height:1.5;color:var(--wb-text);"></div>
   </div>
-  <p style="font-size:.72rem;line-height:1.5;color:var(--wb-text-sub);padding:0 4px;">Withdrawal requests are not processed by this front-end alone. Connect a secure, verified payout backend before enabling real-money transfers.</p>
 </div>
 
 <!-- ================= 3. FULL-PAGE: MASTERY ROAD ================= -->
