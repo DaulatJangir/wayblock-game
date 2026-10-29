@@ -2135,15 +2135,15 @@
 /* Stacked player roster: each participant gets a clear, readable row. */
 #hostRosterBox:not(.hidden){display:grid;grid-template-columns:minmax(0,1fr);gap:9px;margin-top:14px;width:100%;min-width:0}
 .host-roster-player{display:flex;align-items:center;gap:11px;min-width:0;padding:11px 12px;border:1px solid rgba(148,163,184,.17);border-radius:14px;background:linear-gradient(110deg,rgba(30,45,77,.68),rgba(14,23,42,.96));box-shadow:inset 0 1px 0 rgba(255,255,255,.035)}
-.host-roster-host{border-color:rgba(0,210,255,.3)}
+.host-roster-host{border-color:rgba(251,191,36,.3)}
 .host-roster-guest{border-color:rgba(251,191,36,.28)}
-.host-roster-avatar{display:grid;place-items:center;flex:0 0 36px;width:36px;height:36px;border-radius:11px;background:linear-gradient(145deg,#164e63,#0e7490);color:#a5f3fc;font-size:1.1rem}
-.host-roster-guest .host-roster-avatar{background:linear-gradient(145deg,#854d0e,#b45309);color:#fef3c7}
+.host-roster-avatar{display:grid;place-items:center;flex:0 0 36px;width:36px;height:36px;border-radius:11px;background:linear-gradient(145deg,#fbbf24,#d97706);color:#17120a;font-size:1.1rem}
+.host-roster-guest .host-roster-avatar{background:linear-gradient(145deg,#fbbf24,#b45309);color:#17120a}
 .host-roster-info{display:flex;flex:1;flex-direction:column;gap:3px;min-width:0}
 .host-roster-info strong{overflow:hidden;color:var(--wb-text);font-size:.83rem;font-weight:850;text-overflow:ellipsis;white-space:nowrap}
 .host-roster-info small{color:var(--wb-text-sub);font-size:.67rem}
 .host-roster-role{flex:0 0 auto;padding:6px 8px;border:1px solid;border-radius:8px;font-size:.62rem;font-weight:950;letter-spacing:.25px;white-space:nowrap}
-.host-roster-role-host{border-color:rgba(0,210,255,.28);background:rgba(0,210,255,.09);color:#67e8f9}
+.host-roster-role-host{border-color:rgba(251,191,36,.3);background:rgba(251,191,36,.09);color:#fcd34d}
 .host-roster-role-guest{border-color:rgba(251,191,36,.3);background:rgba(251,191,36,.09);color:#fcd34d}
 @media(max-width:360px){.host-roster-player{gap:8px;padding:9px}.host-roster-role{padding:5px 6px;font-size:.57rem}.host-roster-avatar{flex-basis:32px;width:32px;height:32px}}
 .host-incoming-request{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:13px;padding:12px;border:1px solid rgba(245,158,11,.35);border-radius:14px;background:rgba(245,158,11,.07)}.host-request-copy{display:flex;flex:1 1 100%;flex-direction:column;gap:4px}.host-request-copy strong{font-size:.82rem}.host-request-copy>span{font-size:.7rem;color:var(--wb-text-sub)}.host-accept-btn{flex:1;padding:10px;font-size:.8rem}.host-decline-btn{padding:10px 13px;border:1px solid var(--wb-border);border-radius:11px;background:#111d33;color:#cbd5e1;font-weight:800}
