@@ -709,6 +709,38 @@
   @media(min-width:700px){.howto-page{max-width:850px;margin:0 auto}.howto-hero{padding:30px}.howto-hero-board{position:absolute;right:28px;top:45px;width:230px;opacity:.95}.howto-hero p{max-width:440px}.howto-step-card{grid-template-columns:34px minmax(0,1fr) minmax(210px,.72fr);align-items:center}.howto-illustration{grid-column:auto}}
   @media(max-width:420px){.howto-hero{padding:20px 16px 16px}.howto-step-card{padding:14px!important;gap:9px}.howto-hero-board{max-width:240px}}
 
+  /* Make only the FIELD GUIDE board artwork part of its card background. */
+  #fullGuideView .howto-hero { position: relative; isolation: isolate; }
+  #fullGuideView .howto-hero > :not(.howto-hero-board) { position: relative; z-index: 1; }
+  #fullGuideView .howto-hero .howto-hero-board {
+    position: absolute;
+    z-index: 0;
+    right: 8px;
+    bottom: 8px;
+    top: auto;
+    transform: none;
+    width: 170px;
+    max-width: 46%;
+    margin: 0;
+    opacity: .22;
+    pointer-events: none;
+    border-color: transparent;
+    background: transparent;
+    box-shadow: none;
+  }
+  @media (max-width: 699px) {
+    #fullGuideView .howto-hero .howto-hero-board {
+      position: absolute;
+      right: 6px;
+      bottom: 6px;
+      top: auto;
+      width: 138px;
+      max-width: 42%;
+      margin: 0;
+      opacity: .18;
+    }
+  }
+
   .guide-diagram {
     background: #090e1a;
     border: 1px dashed var(--wb-border);
