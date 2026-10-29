@@ -663,6 +663,37 @@
     line-height: 1.45;
     margin-bottom: 8px;
   }
+  .howto-page{display:flex;flex-direction:column;gap:16px;padding:0 0 28px}
+  .howto-hero{position:relative;overflow:hidden;padding:24px 20px 18px;border:1px solid rgba(247,198,91,.24);border-radius:24px;background:radial-gradient(circle at 90% 18%,rgba(247,198,91,.16),transparent 34%),linear-gradient(145deg,#171c24,#0b1017 78%);box-shadow:0 18px 44px rgba(0,0,0,.24)}
+  .howto-eyebrow{display:flex;align-items:center;gap:8px;color:#f7c65b;font-size:.68rem;font-weight:900;letter-spacing:.15em}
+  .howto-hero h1{margin:16px 0 10px;color:#f7f8fb;font-size:clamp(2rem,8vw,3.1rem);line-height:1.03;letter-spacing:-.055em}.howto-hero h1 span{color:#f7c65b}
+  .howto-hero p{max-width:520px;color:#aeb8c6;line-height:1.65;font-size:.91rem}
+  .howto-hero-stats{display:flex;gap:18px;flex-wrap:wrap;margin-top:20px}.howto-hero-stats div{display:flex;flex-direction:column;gap:3px}.howto-hero-stats strong{color:#f7c65b;font-size:1.05rem}.howto-hero-stats span{color:#aeb8c6;font-size:.7rem}
+  .howto-hero-board{margin:22px auto 0;max-width:280px;padding:12px;border:1px solid rgba(255,255,255,.1);border-radius:18px;background:rgba(0,0,0,.22)}
+  .howto-mini-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:4px;aspect-ratio:1}.howto-mini-grid span{display:grid;place-items:center;min-width:0;border-radius:5px;background:#202a36;border:1px solid rgba(255,255,255,.035)}
+  .howto-mini-grid .howto-wall-v{background:linear-gradient(90deg,transparent 35%,#f7c65b 35%,#f7c65b 65%,transparent 65%),#202a36}.howto-mini-grid .howto-wall-h{background:linear-gradient(180deg,transparent 35%,#f7c65b 35%,#f7c65b 65%,transparent 65%),#202a36}
+  .howto-pawn-blue,.howto-pawn-gold{display:grid;place-items:center;border-radius:50%;font-size:1.15rem;line-height:1;text-shadow:0 0 12px currentColor}.howto-pawn-blue{color:#67c7ff!important}.howto-pawn-gold{color:#f7c65b!important}
+  .howto-board-caption{display:flex;align-items:center;justify-content:center;gap:8px;padding-top:10px;color:#c6ced8;font-size:.72rem}
+  .howto-section-heading{display:flex;align-items:center;gap:12px;margin:6px 0 0;color:#f7c65b;font-size:.68rem;font-weight:900;letter-spacing:.16em}.howto-section-heading i{flex:1;height:1px;background:linear-gradient(90deg,rgba(247,198,91,.35),transparent)}
+  .howto-step-card{display:grid;grid-template-columns:34px minmax(0,1fr);gap:12px;padding:18px!important;border:1px solid rgba(148,163,184,.17);background:linear-gradient(145deg,rgba(24,31,41,.96),rgba(13,18,26,.96))}
+  .howto-step-number{display:grid;place-items:center;width:32px;height:32px;border-radius:10px;color:#f7c65b;background:rgba(247,198,91,.1);border:1px solid rgba(247,198,91,.25);font-size:.75rem;font-weight:900}
+  .howto-step-copy{min-width:0}.howto-step-copy h4{margin:3px 0 8px!important;color:#f6f7f9!important;font-size:1rem!important}.howto-step-copy h4 i{margin-right:6px;color:#f7c65b}.howto-step-copy p{margin:0 0 10px!important;color:#aeb8c6!important;font-size:.84rem!important;line-height:1.65!important}
+  .howto-illustration{grid-column:1/-1;padding:12px;border:1px solid rgba(255,255,255,.07);border-radius:16px;background:rgba(3,7,12,.34)}
+  .howto-demo-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:4px;max-width:270px;margin:0 auto;aspect-ratio:1}.howto-demo-grid span,.howto-move-board span,.howto-wall-board span,.howto-jump-board span{display:grid;place-items:center;min-width:0;border-radius:4px;background:#202a36;color:#f7c65b;font-size:1.1rem;font-weight:900}
+  .howto-demo-grid .goal-cell{background:rgba(247,198,91,.22)}.howto-demo-grid .start-cell{background:rgba(103,199,255,.13)}.howto-demo-grid .arrow-cell{color:#f7c65b}.howto-goal-label{max-width:270px;margin:0 auto 7px;color:#f7c65b;font-size:.65rem;font-weight:900;letter-spacing:.16em}
+  .howto-demo-legend{display:flex;flex-wrap:wrap;justify-content:center;gap:8px 14px;margin-top:10px;color:#9ba8b8;font-size:.66rem}
+  .howto-move-board{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:5px;max-width:220px;margin:0 auto;aspect-ratio:1}.howto-move-board span{border-radius:8px}.howto-move-board .move-target{color:#f7c65b;background:rgba(247,198,91,.12);border:1px dashed rgba(247,198,91,.5)}.howto-demo-legend .legend-blue{color:#67c7ff}
+  .howto-wall-board{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;max-width:250px;margin:0 auto;aspect-ratio:1.3}.howto-wall-board span{border-radius:5px}.howto-wall-board .wall-piece{background:linear-gradient(180deg,#f7c65b,#b9842c);box-shadow:0 0 12px rgba(247,198,91,.2)}
+  .howto-wall-label{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:10px;color:#aeb8c6;font-size:.68rem}.wall-swatch{width:24px;height:6px;border-radius:3px;background:#f7c65b}
+  .howto-jump-board{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;max-width:220px;margin:0 auto;aspect-ratio:3/5}.howto-jump-board span{border-radius:5px}.howto-jump-board .jump-arrow{color:#f7c65b;background:rgba(247,198,91,.08)}.howto-jump-board .landing-cell{color:#67e8a5;background:rgba(103,232,165,.12);border:1px solid rgba(103,232,165,.35)}
+  .howto-tip{display:flex;gap:9px;align-items:flex-start;padding:11px;border-radius:12px;background:rgba(247,198,91,.08);color:#c6ced8;font-size:.76rem;line-height:1.5}.howto-tip i{color:#f7c65b;margin-top:2px}
+  .howto-win-card{display:flex;align-items:flex-start;gap:15px;padding:20px;border:1px solid rgba(247,198,91,.3);border-radius:20px;background:linear-gradient(135deg,rgba(247,198,91,.13),rgba(19,24,31,.95) 62%)}.howto-win-icon{flex:0 0 44px;display:grid;place-items:center;width:44px;height:44px;border-radius:14px;background:rgba(247,198,91,.14);color:#f7c65b;font-size:1.2rem}
+  .howto-win-card h3{margin:8px 0!important;color:#fff;font-size:1.15rem}.howto-win-card p{margin:0;color:#aeb8c6;font-size:.82rem;line-height:1.65}
+  .howto-reminders{display:flex;flex-direction:column;gap:9px}.howto-reminders div{display:flex;align-items:flex-start;gap:10px;padding:13px;border-radius:13px;background:rgba(255,255,255,.035);color:#c6ced8;font-size:.8rem;line-height:1.5}.howto-reminders i{margin-top:2px;color:#67e8a5}
+  .howto-play-cta{display:flex;align-items:center;justify-content:center;gap:9px;width:100%;min-height:50px;margin-top:4px;border-radius:15px}
+  @media(min-width:700px){.howto-page{max-width:850px;margin:0 auto}.howto-hero{padding:30px}.howto-hero-board{position:absolute;right:28px;top:45px;width:230px;opacity:.95}.howto-hero p{max-width:440px}.howto-step-card{grid-template-columns:34px minmax(0,1fr) minmax(210px,.72fr);align-items:center}.howto-illustration{grid-column:auto}}
+  @media(max-width:420px){.howto-hero{padding:20px 16px 16px}.howto-step-card{padding:14px!important;gap:9px}.howto-hero-board{max-width:240px}}
+
   .guide-diagram {
     background: #090e1a;
     border: 1px dashed var(--wb-border);
@@ -2703,7 +2734,7 @@
   </div>
 
   <div class="profile-section-box" style="padding:4px 14px;">
-    <div class="settings-row" onclick="openHowToPlayModal()" style="cursor:pointer;">
+    <div class="settings-row" onclick="openHowToPlayPage()" style="cursor:pointer;">
       <span style="font-size:0.88rem; font-weight:700;">🎮 How to Play</span>
       <span style="color:var(--wb-text-sub);">›</span>
     </div>
@@ -2947,47 +2978,29 @@
 <!-- ================= 6. FULL-PAGE: GAME GUIDE ================= -->
 <div class="view-container hidden" id="fullGuideView">
   <div class="top-bar">
-    <div class="icon-circle-btn" onclick="switchNavTab('home')">←</div>
-    <div class="brand-header-text" style="font-size:1.15rem;">Game Guide</div>
-    <div style="width:36px;"></div>
+    <button class="icon-circle-btn" onclick="switchView('fullSettingsView')" aria-label="Back to settings">←</button>
+    <div class="brand-header-text" style="font-size:1.15rem;">How to Play</div><div style="width:36px;"></div>
   </div>
-
-  <div class="guide-article">
-    <div class="guide-card">
-      <h4>🎯 1. Primary Objective</h4>
-      <p>Be the first player to guide your pawn across the 9×9 arena to any square on your opponent's baseline (or claim the golden center trophy in 3-Player mode).</p>
-      <div class="guide-diagram">
-        [ Goal Baseline (Opposite Row) ] 🏁<br>
-        ↑ ↑ ↑ (Forward Sprint) ↑ ↑ ↑<br>
-        [ Home Baseline (Bottom Row) ] 🔵 (Your Pawn)
-      </div>
-    </div>
-
-    <div class="guide-card">
-      <h4>♟️ 2. Movement Rules</h4>
-      <p>On your turn, advance your pawn <strong>one square</strong> orthogonally (forward, backward, left, right), provided no wall blocks the passage.</p>
-      <p>• <strong>Jumping Opponents:</strong> If rival pawns are directly adjacent with no wall behind them, jump over them into the square directly behind.</p>
-      <div class="guide-diagram">
-        [ Empty Target Square ]<br>
-        ↑ (Leap)<br>
-        [ 🔴 Rival Pawn ]<br>
-        [ 🔵 Your Pawn ]
-      </div>
-    </div>
-
-    <div class="guide-card">
-      <h4>🧱 3. Wall Barrier Placement</h4>
-      <p>Instead of advancing, deploy a 2-tile length laser wall (Horizontal [—] or Vertical [ | ]) to detour opponents.</p>
-      <p>• <strong>Fair Path Rule:</strong> You cannot completely enclose any player. At least one open path to the goal baseline must remain available for all players.</p>
-      <div class="guide-diagram">
-        ⛔ Full cage entrapment = Illegal move<br>
-        ✅ Long labyrinth detour = Tactical & Legal!
-      </div>
-    </div>
+  <div class="howto-page">
+    <section class="howto-hero">
+      <div class="howto-eyebrow"><i class="fa-solid fa-graduation-cap"></i> WAYBLOCK FIELD GUIDE</div>
+      <h1>Think ahead.<br><span>Find your way.</span></h1>
+      <p>Learn the moves, master the walls, and outsmart your opponent. Your next winning strategy starts here.</p>
+      <div class="howto-hero-stats"><div><strong>01</strong><span>Move smart</span></div><div><strong>02</strong><span>Place walls</span></div><div><strong>03</strong><span>Reach the goal</span></div></div>
+      <div class="howto-hero-board" aria-hidden="true"><div class="howto-mini-grid"><span></span><span></span><span></span><span></span><span></span><span></span><span class="howto-wall-v"></span><span></span><span></span><span></span><span></span><span></span><span class="howto-pawn-blue">●</span><span></span><span></span><span></span><span class="howto-wall-h"></span><span class="howto-wall-h"></span><span></span><span></span><span></span><span></span><span class="howto-pawn-gold">●</span><span></span><span></span></div><div class="howto-board-caption"><i class="fa-solid fa-route"></i> Every move changes your route</div></div>
+    </section>
+    <div class="howto-section-heading"><span>THE BASICS</span><i></i></div>
+    <section class="guide-card howto-step-card"><div class="howto-step-number">01</div><div class="howto-step-copy"><h4><i class="fa-solid fa-flag-checkered"></i> Your mission</h4><p>Race your pawn to the opposite side of the board before your opponent. Look for the clearest route, but be ready to change your plan when a wall appears.</p></div><div class="howto-illustration"><div class="howto-goal-label">GOAL LINE</div><div class="howto-demo-grid"><span class="goal-cell"></span><span class="goal-cell"></span><span class="goal-cell"></span><span class="goal-cell"></span><span class="goal-cell"></span><span></span><span></span><span class="arrow-cell">↑</span><span></span><span></span><span></span><span></span><span class="arrow-cell">↑</span><span></span><span></span><span></span><span></span><span class="howto-pawn-blue">●</span><span></span><span></span><span class="start-cell"></span><span class="start-cell"></span><span class="start-cell"></span><span class="start-cell"></span><span class="start-cell"></span></div><div class="howto-demo-legend"><span>● Your pawn</span><span>↑ Route to goal</span></div></div></section>
+    <section class="guide-card howto-step-card"><div class="howto-step-number">02</div><div class="howto-step-copy"><h4><i class="fa-solid fa-arrows-up-down-left-right"></i> Move one square</h4><p>On your turn, move one square up, down, left, or right into a valid space. You cannot move through a wall or land on an occupied square. Think about your next move before committing.</p></div><div class="howto-illustration"><div class="howto-move-board"><span></span><span class="move-target">↑</span><span></span><span class="move-target">←</span><span class="howto-pawn-blue">●</span><span class="move-target">→</span><span></span><span class="move-target">↓</span><span></span></div><div class="howto-demo-legend"><span class="legend-blue">Blue = current position</span><span>Arrows = possible directions</span></div></div></section>
+    <section class="guide-card howto-step-card"><div class="howto-step-number">03</div><div class="howto-step-copy"><h4><i class="fa-solid fa-grip-lines"></i> Use walls wisely</h4><p>Instead of moving, place a wall to make your opponent take a longer route. Walls sit between squares, not on top of them. Always keep a route to the goal open for every player.</p><div class="howto-tip"><i class="fa-solid fa-lightbulb"></i><span><strong>Pro tip:</strong> A wall that slows your rival but also costs you turns may not be worth it.</span></div></div><div class="howto-illustration"><div class="howto-wall-board"><span></span><span></span><span></span><span></span><span></span><span></span><span class="wall-piece"></span><span></span><span></span><span></span><span class="wall-piece"></span><span></span><span></span><span></span><span></span><span></span></div><div class="howto-wall-label"><span class="wall-swatch"></span> Wall blocks this passage</div></div></section>
+    <section class="guide-card howto-step-card"><div class="howto-step-number">04</div><div class="howto-step-copy"><h4><i class="fa-solid fa-shuffle"></i> Adapt to your opponent</h4><p>If your opponent is directly next to you, your game may allow a jump when the space beyond is open. If a wall blocks that jump, check for a legal side route. Follow the valid moves shown by the game.</p></div><div class="howto-illustration"><div class="howto-jump-board"><span></span><span class="howto-pawn-blue">●</span><span></span><span></span><span class="jump-arrow">↓</span><span></span><span></span><span class="howto-pawn-gold">●</span><span></span><span></span><span class="jump-arrow">↓</span><span></span><span></span><span class="landing-cell">✓</span><span></span></div><div class="howto-demo-legend"><span>Check the path before jumping</span></div></div></section>
+    <section class="howto-win-card"><div class="howto-win-icon"><i class="fa-solid fa-trophy"></i></div><div><div class="howto-eyebrow">THE WINNING FORMULA</div><h3>Progress + patience = victory.</h3><p>Balance advancing with smart wall placement. Keep a route to the goal open for every player and be ready to rethink your strategy.</p></div></section>
+    <div class="howto-section-heading"><span>QUICK REMINDERS</span><i></i></div>
+    <div class="howto-reminders"><div><i class="fa-solid fa-check"></i><span>Take one action per turn: move or place a wall.</span></div><div><i class="fa-solid fa-check"></i><span>Never completely block a player's route to the goal.</span></div><div><i class="fa-solid fa-check"></i><span>Watch your opponent and keep adapting your plan.</span></div></div>
+    <button class="primary-action-btn howto-play-cta" onclick="switchNavTab('home')"><i class="fa-solid fa-gamepad"></i> Ready to Play</button>
   </div>
 </div>
 
-<!-- ================= 7. FULL-PAGE: HELP & SUPPORT ================= -->
 <div class="view-container hidden" id="fullSupportView">
   <div class="top-bar">
     <div class="icon-circle-btn" onclick="switchNavTab('profile')">←</div>
@@ -3794,9 +3807,13 @@ function openFullReferralPage() {
   switchView('fullReferralView'); 
 }
 function openFullGuidePage() { switchView('fullGuideView'); }
+function openHowToPlayPage() {
+  switchView('fullGuideView');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
 function openHowToPlayModal() {
-  const modal = document.getElementById('howToPlayModal');
-  if (modal) modal.classList.remove('hidden');
+  openHowToPlayPage();
 }
 
 function closeHowToPlayModal() {
