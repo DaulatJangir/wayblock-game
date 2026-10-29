@@ -663,6 +663,21 @@
     line-height: 1.45;
     margin-bottom: 8px;
   }
+  /* Keep the field-guide hero from being covered by its board artwork. */
+  #fullGuideView { max-width: 920px; width: 100%; }
+  #fullGuideView .howto-hero { isolation: isolate; }
+  #fullGuideView .howto-hero > :not(.howto-hero-board) { position: relative; z-index: 1; }
+  #fullGuideView .howto-hero-board { z-index: 0; pointer-events: none; }
+  @media (min-width: 700px) {
+    #fullGuideView .howto-hero { min-height: 300px; padding-right: 290px; }
+    #fullGuideView .howto-hero h1,
+    #fullGuideView .howto-hero p,
+    #fullGuideView .howto-hero-stats { max-width: 440px; }
+    #fullGuideView .howto-hero-board { right: 24px; top: 50%; transform: translateY(-50%); width: 220px; margin: 0; }
+  }
+  @media (max-width: 699px) {
+    #fullGuideView .howto-hero-board { position: relative; right: auto; top: auto; transform: none; }
+  }
   .howto-page{display:flex;flex-direction:column;gap:16px;padding:0 0 28px}
   .howto-hero{position:relative;overflow:hidden;padding:24px 20px 18px;border:1px solid rgba(247,198,91,.24);border-radius:24px;background:radial-gradient(circle at 90% 18%,rgba(247,198,91,.16),transparent 34%),linear-gradient(145deg,#171c24,#0b1017 78%);box-shadow:0 18px 44px rgba(0,0,0,.24)}
   .howto-eyebrow{display:flex;align-items:center;gap:8px;color:#f7c65b;font-size:.68rem;font-weight:900;letter-spacing:.15em}
