@@ -1776,10 +1776,19 @@
   .host-join-choice-copy strong { color: #f6f8fc; font-size: 1rem; font-weight: 900; }
   .host-join-choice-copy span { color: #aab8ce; font-size: .76rem; line-height: 1.35; }
   .host-join-choice-arrow { color: #dbe7f7; font-size: 1.3rem; font-weight: 800; }
-  .host-choice { border-color: rgba(91,215,194,.27); }
-  .host-choice .host-join-choice-icon { background: rgba(76,205,180,.12); border-color: rgba(76,205,180,.24); color: #8fe5d2; }
-  .join-choice { border-color: rgba(106,144,255,.26); }
-  .join-choice .host-join-choice-icon { background: rgba(92,125,245,.13); border-color: rgba(125,151,255,.23); color: #b8c7ff; }
+  /* Host / Join choice cards use the shared WayBlock navy-and-gold palette. */
+  .host-choice { border-color: rgba(251,191,36,.28); }
+  .host-choice .host-join-choice-icon {
+    background: rgba(251,191,36,.09);
+    border-color: rgba(251,191,36,.25);
+    color: var(--wb-gold);
+  }
+  .join-choice { border-color: var(--wb-border); }
+  .join-choice .host-join-choice-icon {
+    background: rgba(251,191,36,.06);
+    border-color: rgba(251,191,36,.2);
+    color: #f5d889;
+  }
   @media (prefers-reduced-motion: reduce) { .host-join-choice-card { transition: none; } }
 
 
