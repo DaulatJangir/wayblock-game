@@ -2264,6 +2264,35 @@
     opacity: 1;
   }
 </style>
+<style id="premium-delete-account-modal-styles">
+  .delete-account-overlay {
+    position:fixed; inset:0; z-index:10050; display:flex; align-items:center; justify-content:center;
+    padding:22px; background:rgba(3,6,11,.78); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+  }
+  .delete-account-overlay.hidden { display:none !important; }
+  .delete-account-dialog {
+    width:min(100%,390px); padding:28px 22px 22px; text-align:center; border-radius:26px;
+    background:radial-gradient(circle at 50% 0%,rgba(245,196,91,.10),transparent 42%),linear-gradient(155deg,#191e27,#0d1118 78%);
+    border:1px solid rgba(245,196,91,.24); box-shadow:0 24px 80px rgba(0,0,0,.55),inset 0 1px 0 rgba(255,255,255,.04);
+    animation:deleteDialogEnter .22s ease-out;
+  }
+  .delete-account-symbol {
+    width:58px;height:58px;margin:0 auto 16px;display:grid;place-items:center;border-radius:19px;
+    color:#ffb4a9;font-size:1.8rem;font-weight:900;
+    background:linear-gradient(145deg,rgba(239,91,79,.20),rgba(239,91,79,.06));
+    border:1px solid rgba(255,128,113,.36);box-shadow:0 0 28px rgba(239,91,79,.10);
+  }
+  .delete-account-eyebrow {font-size:.66rem;letter-spacing:2px;font-weight:800;color:#d6b86e;margin-bottom:8px;}
+  .delete-account-dialog h2 {margin:0 0 12px;color:#f7f8fa;font-size:1.35rem;letter-spacing:-.4px;}
+  .delete-account-message {margin:0 auto 12px;max-width:300px;color:#b5bdc8;font-size:.9rem;line-height:1.6;}
+  .delete-account-warning {margin:0 0 22px;color:#ff9f91;font-size:.78rem;font-weight:700;}
+  .delete-account-actions {display:flex;flex-direction:column;gap:10px;}
+  .delete-account-actions button {width:100%;min-height:46px;border-radius:14px;font-size:.88rem;font-weight:800;cursor:pointer;}
+  .delete-account-cancel {background:linear-gradient(180deg,#252b35,#191e27);border:1px solid #3b424d;color:#f4f5f7;}
+  .delete-account-confirm {background:linear-gradient(180deg,#d95b50,#b83b35);border:1px solid rgba(255,170,158,.35);color:#fff;box-shadow:0 6px 18px rgba(184,59,53,.18);}
+  .delete-account-actions button:active {transform:scale(.985);}
+  @keyframes deleteDialogEnter {from {opacity:0;transform:translateY(8px) scale(.98);}to {opacity:1;transform:translateY(0) scale(1);}}
+</style>
 </head>
 <body>
 
@@ -2629,9 +2658,24 @@
   </div>
 
   <!-- Item 1 & 3: Clean, Un-highlighted Delete Account button with no cyan glow[cite: 11] -->
-  <button class="delete-account-clean-btn" onclick="deleteAccountPermanently()">
+  <button class="delete-account-clean-btn" onclick="openDeleteAccountModal()">
     Delete Account
   </button>
+</div>
+
+<!-- ================= DELETE ACCOUNT CONFIRMATION ================= -->
+<div id="deleteAccountModal" class="delete-account-overlay hidden" role="dialog" aria-modal="true" aria-labelledby="deleteAccountTitle">
+  <div class="delete-account-dialog">
+    <div class="delete-account-symbol">!</div>
+    <div class="delete-account-eyebrow">ACCOUNT MANAGEMENT</div>
+    <h2 id="deleteAccountTitle">Delete your account?</h2>
+    <p class="delete-account-message">This will permanently erase your local profile, points, achievements, and match history from this browser.</p>
+    <p class="delete-account-warning">This action cannot be undone.</p>
+    <div class="delete-account-actions">
+      <button type="button" class="delete-account-cancel" onclick="closeDeleteAccountModal()">Keep My Account</button>
+      <button type="button" class="delete-account-confirm" onclick="deleteAccountPermanently()">Delete Account</button>
+    </div>
+  </div>
 </div>
 
 <!-- ================= 5. FULL-PAGE: REFER & EARN (Coming Soon) ================= -->
@@ -3878,11 +3922,18 @@ function startConfiguredLocalGame() {
 }
   
 // Delete Account Permanently
+function openDeleteAccountModal() {
+  const modal = document.getElementById('deleteAccountModal');
+  if (modal) modal.classList.remove('hidden');
+}
+function closeDeleteAccountModal() {
+  const modal = document.getElementById('deleteAccountModal');
+  if (modal) modal.classList.add('hidden');
+}
 function deleteAccountPermanently() {
-  if (confirm("Are you sure you want to permanently delete this account? All your stats, wins, matches, and ID will be wiped forever.")) {
-    localStorage.clear();
-    location.reload();
-  }
+  closeDeleteAccountModal();
+  localStorage.clear();
+  location.reload();
 }
 
 function goToLobbyChoice() { switchView('lobbyChoiceView'); }
