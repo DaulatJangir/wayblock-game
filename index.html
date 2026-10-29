@@ -2488,10 +2488,13 @@
   <div class="top-bar">
     <div class="top-bar-title">Profile</div>
     <div class="profile-top-actions" style="display:flex;align-items:center;gap:10px;">
-      <div class="profile-points-top" aria-label="Points balance" style="display:inline-flex;align-items:center;gap:5px;padding:7px 10px;border:1px solid rgba(251,191,36,.28);border-radius:999px;background:rgba(251,191,36,.08);white-space:nowrap;">
+      <button type="button" class="profile-points-top" onclick="openPointsRewardsPage()" aria-label="View points and rewards" title="Points & rewards" style="display:inline-flex;align-items:center;gap:5px;padding:7px 10px;border:1px solid rgba(251,191,36,.28);border-radius:999px;background:rgba(251,191,36,.08);white-space:nowrap;cursor:pointer;">
         <span style="color:var(--wb-gold);font-size:.9rem;">★</span>
         <strong id="profilePointsBalance" style="font-size:.88rem;color:var(--wb-gold);">100</strong>
-      </div>
+      </button>
+      <button type="button" class="profile-wallet-top" onclick="openWalletPage()" aria-label="Open wallet" title="Wallet balance" style="display:inline-flex;align-items:center;gap:5px;padding:7px 10px;border:1px solid rgba(74,222,128,.28);border-radius:999px;background:rgba(74,222,128,.08);white-space:nowrap;cursor:pointer;color:#86efac;font-weight:800;font-size:.8rem;">
+        <span>👛</span><span id="profileWalletBalance">₹0</span>
+      </button>
       <div class="icon-circle-btn" onclick="openFullSettingsPage()" title="Settings" aria-label="Settings">⚙️</div>
     </div>
   </div>
@@ -2598,6 +2601,49 @@
     </div>
     <button class="primary-btn" onclick="closeHowToPlayModal()">Got it</button>
   </div>
+</div>
+
+<!-- ================= POINTS REWARDS PAGE ================= -->
+<div class="view-container hidden" id="fullPointsRewardsView">
+  <div class="top-bar">
+    <button class="icon-circle-btn" onclick="switchNavTab('profile')" aria-label="Back to profile">←</button>
+    <div class="brand-header-text" style="font-size:1.15rem;">Points & Rewards</div>
+    <div style="width:36px;"></div>
+  </div>
+  <div class="profile-section-box" style="text-align:center;padding:24px 18px;border-color:rgba(245,196,91,.3);">
+    <div style="font-size:2.2rem;">⭐</div>
+    <div style="font-size:.75rem;letter-spacing:1.5px;color:var(--wb-text-sub);font-weight:800;margin-top:8px;">YOUR POINTS</div>
+    <div id="pointsRewardsCurrent" style="font-size:2.4rem;font-weight:900;color:var(--wb-gold);margin:5px 0;">100</div>
+    <div style="color:var(--wb-text-sub);font-size:.85rem;">Reach each 500-point milestone to unlock a ₹100 wallet reward.</div>
+    <div style="height:8px;background:#252b33;border-radius:99px;overflow:hidden;margin:18px 0 8px;"><div id="pointsRewardsProgress" style="height:100%;width:20%;background:linear-gradient(90deg,#d9a441,#ffe29a);border-radius:99px;"></div></div>
+    <div id="pointsRewardsNext" style="font-size:.78rem;color:var(--wb-text-sub);">400 more points to next milestone</div>
+  </div>
+  <div class="profile-section-box">
+    <div class="sec-title" style="margin-bottom:14px;">REWARD MILESTONES</div>
+    <div id="pointsRewardsMilestones" style="display:flex;flex-direction:column;gap:10px;"></div>
+  </div>
+  <p style="font-size:.72rem;line-height:1.5;color:var(--wb-text-sub);padding:0 4px;">Wallet rewards shown here are a local app demonstration and are not real cash, withdrawable funds, or a promise of payment. A verified rewards backend and payout system would be required for real-money rewards.</p>
+</div>
+
+<!-- ================= WALLET PAGE ================= -->
+<div class="view-container hidden" id="fullWalletView">
+  <div class="top-bar">
+    <button class="icon-circle-btn" onclick="switchNavTab('profile')" aria-label="Back to profile">←</button>
+    <div class="brand-header-text" style="font-size:1.15rem;">My Wallet</div>
+    <div style="width:36px;"></div>
+  </div>
+  <div class="profile-section-box" style="text-align:center;padding:26px 18px;border-color:rgba(74,222,128,.28);">
+    <div style="font-size:2.2rem;">👛</div>
+    <div style="font-size:.75rem;letter-spacing:1.5px;color:var(--wb-text-sub);font-weight:800;margin-top:8px;">DEMO WALLET BALANCE</div>
+    <div id="walletPageBalance" style="font-size:2.5rem;font-weight:900;color:#86efac;margin:8px 0;">₹0</div>
+    <div id="walletPagePoints" style="font-size:.85rem;color:var(--wb-text-sub);">100 points</div>
+  </div>
+  <div class="profile-section-box">
+    <div class="sec-title" style="margin-bottom:12px;">HOW REWARDS WORK</div>
+    <div style="display:flex;gap:12px;align-items:center;padding:12px 0;border-bottom:1px solid var(--wb-border);"><span style="font-size:1.4rem;">⭐</span><div><strong>500 points</strong><div style="font-size:.8rem;color:var(--wb-text-sub);">Unlock ₹100 demo reward</div></div></div>
+    <div style="display:flex;gap:12px;align-items:center;padding:12px 0;"><span style="font-size:1.4rem;">🎁</span><div><strong>Every additional 500 points</strong><div style="font-size:.8rem;color:var(--wb-text-sub);">Adds another ₹100 demo reward</div></div></div>
+  </div>
+  <p style="font-size:.72rem;line-height:1.5;color:var(--wb-text-sub);padding:0 4px;">This balance is only a local demonstration. No real money is deposited, held, or payable, and withdrawals are not available.</p>
 </div>
 
 <!-- ================= 3. FULL-PAGE: MASTERY ROAD ================= -->
@@ -3525,7 +3571,7 @@ function renderGameHistory() {
 }
 
 function switchNavTab(tab) {
-  ['homeView', 'profileView', 'fullMasteryRoadView', 'fullSettingsView', 'fullReferralView', 'fullGuideView', 'fullSupportView', 'lobbyChoiceView', 'hostJoinChoiceView', 'hostLobbyView', 'joinLobbyView', 'gameArenaView', 'localSetupView', 'leaderboardView', 'historyView'].forEach(id => {
+  ['homeView', 'profileView', 'fullPointsRewardsView', 'fullWalletView', 'fullMasteryRoadView', 'fullSettingsView', 'fullReferralView', 'fullGuideView', 'fullSupportView', 'lobbyChoiceView', 'hostJoinChoiceView', 'hostLobbyView', 'joinLobbyView', 'gameArenaView', 'localSetupView', 'leaderboardView', 'historyView'].forEach(id => {
     document.getElementById(id).classList.add('hidden');
   });
 
@@ -3554,7 +3600,7 @@ function switchNavTab(tab) {
 }
 
 function switchView(viewId) {
-  ['homeView', 'profileView', 'fullMasteryRoadView', 'fullSettingsView', 'fullReferralView', 'fullGuideView', 'fullSupportView', 'lobbyChoiceView', 'hostJoinChoiceView', 'hostLobbyView', 'joinLobbyView', 'gameArenaView', 'localSetupView', 'leaderboardView', 'historyView'].forEach(id => {
+  ['homeView', 'profileView', 'fullPointsRewardsView', 'fullWalletView', 'fullMasteryRoadView', 'fullSettingsView', 'fullReferralView', 'fullGuideView', 'fullSupportView', 'lobbyChoiceView', 'hostJoinChoiceView', 'hostLobbyView', 'joinLobbyView', 'gameArenaView', 'localSetupView', 'leaderboardView', 'historyView'].forEach(id => {
     document.getElementById(id).classList.add('hidden');
   });
   document.getElementById(viewId).classList.remove('hidden');
@@ -3695,9 +3741,66 @@ function getProfilePoints() {
   return points;
 }
 
+function getWalletRewardLevel() {
+  const points = getProfilePoints();
+  const reachedLevel = Math.floor(points / 500);
+  const savedLevel = Math.max(0, parseInt(localStorage.getItem('wayblock_wallet_reward_level') || '0', 10) || 0);
+  const level = Math.max(savedLevel, reachedLevel);
+  if (level !== savedLevel) localStorage.setItem('wayblock_wallet_reward_level', String(level));
+  return level;
+}
+
+function getWalletDemoBalance() {
+  return getWalletRewardLevel() * 100;
+}
+
 function renderProfilePoints() {
+  const points = getProfilePoints();
   const pointsEl = document.getElementById('profilePointsBalance');
-  if (pointsEl) pointsEl.textContent = getProfilePoints().toLocaleString();
+  if (pointsEl) pointsEl.textContent = points.toLocaleString();
+  const walletEl = document.getElementById('profileWalletBalance');
+  if (walletEl) walletEl.textContent = '₹' + getWalletDemoBalance().toLocaleString('en-IN');
+}
+
+function renderPointsRewardsPage() {
+  const points = getProfilePoints();
+  const level = getWalletRewardLevel();
+  const nextMilestone = (Math.floor(points / 500) + 1) * 500;
+  const current = document.getElementById('pointsRewardsCurrent');
+  const progress = document.getElementById('pointsRewardsProgress');
+  const next = document.getElementById('pointsRewardsNext');
+  const list = document.getElementById('pointsRewardsMilestones');
+  if (current) current.textContent = points.toLocaleString('en-IN');
+  if (progress) progress.style.width = (points % 500 / 500 * 100) + '%';
+  if (next) next.textContent = (nextMilestone - points) + ' more points to next milestone';
+  if (list) {
+    list.innerHTML = '';
+    for (let milestone = 500; milestone <= Math.max(2000, Math.ceil(Math.max(points, level * 500) / 500) * 500 + 500); milestone += 500) {
+      const unlocked = level >= milestone / 500;
+      const row = document.createElement('div');
+      row.style.cssText = 'display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px;border:1px solid ' + (unlocked ? 'rgba(74,222,128,.3)' : 'var(--wb-border)') + ';border-radius:12px;background:' + (unlocked ? 'rgba(74,222,128,.06)' : 'rgba(255,255,255,.02)');
+      row.innerHTML = '<div><strong>' + milestone.toLocaleString('en-IN') + ' points</strong><div style="font-size:.76rem;color:var(--wb-text-sub);margin-top:3px;">' + (unlocked ? 'Milestone unlocked' : 'Keep playing to unlock') + '</div></div><strong style="color:' + (unlocked ? '#86efac' : 'var(--wb-text-sub)') + ';">' + (unlocked ? '✓ ' : '') + '₹' + (milestone / 500 * 100).toLocaleString('en-IN') + '</strong>';
+      list.appendChild(row);
+    }
+  }
+  renderProfilePoints();
+}
+
+function renderWalletPage() {
+  const balance = document.getElementById('walletPageBalance');
+  const points = document.getElementById('walletPagePoints');
+  if (balance) balance.textContent = '₹' + getWalletDemoBalance().toLocaleString('en-IN');
+  if (points) points.textContent = getProfilePoints().toLocaleString('en-IN') + ' points';
+}
+
+function openPointsRewardsPage() {
+  renderPointsRewardsPage();
+  switchView('fullPointsRewardsView');
+}
+
+function openWalletPage() {
+  renderWalletPage();
+  switchView('fullWalletView');
 }
 
 function saveMatchRecord(match) {
