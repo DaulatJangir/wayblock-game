@@ -2523,7 +2523,7 @@
           <div class="goal-progress-track"><span id="dailyWallsBar" class="goal-progress-fill teal-fill" style="width:0%"></span></div>
         </div>
       </div>
-      <div class="home-goal-footer"><span id="dailyQuestStatus">Resets daily</span><span class="goal-reward-pill">🪙 +50</span></div>
+      <div class="home-goal-footer"><span id="dailyQuestStatus">Resets daily</span><span class="goal-reward-pill">⭐ +20 points</span></div>
     </section>
 
     <section class="home-goal-card weekly-goal-card" aria-label="Weekly Goals">
@@ -2541,7 +2541,7 @@
           <div><i class="goal-dot dot-blue"></i><span id="weeklyDaysText">Play 3 Days</span></div>
         </div>
       </div>
-      <div class="home-goal-footer"><span id="weeklyGoalStatus">Resets weekly</span><span class="goal-reward-pill">🪙 +100</span></div>
+      <div class="home-goal-footer"><span id="weeklyGoalStatus">Resets weekly</span><span class="goal-reward-pill">⭐ +50 points</span></div>
     </section>
   </div>
 </div>
@@ -3594,13 +3594,14 @@ function recordQuestEvent(type, data = {}) {
   const weeklyDone = state.weekly.wins >= 5 && state.weekly.walls >= 20 && state.weekly.days.length >= 3;
   if (dailyDone && !state.daily.rewarded) {
     state.daily.rewarded = true;
-    localStorage.setItem('wayblock_coins', String((parseInt(localStorage.getItem('wayblock_coins') || '0',10) || 0) + 50));
+    localStorage.setItem('wayblock_points', String(getProfilePoints() + 20));
   }
   if (weeklyDone && !state.weekly.rewarded) {
     state.weekly.rewarded = true;
-    localStorage.setItem('wayblock_coins', String((parseInt(localStorage.getItem('wayblock_coins') || '0',10) || 0) + 100));
+    localStorage.setItem('wayblock_points', String(getProfilePoints() + 50));
   }
   saveQuestState(state);
+  renderProfilePoints();
   renderHomeQuestCards();
 }
 function setQuestProgress(textId, barId, value, target) {
@@ -3903,7 +3904,7 @@ function renderPointsRewardsPage() {
   if (next) next.textContent = (nextMilestone - points) + ' more points to next milestone';
   if (list) {
     list.innerHTML = '';
-    for (let milestone = 500; milestone <= Math.max(2000, Math.ceil(Math.max(points, level * 500) / 500) * 500 + 500); milestone += 500) {
+    for (let milestone = 500; milestone <= 5000; milestone += 500) {
       const unlocked = level >= milestone / 500;
       const row = document.createElement('div');
       row.style.cssText = 'display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px;border:1px solid ' + (unlocked ? 'rgba(74,222,128,.3)' : 'var(--wb-border)') + ';border-radius:12px;background:' + (unlocked ? 'rgba(74,222,128,.06)' : 'rgba(255,255,255,.02)');
