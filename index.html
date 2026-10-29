@@ -2634,16 +2634,38 @@
   </div>
   <div class="profile-section-box" style="text-align:center;padding:26px 18px;border-color:rgba(74,222,128,.28);">
     <div style="font-size:2.2rem;">👛</div>
-    <div style="font-size:.75rem;letter-spacing:1.5px;color:var(--wb-text-sub);font-weight:800;margin-top:8px;">DEMO WALLET BALANCE</div>
+    <div style="font-size:.75rem;letter-spacing:1.5px;color:var(--wb-text-sub);font-weight:800;margin-top:8px;">WALLET BALANCE</div>
     <div id="walletPageBalance" style="font-size:2.5rem;font-weight:900;color:#86efac;margin:8px 0;">₹0</div>
     <div id="walletPagePoints" style="font-size:.85rem;color:var(--wb-text-sub);">100 points</div>
   </div>
   <div class="profile-section-box">
-    <div class="sec-title" style="margin-bottom:12px;">HOW REWARDS WORK</div>
-    <div style="display:flex;gap:12px;align-items:center;padding:12px 0;border-bottom:1px solid var(--wb-border);"><span style="font-size:1.4rem;">⭐</span><div><strong>500 points</strong><div style="font-size:.8rem;color:var(--wb-text-sub);">Unlock ₹100 demo reward</div></div></div>
-    <div style="display:flex;gap:12px;align-items:center;padding:12px 0;"><span style="font-size:1.4rem;">🎁</span><div><strong>Every additional 500 points</strong><div style="font-size:.8rem;color:var(--wb-text-sub);">Adds another ₹100 demo reward</div></div></div>
+    <div class="sec-title" style="margin-bottom:14px;">WITHDRAW FUNDS</div>
+    <p style="font-size:.82rem;color:var(--wb-text-sub);line-height:1.5;margin:0 0 14px;">Choose how you want to receive your withdrawal.</p>
+    <div style="display:flex;gap:10px;margin-bottom:16px;">
+      <button type="button" id="walletMethodUPI" class="primary-action-btn" onclick="selectWalletWithdrawalMethod('upi')" style="flex:1;justify-content:center;border:1px solid var(--wb-gold);">📱 UPI</button>
+      <button type="button" id="walletMethodBank" class="secondary-action-btn" onclick="selectWalletWithdrawalMethod('bank')" style="flex:1;justify-content:center;">🏦 Bank</button>
+    </div>
+    <div id="walletUPIForm" style="display:none;flex-direction:column;gap:12px;">
+      <label style="font-size:.8rem;color:var(--wb-text-sub);font-weight:700;">UPI ID</label>
+      <input id="walletUpiId" type="text" autocomplete="off" placeholder="name@bank" style="width:100%;box-sizing:border-box;padding:12px;border:1px solid var(--wb-border);border-radius:10px;background:var(--wb-bg);color:var(--wb-text);">
+      <label style="font-size:.8rem;color:var(--wb-text-sub);font-weight:700;">Withdrawal amount (₹)</label>
+      <input id="walletUpiAmount" type="number" min="1" step="1" inputmode="numeric" placeholder="Enter amount" style="width:100%;box-sizing:border-box;padding:12px;border:1px solid var(--wb-border);border-radius:10px;background:var(--wb-bg);color:var(--wb-text);">
+      <button type="button" class="primary-action-btn" onclick="submitWalletWithdrawal('upi')" style="justify-content:center;">Withdraw via UPI</button>
+    </div>
+    <div id="walletBankForm" style="display:none;flex-direction:column;gap:12px;">
+      <label style="font-size:.8rem;color:var(--wb-text-sub);font-weight:700;">Account holder name</label>
+      <input id="walletBankHolder" type="text" autocomplete="off" placeholder="Name as per bank account" style="width:100%;box-sizing:border-box;padding:12px;border:1px solid var(--wb-border);border-radius:10px;background:var(--wb-bg);color:var(--wb-text);">
+      <label style="font-size:.8rem;color:var(--wb-text-sub);font-weight:700;">Account number</label>
+      <input id="walletBankAccount" type="text" inputmode="numeric" autocomplete="off" placeholder="Enter account number" style="width:100%;box-sizing:border-box;padding:12px;border:1px solid var(--wb-border);border-radius:10px;background:var(--wb-bg);color:var(--wb-text);">
+      <label style="font-size:.8rem;color:var(--wb-text-sub);font-weight:700;">IFSC code</label>
+      <input id="walletBankIFSC" type="text" autocomplete="off" placeholder="e.g. ABCD0123456" style="width:100%;box-sizing:border-box;padding:12px;border:1px solid var(--wb-border);border-radius:10px;background:var(--wb-bg);color:var(--wb-text);text-transform:uppercase;">
+      <label style="font-size:.8rem;color:var(--wb-text-sub);font-weight:700;">Withdrawal amount (₹)</label>
+      <input id="walletBankAmount" type="number" min="1" step="1" inputmode="numeric" placeholder="Enter amount" style="width:100%;box-sizing:border-box;padding:12px;border:1px solid var(--wb-border);border-radius:10px;background:var(--wb-bg);color:var(--wb-text);">
+      <button type="button" class="primary-action-btn" onclick="submitWalletWithdrawal('bank')" style="justify-content:center;">Withdraw to Bank</button>
+    </div>
+    <div id="walletWithdrawalNotice" role="status" style="display:none;margin-top:14px;padding:12px;border-radius:10px;background:rgba(245,196,91,.08);border:1px solid rgba(245,196,91,.24);font-size:.8rem;line-height:1.5;color:var(--wb-text);"></div>
   </div>
-  <p style="font-size:.72rem;line-height:1.5;color:var(--wb-text-sub);padding:0 4px;">This balance is only a local demonstration. No real money is deposited, held, or payable, and withdrawals are not available.</p>
+  <p style="font-size:.72rem;line-height:1.5;color:var(--wb-text-sub);padding:0 4px;">Withdrawal requests are not processed by this front-end alone. Connect a secure, verified payout backend before enabling real-money transfers.</p>
 </div>
 
 <!-- ================= 3. FULL-PAGE: MASTERY ROAD ================= -->
@@ -3791,6 +3813,47 @@ function renderWalletPage() {
   const points = document.getElementById('walletPagePoints');
   if (balance) balance.textContent = '₹' + getWalletDemoBalance().toLocaleString('en-IN');
   if (points) points.textContent = getProfilePoints().toLocaleString('en-IN') + ' points';
+  const notice = document.getElementById('walletWithdrawalNotice');
+  if (notice) notice.style.display = 'none';
+}
+
+function selectWalletWithdrawalMethod(method) {
+  const upi = document.getElementById('walletUPIForm');
+  const bank = document.getElementById('walletBankForm');
+  const upiButton = document.getElementById('walletMethodUPI');
+  const bankButton = document.getElementById('walletMethodBank');
+  const showUPI = method === 'upi';
+  if (upi) upi.style.display = showUPI ? 'flex' : 'none';
+  if (bank) bank.style.display = showUPI ? 'none' : 'flex';
+  if (upiButton) {
+    upiButton.style.borderColor = showUPI ? 'var(--wb-gold)' : 'var(--wb-border)';
+    upiButton.style.background = showUPI ? 'rgba(245,196,91,.12)' : 'var(--wb-surface)';
+    upiButton.style.color = showUPI ? 'var(--wb-gold)' : 'var(--wb-text)';
+  }
+  if (bankButton) {
+    bankButton.style.borderColor = showUPI ? 'var(--wb-border)' : 'var(--wb-gold)';
+    bankButton.style.background = showUPI ? 'var(--wb-surface)' : 'rgba(245,196,91,.12)';
+    bankButton.style.color = showUPI ? 'var(--wb-text)' : 'var(--wb-gold)';
+  }
+  const notice = document.getElementById('walletWithdrawalNotice');
+  if (notice) notice.style.display = 'none';
+}
+
+function submitWalletWithdrawal(method) {
+  const amountId = method === 'upi' ? 'walletUpiAmount' : 'walletBankAmount';
+  const amount = Number(document.getElementById(amountId)?.value);
+  const notice = document.getElementById('walletWithdrawalNotice');
+  if (!Number.isFinite(amount) || amount <= 0) {
+    if (notice) {
+      notice.textContent = 'Please enter a valid withdrawal amount.';
+      notice.style.display = 'block';
+    }
+    return;
+  }
+  if (notice) {
+    notice.textContent = 'Minimum withdrawal limit is ₹5,000.';
+    notice.style.display = 'block';
+  }
 }
 
 function openPointsRewardsPage() {
