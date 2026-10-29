@@ -2480,6 +2480,10 @@
   </div>
 
   <div class="profile-section-box" style="padding:4px 14px;">
+    <div class="settings-row" onclick="openHowToPlayModal()" style="cursor:pointer;">
+      <span style="font-size:0.88rem; font-weight:700;">🎮 How to Play</span>
+      <span style="color:var(--wb-text-sub);">›</span>
+    </div>
     <div class="settings-row" onclick="openFullReferralPage()" style="cursor:pointer;">
       <span style="font-size:0.88rem; font-weight:700;">🎁 Refer & Earn</span>
       <span style="color:var(--wb-text-sub);">›</span>
@@ -2488,6 +2492,24 @@
       <span style="font-size:0.88rem; font-weight:700;">💬 Help & Support</span>
       <span style="color:var(--wb-text-sub);">›</span>
     </div>
+  </div>
+</div>
+
+<!-- ================= HOW TO PLAY MODAL ================= -->
+<div id="howToPlayModal" class="modal-overlay hidden" onclick="if(event.target===this) closeHowToPlayModal()">
+  <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="howToPlayTitle">
+    <div class="modal-header">
+      <h2 id="howToPlayTitle">🎮 How to Play</h2>
+      <button class="modal-close" onclick="closeHowToPlayModal()" aria-label="Close">×</button>
+    </div>
+    <div class="modal-body">
+      <p><strong>🎯 Goal</strong><br>Be the first player to reach the opposite side of the board.</p>
+      <p><strong>♟️ Move</strong><br>Move your pawn one square at a time, horizontally or vertically.</p>
+      <p><strong>🧱 Place walls</strong><br>Use walls to slow your opponent, but always leave at least one path to the goal.</p>
+      <p><strong>👆 Select an action</strong><br>Choose Move or a wall orientation, then select a valid square or wall position on the board.</p>
+      <p><strong>🏆 Win</strong><br>Plan your route, block strategically, and reach the opposite edge first.</p>
+    </div>
+    <button class="primary-btn" onclick="closeHowToPlayModal()">Got it</button>
   </div>
 </div>
 
@@ -3462,6 +3484,16 @@ function openFullReferralPage() {
   switchView('fullReferralView'); 
 }
 function openFullGuidePage() { switchView('fullGuideView'); }
+function openHowToPlayModal() {
+  const modal = document.getElementById('howToPlayModal');
+  if (modal) modal.classList.remove('hidden');
+}
+
+function closeHowToPlayModal() {
+  const modal = document.getElementById('howToPlayModal');
+  if (modal) modal.classList.add('hidden');
+}
+
 function openFullSupportPage() {
   document.getElementById('ticketProfileId').value = profileId;
   switchView('fullSupportView');
