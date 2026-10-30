@@ -2334,6 +2334,18 @@
     color: var(--wb-text);
     transition: background .18s ease, border-color .18s ease, color .18s ease, box-shadow .18s ease;
   }
+  .wallet-methods-stage{position:relative;isolation:isolate}
+  .wallet-methods-stage.wallet-coming-soon-active #walletUPIForm,
+  .wallet-methods-stage.wallet-coming-soon-active #walletBankForm,
+  .wallet-methods-stage.wallet-coming-soon-active #walletWithdrawalNotice{
+    filter:blur(4px);opacity:.34;pointer-events:none;user-select:none;transition:filter .22s ease,opacity .22s ease
+  }
+  .wallet-coming-soon-overlay{display:none;position:absolute;inset:0;z-index:5;align-items:center;justify-content:center;padding:18px;pointer-events:none}
+  .wallet-coming-soon-overlay.is-visible{display:flex}
+  .wallet-coming-soon-card{display:flex;flex-direction:column;align-items:center;gap:8px;max-width:300px;padding:19px 25px;text-align:center;border:1px solid rgba(245,196,91,.42);border-radius:17px;background:linear-gradient(145deg,rgba(25,27,29,.96),rgba(15,18,21,.97));box-shadow:0 16px 38px rgba(0,0,0,.42),inset 0 1px 0 rgba(255,255,255,.06)}
+  .wallet-coming-soon-card strong{color:var(--wb-gold);font-size:1.05rem;font-weight:900;letter-spacing:.02em}
+  .wallet-coming-soon-card>span:last-child{color:var(--wb-text-sub);font-size:.73rem;line-height:1.45}
+  .wallet-coming-soon-icon{display:grid;place-items:center;width:34px;height:34px;border-radius:11px;background:rgba(245,196,91,.12);color:var(--wb-gold);font-size:1.1rem}
   #walletMethodUPI:focus-visible, #walletMethodBank:focus-visible {
     outline: 2px solid var(--wb-gold);
     outline-offset: 3px;
@@ -2999,6 +3011,7 @@
       <button type="button" id="walletMethodUPI" class="primary-action-btn" onclick="selectWalletWithdrawalMethod('upi')" style="flex:1;justify-content:center;border:1px solid var(--wb-gold);">📱 UPI</button>
       <button type="button" id="walletMethodBank" class="secondary-action-btn" onclick="selectWalletWithdrawalMethod('bank')" style="flex:1;justify-content:center;">🏦 Bank</button>
     </div>
+    <div id="walletMethodsStage" class="wallet-methods-stage">
     <div id="walletUPIForm" style="display:none;flex-direction:column;gap:12px;">
       <label style="font-size:.8rem;color:var(--wb-text-sub);font-weight:700;">UPI ID</label>
       <input id="walletUpiId" type="text" autocomplete="off" placeholder="name@bank" style="width:100%;box-sizing:border-box;padding:12px;border:1px solid var(--wb-border);border-radius:10px;background:var(--wb-bg);color:var(--wb-text);">
@@ -3018,6 +3031,14 @@
       <button type="button" class="primary-action-btn" onclick="submitWalletWithdrawal('bank')" style="justify-content:center;">Withdraw to Bank</button>
     </div>
     <div id="walletWithdrawalNotice" role="status" style="display:none;margin-top:14px;padding:12px;border-radius:10px;background:rgba(245,196,91,.08);border:1px solid rgba(245,196,91,.24);font-size:.8rem;line-height:1.5;color:var(--wb-text);"></div>
+    <div id="walletComingSoonOverlay" class="wallet-coming-soon-overlay" aria-live="polite" aria-hidden="true">
+      <div class="wallet-coming-soon-card">
+        <span class="wallet-coming-soon-icon">✦</span>
+        <strong>Coming Soon ...</strong>
+        <span>Withdrawals via UPI and Bank will be available soon.</span>
+      </div>
+    </div>
+    </div>
   </div>
 </div>
 
@@ -4174,18 +4195,29 @@ function selectWalletWithdrawalMethod(method) {
   const bank = document.getElementById('walletBankForm');
   const upiButton = document.getElementById('walletMethodUPI');
   const bankButton = document.getElementById('walletMethodBank');
+  const stage = document.getElementById('walletMethodsStage');
+  const overlay = document.getElementById('walletComingSoonOverlay');
   const showUPI = method === 'upi';
+
   if (upi) upi.style.display = showUPI ? 'flex' : 'none';
   if (bank) bank.style.display = showUPI ? 'none' : 'flex';
+  if (stage) stage.classList.add('wallet-coming-soon-active');
+  if (overlay) {
+    overlay.classList.add('is-visible');
+    overlay.setAttribute('aria-hidden', 'false');
+  }
+
   if (upiButton) {
     upiButton.style.borderColor = showUPI ? 'var(--wb-gold)' : 'var(--wb-border)';
     upiButton.style.background = showUPI ? 'rgba(245,196,91,.12)' : 'var(--wb-surface)';
     upiButton.style.color = showUPI ? 'var(--wb-gold)' : 'var(--wb-text)';
+    upiButton.setAttribute('aria-pressed', String(showUPI));
   }
   if (bankButton) {
     bankButton.style.borderColor = showUPI ? 'var(--wb-border)' : 'var(--wb-gold)';
     bankButton.style.background = showUPI ? 'var(--wb-surface)' : 'rgba(245,196,91,.12)';
     bankButton.style.color = showUPI ? 'var(--wb-text)' : 'var(--wb-gold)';
+    bankButton.setAttribute('aria-pressed', String(!showUPI));
   }
   const notice = document.getElementById('walletWithdrawalNotice');
   if (notice) notice.style.display = 'none';
