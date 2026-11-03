@@ -5182,7 +5182,7 @@ const STEP = CELL_SIZE + GAP;
 const CENTER_X = 4, CENTER_Y = 4;
 
 let aiDifficulty = 'medium';
-let gameVariant = localStorage.getItem('wayblock_game_variant') === 'bomb' ? 'bomb' : 'normal';
+let gameVariant = 'normal';
 let pendingBombAttack = null;
 let bombDecisionInterval = null;
 let placedWalls = [];
@@ -5205,7 +5205,6 @@ let hoverDot = null;
 
 function setGameVariant(value) {
   gameVariant = value === 'bomb' ? 'bomb' : 'normal';
-  try { localStorage.setItem('wayblock_game_variant', gameVariant); } catch (e) {}
   const selector = document.getElementById('gameVariantSelect');
   if (selector) selector.value = gameVariant;
   const home=document.getElementById('homeView');
