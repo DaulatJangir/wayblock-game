@@ -5137,6 +5137,14 @@ function handleRemoteAction(data) {
     if (data.player === 2) targetP = p2;
     else if (data.player === 3) targetP = p3;
     else if (data.player === 4) targetP = p4;
+    const incomingWallId=data.wallId || nextWallId++;
+    const incomingSegments=data.segments || (data.isH
+      ? [{type:'H',key:data.key1},{type:'H',key:data.key2}]
+      : [{type:'V',key:data.key1},{type:'V',key:data.key2}]).filter(seg=>seg.key);
+    if(isBombWallSegmentsBlocked(data.player,incomingSegments)){
+      if(myRole===1) broadcastAction({action:'wall_rejected',player:data.player,wallId:incomingWallId});
+      return;
+    }
     
     if (data.isH) {
       if (data.key1) segH.set(data.key1, data.color);
@@ -5146,14 +5154,17 @@ function handleRemoteAction(data) {
       if (data.key2) segV.set(data.key2, data.color);
     }
     targetP.walls--;
-    const incomingWallId = data.wallId || nextWallId++;
-    const incomingSegments = data.segments || (data.isH
-      ? [{type:'H',key:data.key1},{type:'H',key:data.key2}]
-      : [{type:'V',key:data.key1},{type:'V',key:data.key2}]).filter(s=>s.key);
     placedWalls.push({id:incomingWallId,owner:data.player,color:data.color,segments:incomingSegments});
     nextWallId=Math.max(nextWallId,Number(incomingWallId)+1);
     draw();
     switchTurn(false);
+  } else if (data.action === 'wall_rejected') {
+    removeWallFromBoard(data.wallId);
+    turn=data.player;
+    mode='move';
+    startTurnTimer();
+    draw();
+    displayToast('Wall position unavailable','That wall position is temporarily locked after a bomb hit.');
   } else if (data.action === 'bomb_offer') {
     applyBombOffer(data);
   } else if (data.action === 'bomb_decision') {
@@ -5292,11 +5303,16 @@ function addBombWallRestriction(owner, segments) {
   displayToast('Wall position locked','You cannot rebuild this exact wall position for your next 2 turns.');
 }
 
+function isBombWallSegmentsBlocked(owner,segments) {
+  if(gameVariant!=='bomb' || !blockedBombWallPlacements.length || !segments?.length) return false;
+  const signature=segments.map(seg=>seg.type+':'+seg.key).sort().join('|');
+  return blockedBombWallPlacements.some(x=>x.owner===owner && x.signature===signature);
+}
+
 function isBombWallPositionBlocked(dotX,dotY,isH,playerColor) {
   if(gameVariant!=='bomb' || !blockedBombWallPlacements.length) return false;
   const owner=[1,2,3,4].find(n=>getPlayerByNumber(n).color===playerColor) || turn;
-  const signature=getProposedSegments(dotX,dotY,isH).map(seg=>seg.type+':'+seg.key).sort().join('|');
-  return blockedBombWallPlacements.some(x=>x.owner===owner && x.signature===signature);
+  return isBombWallSegmentsBlocked(owner,getProposedSegments(dotX,dotY,isH));
 }
 
 function advanceBombWallRestrictions(playerNumber) {
