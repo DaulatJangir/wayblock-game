@@ -5928,6 +5928,12 @@ function draw() {
   updateBombUI();
   const bombButton=document.getElementById('btnBomb');
   if(bombButton) bombButton.classList.toggle('hidden',gameVariant!=='bomb');
+  document.getElementById('btnMove')?.classList.toggle('active',mode==='move');
+  document.getElementById('btnWallH')?.classList.toggle('active',mode==='wall-h');
+  document.getElementById('btnWallV')?.classList.toggle('active',mode==='wall-v');
+  if(bombButton) bombButton.classList.toggle('active',mode==='bomb');
+  const boardHint=document.querySelector('.board-drag-hint');
+  if(boardHint) boardHint.innerHTML=(gameVariant==='bomb'&&mode==='bomb')?'<span>💣</span> Tap an opponent wall to attack':'<span>❖</span> Drag the wall and drop it on the board';
 
   updateScoreboardUI();
 
