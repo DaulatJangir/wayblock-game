@@ -4813,7 +4813,7 @@ function initHostView(selectedRounds) {
         }
       } else if (data.type === 'sync_action') {
         handleRemoteAction(data);
-        if(data.action!=='bomb_decision') relayToOtherGuests(c, data);
+        if(data.action!=='bomb_decision' && !data._bombWallRejected) relayToOtherGuests(c, data);
       }
     });
   });
@@ -5142,7 +5142,10 @@ function handleRemoteAction(data) {
       ? [{type:'H',key:data.key1},{type:'H',key:data.key2}]
       : [{type:'V',key:data.key1},{type:'V',key:data.key2}]).filter(seg=>seg.key);
     if(isBombWallSegmentsBlocked(data.player,incomingSegments)){
-      if(myRole===1) broadcastAction({action:'wall_rejected',player:data.player,wallId:incomingWallId});
+      if(myRole===1) {
+        data._bombWallRejected=true;
+        broadcastAction({action:'wall_rejected',player:data.player,wallId:incomingWallId});
+      }
       return;
     }
     
