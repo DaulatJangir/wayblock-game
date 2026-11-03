@@ -4804,7 +4804,7 @@ function initHostView(selectedRounds) {
         }
       } else if (data.type === 'sync_action') {
         handleRemoteAction(data);
-        relayToOtherGuests(c, data);
+        if(data.action!=='bomb_decision') relayToOtherGuests(c, data);
       }
     });
   });
@@ -5147,6 +5147,12 @@ function handleRemoteAction(data) {
     switchTurn(false);
   } else if (data.action === 'bomb_offer') {
     applyBombOffer(data);
+  } else if (data.action === 'bomb_decision') {
+    if(myRole===1 && pendingBombAttack && pendingBombAttack.id===data.id && Date.now()<pendingBombAttack.expiresAt){
+      const resolution={id:data.id,choice:data.choice==='protect'?'protect':'accept'};
+      applyBombResolution(resolution);
+      broadcastAction({action:'bomb_resolve',...resolution});
+    }
   } else if (data.action === 'bomb_resolve') {
     applyBombResolution(data);
   } else if (data.action === 'next_round') {
@@ -5297,7 +5303,15 @@ function applyBombResolution(data) {
 
 function resolveBombAttack(choice) {
   if(!pendingBombAttack) return;
-  if(isOnline && myRole!==1 && myRole!==pendingBombAttack.defender) return;
+  if(isOnline && myRole!==1){
+    if(myRole!==pendingBombAttack.defender || Date.now()>=pendingBombAttack.expiresAt) return;
+    const decision={id:pendingBombAttack.id,choice:choice==='protect'?'protect':'accept'};
+    document.getElementById('bombProtectBtn').disabled=true;
+    document.getElementById('bombAcceptBtn').disabled=true;
+    document.getElementById('bombDecisionStatus').textContent='Decision sent — syncing with the host…';
+    broadcastAction({action:'bomb_decision',...decision});
+    return;
+  }
   const data={id:pendingBombAttack.id,choice:choice==='protect'?'protect':(choice==='timeout'?'timeout':'accept')};
   applyBombResolution(data);
   if(isOnline) broadcastAction({action:'bomb_resolve',...data});
