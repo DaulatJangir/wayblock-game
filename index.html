@@ -2717,11 +2717,10 @@
 .game-variant-picker{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 12px;padding:11px 13px;border:1px solid #38342b;border-radius:15px;background:linear-gradient(155deg,#171b20,#101419);box-shadow:0 5px 15px rgba(0,0,0,.18)}
 .game-variant-picker label{font-size:.66rem;font-weight:900;letter-spacing:1.2px;color:#a6adb7}
 .game-variant-picker select{min-width:145px;padding:9px 30px 9px 11px;border:1px solid rgba(245,196,91,.35);border-radius:10px;background:#10151b;color:#f5c45b;font-size:.8rem;font-weight:800;outline:none}
-.wall-pill{flex-direction:column;gap:2px;min-width:42px;padding:4px 7px}
 .wall-pill .wall-stock{display:flex;align-items:center;gap:4px;font-size:.82rem}
 .wall-pill .bomb-stock{display:none;align-items:center;gap:3px;font-size:.65rem;line-height:1;color:#f5c45b}
+#gameArenaView.bomb-mode-active .wall-pill{flex-direction:column;gap:2px;min-width:48px;padding:4px 7px}
 #gameArenaView.bomb-mode-active .wall-pill .bomb-stock{display:flex}
-#gameArenaView.bomb-mode-active .wall-pill{min-width:48px}
 #gameArenaView .bomb-control-btn{display:none}
 #gameArenaView.bomb-mode-active .bomb-control-btn{display:inline-flex}
 #gameArenaView.bomb-mode-active .bomb-control-btn.active{background:linear-gradient(110deg,#d5a83f,#f0c968 52%,#c9962e)!important;color:#17140d!important;border-color:#e4bd5c!important}
@@ -5128,6 +5127,7 @@ function handleRemoteAction(data) {
     let targetP = p1;
     if (data.player === 2) targetP = p2;
     else if (data.player === 3) targetP = p3;
+    else if (data.player === 4) targetP = p4;
     
     if (data.isH) {
       if (data.key1) segH.set(data.key1, data.color);
@@ -5224,7 +5224,7 @@ function showBombDecisionModal() {
   if(!modal || !pendingBombAttack) return;
   const owner=getPlayerByNumber(pendingBombAttack.defender);
   const attacker=getPlayerByNumber(pendingBombAttack.attacker);
-  const canDecide=!isOnline || myRole===pendingBombAttack.defender;
+  const canDecide=isOnline ? myRole===pendingBombAttack.defender : (gameMode==='ai' ? pendingBombAttack.defender===1 : true);
   document.getElementById('bombDecisionTitle').textContent=owner.name+' — protect your wall?';
   document.getElementById('bombDecisionCopy').textContent=attacker.name+' used a bomb on your wall. Protect it with your bomb, or accept the hit.';
   document.getElementById('bombProtectBtn').disabled=!canDecide || (owner.bombs||0)<1;
@@ -5882,9 +5882,13 @@ function aiSmartTurn() {
     }
 
     if (bestWall && maxDistIncrease >= 1) {
-      tryPlaceWall(bestWall.x, bestWall.y, bestWall.isH, p2.color);
-      p2.walls--;
-      placedWall = true;
+      const placed=tryPlaceWall(bestWall.x, bestWall.y, bestWall.isH, p2.color);
+      if(placed){
+        const wallId=nextWallId++;
+        placedWalls.push({id:wallId,owner:2,color:p2.color,segments:placed.map(s=>({type:s.type,key:s.key}))});
+        p2.walls--;
+        placedWall = true;
+      }
     }
   }
 
