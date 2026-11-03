@@ -2097,10 +2097,20 @@
   .home-simple-profile-row{padding:0;min-height:0;background:transparent;border:0;display:flex;align-items:center;justify-content:space-between;gap:10px}
   .home-simple-profile-row .home-user-card{margin:0;min-width:0;flex:1}
   .home-mode-picker{position:relative;flex:0 0 auto;display:flex;align-items:center;max-width:46%;min-width:132px}
-  .home-mode-picker select{appearance:none;-webkit-appearance:none;width:100%;min-height:42px;padding:0 31px 0 12px;border:1px solid rgba(245,196,91,.38);border-radius:13px;outline:none;background:linear-gradient(145deg,rgba(30,36,45,.97),rgba(14,19,27,.98));color:#f5d27e;font-size:.76rem;font-weight:850;letter-spacing:.15px;box-shadow:0 5px 16px rgba(0,0,0,.22),inset 0 1px rgba(255,255,255,.045);cursor:pointer}
-  .home-mode-picker select:focus{border-color:#f5c45b;box-shadow:0 0 0 3px rgba(245,196,91,.12),0 5px 16px rgba(0,0,0,.22)}
-  .home-mode-picker select option{background:#151b24;color:#f4f6fb;font-weight:700}
-  .home-mode-picker .mode-chevron{position:absolute;right:12px;pointer-events:none;color:#f5c45b;font-size:.72rem}
+  .home-mode-picker{z-index:30}
+  .home-mode-trigger{display:flex;align-items:center;justify-content:space-between;gap:9px;width:100%;min-height:42px;padding:0 12px;border:1px solid rgba(245,196,91,.42);border-radius:13px;background:linear-gradient(145deg,rgba(30,36,45,.98),rgba(14,19,27,.99));color:#f5d27e;font:850 .76rem inherit;letter-spacing:.15px;box-shadow:0 5px 16px rgba(0,0,0,.22),inset 0 1px rgba(255,255,255,.045);cursor:pointer}
+  .home-mode-trigger:focus-visible{outline:2px solid rgba(245,196,91,.7);outline-offset:2px}
+  .home-mode-trigger .mode-chevron{color:#f5c45b;font-size:.72rem;transition:transform .18s ease}
+  .home-mode-picker.menu-open .home-mode-trigger .mode-chevron{transform:rotate(180deg)}
+  .home-mode-menu{position:absolute;top:calc(100% + 8px);right:0;left:0;z-index:10050;padding:6px;border:1px solid rgba(245,196,91,.34);border-radius:14px;background:rgba(16,21,29,.97);box-shadow:0 14px 34px rgba(0,0,0,.48),inset 0 1px rgba(255,255,255,.045);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);transform-origin:top right;animation:modeMenuIn .16s ease-out}
+  .home-mode-menu[hidden]{display:none!important}
+  .home-mode-option{display:flex;align-items:center;justify-content:space-between;width:100%;min-height:42px;padding:0 11px;border:0;border-radius:9px;background:transparent;color:#e8edf5;text-align:left;font:750 .78rem inherit;cursor:pointer}
+  .home-mode-option+.home-mode-option{margin-top:3px}
+  .home-mode-option:active,.home-mode-option.selected{background:rgba(245,196,91,.12);color:#f5d27e}
+  .home-mode-option .mode-option-check{color:#f5c45b;font-size:.85rem;opacity:0}
+  .home-mode-option.selected .mode-option-check{opacity:1}
+  .home-mode-native{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip:rect(0,0,0,0)!important;white-space:nowrap!important;border:0!important}
+  @keyframes modeMenuIn{from{opacity:0;transform:translateY(-5px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}
   .bomb-mode-indicator{display:none!important;margin-left:5px;font-size:.9em;vertical-align:middle;filter:none!important;text-shadow:none!important;box-shadow:none!important}
   #homeView.bomb-mode-active .bomb-mode-indicator{display:inline!important}
   @media(max-width:430px){.home-simple-header{margin-bottom:22px}.home-simple-wordmark{font-size:1.25rem}.home-simple-top-row{padding-bottom:14px}.home-mode-picker{min-width:122px;max-width:47%}.home-mode-picker select{min-height:40px;padding-left:10px;font-size:.72rem}}
@@ -2800,12 +2810,18 @@
           </div>
         </div>
       </div>
-      <div class="home-mode-picker">
-        <select id="gameVariantSelect" onchange="setGameVariant(this.value)" aria-label="Select game mode">
+      <div class="home-mode-picker" id="homeModePicker">
+        <select id="gameVariantSelect" class="home-mode-native" tabindex="-1" aria-hidden="true">
           <option value="normal">Normal Way</option>
           <option value="bomb">Bomb Way 💣</option>
         </select>
-        <span class="mode-chevron">⌄</span>
+        <button type="button" class="home-mode-trigger" id="gameVariantTrigger" aria-label="Select game mode" aria-haspopup="true" aria-expanded="false" onclick="toggleGameVariantMenu(event)">
+          <span id="gameVariantLabel">Normal Way</span><span class="mode-chevron">⌄</span>
+        </button>
+        <div class="home-mode-menu" id="gameVariantMenu" role="menu" hidden>
+          <button type="button" class="home-mode-option selected" data-variant="normal" role="menuitemradio" aria-checked="true" onclick="chooseGameVariant('normal')"><span>Normal Way</span><span class="mode-option-check">✓</span></button>
+          <button type="button" class="home-mode-option" data-variant="bomb" role="menuitemradio" aria-checked="false" onclick="chooseGameVariant('bomb')"><span>Bomb Way 💣</span><span class="mode-option-check">✓</span></button>
+        </div>
       </div>
     </div>
   </div>
@@ -5249,10 +5265,43 @@ let segH = new Map();
 let segV = new Map();
 let hoverDot = null;
 
+function toggleGameVariantMenu(event) {
+  event?.stopPropagation();
+  const picker=document.getElementById('homeModePicker');
+  const menu=document.getElementById('gameVariantMenu');
+  const trigger=document.getElementById('gameVariantTrigger');
+  if(!picker || !menu || !trigger) return;
+  const opening=menu.hidden;
+  menu.hidden=!opening;
+  picker.classList.toggle('menu-open',opening);
+  trigger.setAttribute('aria-expanded',String(opening));
+}
+
+function closeGameVariantMenu() {
+  const picker=document.getElementById('homeModePicker');
+  const menu=document.getElementById('gameVariantMenu');
+  const trigger=document.getElementById('gameVariantTrigger');
+  if(menu) menu.hidden=true;
+  if(picker) picker.classList.remove('menu-open');
+  if(trigger) trigger.setAttribute('aria-expanded','false');
+}
+
+function chooseGameVariant(value) {
+  setGameVariant(value);
+}
+
 function setGameVariant(value) {
   gameVariant = value === 'bomb' ? 'bomb' : 'normal';
   const selector = document.getElementById('gameVariantSelect');
   if (selector) selector.value = gameVariant;
+  const label=document.getElementById('gameVariantLabel');
+  if(label) label.textContent=gameVariant==='bomb'?'Bomb Way 💣':'Normal Way';
+  document.querySelectorAll('#gameVariantMenu .home-mode-option').forEach(option=>{
+    const selected=option.dataset.variant===gameVariant;
+    option.classList.toggle('selected',selected);
+    option.setAttribute('aria-checked',String(selected));
+  });
+  closeGameVariantMenu();
   const home=document.getElementById('homeView');
   if(home) home.classList.toggle('bomb-mode-active',gameVariant==='bomb');
   displayToast('Game mode', gameVariant === 'bomb' ? 'Bomb Way selected for your next match.' : 'Normal Way selected.');
@@ -6216,6 +6265,19 @@ function draw() {
 initProfile();
 const gameVariantSelector=document.getElementById('gameVariantSelect');
 if(gameVariantSelector) gameVariantSelector.value=gameVariant;
+const gameVariantLabel=document.getElementById('gameVariantLabel');
+if(gameVariantLabel) gameVariantLabel.textContent=gameVariant==='bomb'?'Bomb Way 💣':'Normal Way';
+document.querySelectorAll('#gameVariantMenu .home-mode-option').forEach(option=>{
+  const selected=option.dataset.variant===gameVariant;
+  option.classList.toggle('selected',selected);
+  option.setAttribute('aria-checked',String(selected));
+});
+document.addEventListener('click',event=>{
+  if(!event.target.closest('#homeModePicker')) closeGameVariantMenu();
+});
+document.addEventListener('keydown',event=>{
+  if(event.key==='Escape') closeGameVariantMenu();
+});
 document.getElementById('homeView')?.classList.toggle('bomb-mode-active',gameVariant==='bomb');
 renderHomeQuestCards();
 </script>
