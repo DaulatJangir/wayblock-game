@@ -5216,7 +5216,7 @@ function updateBombUI() {
     if(el) el.textContent=String(player.bombs || 0);
   });
   const btn=document.getElementById('btnBomb');
-  if(btn) btn.disabled = gameVariant !== 'bomb' || !getCurrentPlayer() || (getCurrentPlayer().bombs||0) < 1;
+  if(btn) btn.disabled = gameVariant !== 'bomb' || !getCurrentPlayer() || (getCurrentPlayer().bombs||0) < 1 || (isOnline && turn!==myRole) || (gameMode==='ai' && turn===2);
 }
 
 function closeBombDecisionModal() {
