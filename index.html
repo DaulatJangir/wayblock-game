@@ -2063,8 +2063,17 @@
   .home-simple-wordmark span:first-child{color:var(--wb-text)}
   .home-simple-wordmark span:last-child{color:var(--wb-gold);text-shadow:0 0 14px rgba(255,209,102,.22)}
   .home-simple-settings{width:42px!important;height:42px!important;min-width:42px!important;min-height:42px!important;border-radius:14px;background:var(--wb-card);border:1px solid var(--wb-border);box-shadow:none}
-  .home-simple-profile-row{padding:0;min-height:0;background:transparent;border:0}
-  @media(max-width:430px){.home-simple-header{margin-bottom:22px}.home-simple-wordmark{font-size:1.25rem}.home-simple-top-row{padding-bottom:14px}}
+  .home-simple-profile-row{padding:0;min-height:0;background:transparent;border:0;display:flex;align-items:center;justify-content:space-between;gap:10px}
+  .home-simple-profile-row .home-user-card{margin:0;min-width:0;flex:1}
+  .home-mode-picker{position:relative;flex:0 0 auto;display:flex;align-items:center;max-width:46%;min-width:132px}
+  .home-mode-picker select{appearance:none;-webkit-appearance:none;width:100%;min-height:42px;padding:0 31px 0 12px;border:1px solid rgba(245,196,91,.38);border-radius:13px;outline:none;background:linear-gradient(145deg,rgba(30,36,45,.97),rgba(14,19,27,.98));color:#f5d27e;font-size:.76rem;font-weight:850;letter-spacing:.15px;box-shadow:0 5px 16px rgba(0,0,0,.22),inset 0 1px rgba(255,255,255,.045);cursor:pointer}
+  .home-mode-picker select:focus{border-color:#f5c45b;box-shadow:0 0 0 3px rgba(245,196,91,.12),0 5px 16px rgba(0,0,0,.22)}
+  .home-mode-picker select option{background:#151b24;color:#f4f6fb;font-weight:700}
+  .home-mode-picker .mode-chevron{position:absolute;right:12px;pointer-events:none;color:#f5c45b;font-size:.72rem}
+  .bomb-mode-indicator{display:none!important;margin-left:5px;font-size:.9em;vertical-align:middle;filter:drop-shadow(0 0 5px rgba(245,196,91,.35))}
+  #homeView.bomb-mode-active .bomb-mode-indicator{display:inline!important}
+  @media(max-width:430px){.home-simple-header{margin-bottom:22px}.home-simple-wordmark{font-size:1.25rem}.home-simple-top-row{padding-bottom:14px}.home-mode-picker{min-width:122px;max-width:47%}.home-mode-picker select{min-height:40px;padding-left:10px;font-size:.72rem}}
+  @media(max-width:350px){.home-mode-picker{min-width:112px}.home-mode-picker select{font-size:.68rem;padding-left:8px}}
 
 
 .online-players-overlay{position:fixed;inset:0;z-index:300;display:flex;align-items:center;justify-content:center;padding:20px;background:rgba(2,6,16,.78);backdrop-filter:blur(8px)}
@@ -2747,7 +2756,7 @@
 <div class="view-container" id="homeView">
   <div class="home-simple-header">
     <div class="home-simple-top-row">
-      <div class="home-simple-wordmark"><span>WAY</span><span>BLOCK</span></div>
+      <div class="home-simple-wordmark"><span>WAY</span><span>BLOCK</span><span class="bomb-mode-indicator" aria-label="Bomb Way">💣</span></div>
       <div class="icon-circle-btn home-simple-settings" onclick="openFullSettingsPage()" title="Settings" aria-label="Settings">⚙️</div>
     </div>
     <div class="home-simple-profile-row">
@@ -2760,14 +2769,14 @@
           </div>
         </div>
       </div>
+      <div class="home-mode-picker">
+        <select id="gameVariantSelect" onchange="setGameVariant(this.value)" aria-label="Select game mode">
+          <option value="normal">Normal Way</option>
+          <option value="bomb">Bomb Way 💣</option>
+        </select>
+        <span class="mode-chevron">⌄</span>
+      </div>
     </div>
-  </div>
-  <div class="game-variant-picker">
-    <label for="gameVariantSelect">GAME MODE</label>
-    <select id="gameVariantSelect" onchange="setGameVariant(this.value)">
-      <option value="normal">Normal Way</option>
-      <option value="bomb">Bomb Way</option>
-    </select>
   </div>
   <!-- Featured Play Online card (keeps the existing online lobby action) -->
   <div class="home-online-hero" onclick="goToLobbyChoice()" role="button" tabindex="0" aria-label="Play Online, ranked matches">
@@ -2777,7 +2786,7 @@
     </div>
     <div class="home-online-hero-bottom">
       <div class="home-online-copy">
-        <div class="home-online-title">Play Online</div>
+        <div class="home-online-title">Play Online<span class="bomb-mode-indicator" aria-hidden="true">💣</span></div>
         <div class="home-online-subtitle">Ranked matches</div>
       </div>
       <div class="home-online-arrow" aria-hidden="true">→</div>
@@ -2789,7 +2798,7 @@
       <div class="adc-left">
         <div class="adc-icon-box">🤖</div>
         <div>
-          <div class="adc-title">VS AI</div>
+          <div class="adc-title">VS AI<span class="bomb-mode-indicator" aria-hidden="true">💣</span></div>
           <div class="adc-sub">Play with computer</div>
         </div>
       </div>
@@ -2801,7 +2810,7 @@
       <div class="adc-left">
         <div class="adc-icon-box">👥</div>
         <div>
-          <div class="adc-title">PLAY LOCAL</div>
+          <div class="adc-title">PLAY LOCAL<span class="bomb-mode-indicator" aria-hidden="true">💣</span></div>
           <div class="adc-sub">2–4 players on the same device</div>
         </div>
       </div>
@@ -5199,6 +5208,8 @@ function setGameVariant(value) {
   try { localStorage.setItem('wayblock_game_variant', gameVariant); } catch (e) {}
   const selector = document.getElementById('gameVariantSelect');
   if (selector) selector.value = gameVariant;
+  const home=document.getElementById('homeView');
+  if(home) home.classList.toggle('bomb-mode-active',gameVariant==='bomb');
   displayToast('Game mode', gameVariant === 'bomb' ? 'Bomb Way selected for your next match.' : 'Normal Way selected.');
 }
 
@@ -6123,6 +6134,7 @@ function draw() {
 initProfile();
 const gameVariantSelector=document.getElementById('gameVariantSelect');
 if(gameVariantSelector) gameVariantSelector.value=gameVariant;
+document.getElementById('homeView')?.classList.toggle('bomb-mode-active',gameVariant==='bomb');
 renderHomeQuestCards();
 </script>
 
