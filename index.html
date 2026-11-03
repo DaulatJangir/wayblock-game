@@ -4946,7 +4946,8 @@ function joinDiscoveredRoom(roomId,button){
 
 let createRoomRounds = 1;
 let activeHostFlow = 'classic';
-function openCreateRoomModal(){const m=document.getElementById('createRoomModal');if(m)m.classList.remove('hidden');}
+function openCreateRoomModalOriginal(){const m=document.getElementById('createRoomModal');if(m)m.classList.remove('hidden');}
+function openCreateRoomModal(){showCreateRoomComingSoon();}
 function closeCreateRoomModal(){const m=document.getElementById('createRoomModal');if(m)m.classList.add('hidden');}
 function selectCreateRoomRounds(rounds){createRoomRounds=rounds;document.querySelectorAll('.create-room-round').forEach(b=>b.classList.toggle('active',Number(b.dataset.rounds)===rounds));}
 function startCreateRoom(){closeCreateRoomModal();initHostView(createRoomRounds);}
@@ -6258,6 +6259,34 @@ function closeAchievementsModal(){const m=document.getElementById('achievementsM
   }
 
 </style>
+
+
+<style id="create-room-coming-soon-style">
+#createRoomComingSoon{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;padding:22px;background:rgba(5,8,14,.62);backdrop-filter:blur(11px);-webkit-backdrop-filter:blur(11px);animation:crSoonFade .22s ease both}
+#createRoomComingSoon[hidden]{display:none}
+#createRoomComingSoon .cr-soon-panel{position:relative;width:min(360px,100%);padding:34px 26px 30px;text-align:center;overflow:hidden;border:1px solid rgba(213,168,63,.55);border-radius:24px;background:radial-gradient(ellipse at 50% -15%,rgba(213,168,63,.17),transparent 65%),linear-gradient(155deg,#202223 0%,#111416 78%);box-shadow:0 24px 80px rgba(0,0,0,.62),inset 0 1px 0 rgba(255,255,255,.055);animation:crSoonRise .3s cubic-bezier(.2,.8,.2,1) both}
+#createRoomComingSoon .cr-soon-mark{width:58px;height:58px;margin:0 auto 17px;display:grid;place-items:center;border:1px solid rgba(213,168,63,.45);border-radius:18px;background:linear-gradient(145deg,rgba(213,168,63,.2),rgba(213,168,63,.06));color:#f0c968;font-size:1.7rem;box-shadow:0 8px 24px rgba(213,168,63,.1)}
+#createRoomComingSoon h2{margin:0;color:#f7f5ef;font-size:1.65rem;font-weight:950;letter-spacing:-.5px}
+#createRoomComingSoon p{margin:10px 0 22px;color:#a9adb5;font-size:.9rem;line-height:1.55}
+#createRoomComingSoon .cr-soon-tag{display:inline-flex;align-items:center;gap:7px;padding:8px 13px;border:1px solid rgba(213,168,63,.3);border-radius:999px;background:rgba(213,168,63,.08);color:#f0c968;font-size:.68rem;font-weight:900;letter-spacing:1.3px}
+#createRoomComingSoon .cr-soon-close{position:absolute;top:12px;right:12px;width:34px;height:34px;border:1px solid rgba(255,255,255,.1);border-radius:11px;background:rgba(255,255,255,.045);color:#d8d3c7;font-size:1.3rem;cursor:pointer}
+@keyframes crSoonFade{from{opacity:0}to{opacity:1}}
+@keyframes crSoonRise{from{opacity:0;transform:translateY(10px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
+</style>
+<div id="createRoomComingSoon" hidden role="dialog" aria-modal="true" aria-labelledby="createRoomComingSoonTitle" onclick="if(event.target===this)closeCreateRoomComingSoon()">
+ <div class="cr-soon-panel">
+  <button class="cr-soon-close" type="button" onclick="closeCreateRoomComingSoon()" aria-label="Close">×</button>
+  <div class="cr-soon-mark" aria-hidden="true">♟</div>
+  <div class="cr-soon-tag">WAYBLOCK FEATURE</div>
+  <h2 id="createRoomComingSoonTitle">Coming Soon...</h2>
+  <p>Create Room is getting ready. This feature will be available in a future update.</p>
+ </div>
+</div>
+<script>
+function showCreateRoomComingSoon(){const overlay=document.getElementById('createRoomComingSoon');if(overlay){overlay.hidden=false;document.addEventListener('keydown',handleCreateRoomComingSoonEscape);}}
+function closeCreateRoomComingSoon(){const overlay=document.getElementById('createRoomComingSoon');if(overlay)overlay.hidden=true;document.removeEventListener('keydown',handleCreateRoomComingSoonEscape);}
+function handleCreateRoomComingSoonEscape(event){if(event.key==='Escape')closeCreateRoomComingSoon();}
+</script>
 
 </body>
 </html>
