@@ -3766,12 +3766,15 @@
 
 <!-- Tournament Victory Modal -->
 <div class="modal-overlay hidden" id="winModal">
-  <div class="modal-box" style="border:1px solid var(--wb-gold);">
-    <div style="font-size:2.2rem; margin-bottom:4px;">🏆</div>
-    <h2 style="color:var(--wb-gold); margin-bottom:2px;">MATCH WINNER</h2>
-    <p style="color:var(--wb-text-sub); font-size:0.82rem; margin-bottom:14px;" id="finalTourneySub">Tournament Completed</p>
-    <div id="podiumList" style="margin:16px 0;"></div>
-    <button class="primary-action-btn" onclick="confirmExitToHome()">Return to Menu</button>
+  <div class="win-confetti-layer" id="winConfettiLayer" aria-hidden="true"></div>
+  <div class="modal-box win-modal-box" role="dialog" aria-modal="true" aria-labelledby="winModalTitle">
+    <div class="win-modal-glow" aria-hidden="true"></div>
+    <div class="win-trophy" aria-hidden="true">🏆</div>
+    <div class="win-modal-eyebrow">MATCH COMPLETED</div>
+    <h2 id="winModalTitle" class="win-modal-title">MATCH WINNER</h2>
+    <p class="win-modal-subtitle" id="finalTourneySub">Tournament Completed</p>
+    <div class="win-podium-wrap"><div id="podiumList" class="win-podium-list"></div></div>
+    <button class="primary-action-btn win-return-btn" onclick="confirmExitToHome()">Return to Menu <span aria-hidden="true">→</span></button>
   </div>
 </div>
 
@@ -5910,16 +5913,31 @@ function showFinalTournamentWin() {
   const medals = ["🥇 Champion", "🥈 Runner-Up", "🥉 3rd Place", "4th Place"];
   players.forEach((p, idx) => {
     const item = document.createElement('div');
-    item.style.cssText = "display:flex; justify-content:space-between; padding:10px 14px; background:#142038; border-radius:10px; margin-bottom:8px; font-weight:700;";
+    item.className = 'win-podium-row' + (idx===0?' champion':'');
     item.innerHTML = `
-      <span>${medals[idx] || `${idx + 1}th`} - <span style="color:${p.color}">${p.name}</span></span>
-      <span style="color:var(--wb-text-sub);">${p.finalScore} ${p.finalScore === 1 ? 'Win' : 'Wins'}</span>
+      <span class="win-podium-player"><span>${medals[idx] || `${idx + 1}th`}</span> · <span style="color:${p.color}">${p.name}</span></span>
+      <span class="win-podium-score">${p.finalScore} ${p.finalScore === 1 ? 'Win' : 'Wins'}</span>
     `;
     podiumList.appendChild(item);
   });
 
   const sub = document.getElementById('finalTourneySub');
   if (sub) sub.innerText = `${champion.name} won the match!`;
+  const confettiLayer=document.getElementById('winConfettiLayer');
+  if(confettiLayer){
+    confettiLayer.innerHTML='';
+    for(let i=0;i<36;i++){
+      const piece=document.createElement('span');
+      piece.className='win-confetti';
+      piece.style.left=(Math.random()*100)+'%';
+      piece.style.setProperty('--fall-delay',(Math.random()*.9)+'s');
+      piece.style.setProperty('--fall-time',(2.2+Math.random()*1.5)+'s');
+      piece.style.setProperty('--drift',((Math.random()-.5)*100)+'px');
+      piece.style.background=['#ffd166','#f4b942','#6ee7d2','#91b7ff','#f7f2df'][i%5];
+      piece.style.animationDelay=(Math.random()*.9)+'s';
+      confettiLayer.appendChild(piece);
+    }
+  }
   modal.classList.remove('hidden');
 
   // --- RECORD REAL MATCH RESULT TO PROFILE ---
@@ -6684,6 +6702,31 @@ function closeAchievementsModal(){const m=document.getElementById('achievementsM
 #createRoomComingSoon .cr-soon-close{position:absolute;top:12px;right:12px;width:34px;height:34px;border:1px solid rgba(255,255,255,.1);border-radius:11px;background:rgba(255,255,255,.045);color:#d8d3c7;font-size:1.3rem;cursor:pointer}
 @keyframes crSoonFade{from{opacity:0}to{opacity:1}}
 @keyframes crSoonRise{from{opacity:0;transform:translateY(10px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
+
+  /* Match victory presentation — shared by every game mode */
+  #winModal.modal-overlay{overflow:hidden;background:rgba(3,7,16,.60);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px);padding:18px}
+  #winModal .win-modal-box{position:relative;isolation:isolate;overflow:hidden;max-width:360px;padding:28px 20px 20px;border:1px solid rgba(245,196,91,.72);border-radius:25px;background:linear-gradient(155deg,rgba(26,31,39,.98),rgba(12,17,25,.985) 72%);box-shadow:0 22px 65px rgba(0,0,0,.58),0 0 34px rgba(245,196,91,.10),inset 0 1px rgba(255,255,255,.07);animation:winModalEnter .48s cubic-bezier(.18,.82,.24,1) both}
+  #winModal .win-modal-glow{position:absolute;z-index:-1;top:-95px;left:50%;width:260px;height:190px;transform:translateX(-50%);border-radius:50%;background:radial-gradient(ellipse,rgba(245,196,91,.20),transparent 70%);pointer-events:none}
+  #winModal .win-trophy{position:relative;margin:0 auto 7px;width:66px;height:66px;display:grid;place-items:center;border:1px solid rgba(245,196,91,.32);border-radius:21px;background:linear-gradient(145deg,rgba(245,196,91,.17),rgba(245,196,91,.045));font-size:2.35rem;filter:drop-shadow(0 5px 12px rgba(245,196,91,.20));animation:winTrophyPop .7s .12s cubic-bezier(.2,1.5,.4,1) both,winTrophyFloat 2.8s .9s ease-in-out infinite}
+  #winModal .win-modal-eyebrow{margin:0 0 5px;color:#d8bd7b;font-size:.62rem;font-weight:900;letter-spacing:2px}
+  #winModal .win-modal-title{margin:0;color:#ffd16b;font-size:1.48rem;line-height:1.15;font-weight:950;letter-spacing:.25px;text-shadow:0 2px 18px rgba(245,196,91,.12)}
+  #winModal .win-modal-subtitle{margin:7px 0 17px;color:#aeb9ca;font-size:.82rem;line-height:1.45}
+  #winModal .win-podium-wrap{padding:9px;border:1px solid rgba(255,255,255,.07);border-radius:16px;background:rgba(255,255,255,.025)}
+  #winModal .win-podium-list{display:grid;gap:7px}
+  #winModal .win-podium-row{display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:45px;padding:10px 12px;border:1px solid rgba(255,255,255,.055);border-radius:11px;background:rgba(24,38,61,.72);color:#f1f4fa;font-size:.82rem;font-weight:750;text-align:left}
+  #winModal .win-podium-row.champion{border-color:rgba(245,196,91,.30);background:linear-gradient(100deg,rgba(101,75,28,.30),rgba(24,38,61,.78))}
+  #winModal .win-podium-player{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  #winModal .win-podium-score{flex-shrink:0;color:#b8c4d6;font-weight:850;white-space:nowrap}
+  #winModal .win-return-btn{display:flex;align-items:center;justify-content:center;gap:10px;min-height:50px;margin-top:16px;border-radius:15px;background:linear-gradient(110deg,#ffd16b,#e9a934);color:#17130a;font-weight:900;box-shadow:0 8px 22px rgba(233,169,52,.20)}
+  #winModal .win-return-btn:active{transform:scale(.985)}
+  #winModal .win-confetti-layer{position:absolute;inset:0;z-index:0;overflow:hidden;pointer-events:none}
+  #winModal .win-modal-box{z-index:1}
+  #winModal .win-confetti{position:absolute;top:-14px;width:7px;height:12px;border-radius:2px;opacity:0;animation:winConfettiFall var(--fall-time,2.7s) var(--fall-delay,0s) ease-in forwards}
+  @keyframes winModalEnter{from{opacity:0;transform:translateY(18px) scale(.94)}to{opacity:1;transform:translateY(0) scale(1)}}
+  @keyframes winTrophyPop{from{opacity:0;transform:translateY(12px) scale(.55)}to{opacity:1;transform:translateY(0) scale(1)}}
+  @keyframes winTrophyFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+  @keyframes winConfettiFall{0%{opacity:0;transform:translate3d(0,-10px,0) rotate(0)}10%{opacity:.95}100%{opacity:0;transform:translate3d(var(--drift,24px),105vh,0) rotate(620deg)}}
+  @media(prefers-reduced-motion:reduce){#winModal .win-modal-box,#winModal .win-trophy,#winModal .win-confetti{animation:none!important}}
 </style>
 <div id="createRoomComingSoon" hidden role="dialog" aria-modal="true" aria-labelledby="createRoomComingSoonTitle" onclick="if(event.target===this)closeCreateRoomComingSoon()">
  <div class="cr-soon-panel">
