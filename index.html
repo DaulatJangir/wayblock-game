@@ -2797,7 +2797,7 @@
 <div class="view-container" id="homeView">
   <div class="home-simple-header">
     <div class="home-simple-top-row">
-      <div class="home-simple-wordmark"><span>WAY</span><span>BLOCK</span><span class="bomb-mode-indicator" aria-label="Bomb Way">💣</span></div>
+      <div class="home-simple-wordmark"><span>WAY</span><span>BLOCK</span><span class="bomb-mode-indicator" aria-label="Tactical Mode">💣</span></div>
       <div class="icon-circle-btn home-simple-settings" onclick="openFullSettingsPage()" title="Settings" aria-label="Settings">⚙️</div>
     </div>
     <div class="home-simple-profile-row">
@@ -2812,15 +2812,15 @@
       </div>
       <div class="home-mode-picker" id="homeModePicker">
         <select id="gameVariantSelect" class="home-mode-native" tabindex="-1" aria-hidden="true">
-          <option value="normal">Normal Way</option>
-          <option value="bomb">Bomb Way 💣</option>
+          <option value="normal">Classic Mode</option>
+          <option value="bomb">Tactical Mode</option>
         </select>
         <button type="button" class="home-mode-trigger" id="gameVariantTrigger" aria-label="Select game mode" aria-haspopup="true" aria-expanded="false" onclick="toggleGameVariantMenu(event)">
-          <span id="gameVariantLabel">Normal Way</span><span class="mode-chevron">⌄</span>
+          <span id="gameVariantLabel">Classic Mode</span><span class="mode-chevron">⌄</span>
         </button>
         <div class="home-mode-menu" id="gameVariantMenu" role="menu" hidden>
-          <button type="button" class="home-mode-option selected" data-variant="normal" role="menuitemradio" aria-checked="true" onclick="chooseGameVariant('normal')"><span>Normal Way</span><span class="mode-option-check">✓</span></button>
-          <button type="button" class="home-mode-option" data-variant="bomb" role="menuitemradio" aria-checked="false" onclick="chooseGameVariant('bomb')"><span>Bomb Way 💣</span><span class="mode-option-check">✓</span></button>
+          <button type="button" class="home-mode-option selected" data-variant="normal" role="menuitemradio" aria-checked="true" onclick="chooseGameVariant('normal')"><span>Classic Mode</span><span class="mode-option-check">✓</span></button>
+          <button type="button" class="home-mode-option" data-variant="bomb" role="menuitemradio" aria-checked="false" onclick="chooseGameVariant('bomb')"><span>Tactical Mode</span><span class="mode-option-check">✓</span></button>
         </div>
       </div>
     </div>
@@ -3752,7 +3752,7 @@
 <div class="hidden" id="bombDecisionModal" role="dialog" aria-modal="true" aria-labelledby="bombDecisionTitle">
   <div class="bomb-decision-card">
     <div class="bomb-decision-icon">💣</div>
-    <div class="bomb-decision-eyebrow">BOMB WAY · WALL UNDER ATTACK</div>
+    <div class="bomb-decision-eyebrow">TACTICAL MODE · WALL UNDER ATTACK</div>
     <h2 id="bombDecisionTitle">Protect your wall?</h2>
     <p id="bombDecisionCopy">Your opponent has targeted one of your walls. Choose within 10 seconds.</p>
     <div class="bomb-countdown" id="bombDecisionTimer">10</div>
@@ -5295,7 +5295,7 @@ function setGameVariant(value) {
   const selector = document.getElementById('gameVariantSelect');
   if (selector) selector.value = gameVariant;
   const label=document.getElementById('gameVariantLabel');
-  if(label) label.textContent=gameVariant==='bomb'?'Bomb Way 💣':'Normal Way';
+  if(label) label.textContent=gameVariant==='bomb'?'Tactical Mode':'Classic Mode';
   document.querySelectorAll('#gameVariantMenu .home-mode-option').forEach(option=>{
     const selected=option.dataset.variant===gameVariant;
     option.classList.toggle('selected',selected);
@@ -5304,7 +5304,7 @@ function setGameVariant(value) {
   closeGameVariantMenu();
   const home=document.getElementById('homeView');
   if(home) home.classList.toggle('bomb-mode-active',gameVariant==='bomb');
-  displayToast('Game mode', gameVariant === 'bomb' ? 'Bomb Way selected for your next match.' : 'Normal Way selected.');
+  displayToast('Game mode', gameVariant === 'bomb' ? 'Tactical Mode selected for your next match.' : 'Classic Mode selected.');
 }
 
 function getPlayerByNumber(number) {
@@ -5576,7 +5576,7 @@ function setMode(newMode) {
   if (gameMode === 'ai' && turn === 2) return;
   if (isOnline && turn !== myRole) return;
 
-  if(newMode==='bomb' && (gameVariant!=='bomb' || (getCurrentPlayer().bombs||0)<1)){displayToast('Bomb unavailable','Select Bomb Way and keep your bomb for this match.');return;}
+  if(newMode==='bomb' && (gameVariant!=='bomb' || (getCurrentPlayer().bombs||0)<1)){displayToast('Bomb unavailable','Select Tactical Mode and keep your bomb for this match.');return;}
   mode = newMode;
   document.getElementById('btnMove').classList.toggle('active', mode === 'move');
   document.getElementById('btnWallH').classList.toggle('active', mode === 'wall-h');
@@ -6266,7 +6266,7 @@ initProfile();
 const gameVariantSelector=document.getElementById('gameVariantSelect');
 if(gameVariantSelector) gameVariantSelector.value=gameVariant;
 const gameVariantLabel=document.getElementById('gameVariantLabel');
-if(gameVariantLabel) gameVariantLabel.textContent=gameVariant==='bomb'?'Bomb Way 💣':'Normal Way';
+if(gameVariantLabel) gameVariantLabel.textContent=gameVariant==='bomb'?'Tactical Mode':'Classic Mode';
 document.querySelectorAll('#gameVariantMenu .home-mode-option').forEach(option=>{
   const selected=option.dataset.variant===gameVariant;
   option.classList.toggle('selected',selected);
