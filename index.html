@@ -5186,6 +5186,7 @@ let gameVariant = 'normal';
 let pendingBombAttack = null;
 let bombDecisionInterval = null;
 let placedWalls = [];
+let blockedBombWallPlacements = [];
 let nextWallId = 1;
 let gameMode = 'ai';
 let isOnline = false;
@@ -5283,6 +5284,27 @@ function beginBombAttack(wall) {
   if(isOnline) broadcastAction({action:'bomb_offer',...data});
 }
 
+function addBombWallRestriction(owner, segments) {
+  if(!segments || !segments.length) return;
+  const signature=segments.map(s=>s.type+':'+s.key).sort().join('|');
+  blockedBombWallPlacements=blockedBombWallPlacements.filter(x=>!(x.owner===owner && x.signature===signature));
+  blockedBombWallPlacements.push({owner,signature,remainingTurns:2});
+  displayToast('Wall position locked','You cannot rebuild this exact wall position for your next 2 turns.');
+}
+
+function isBombWallPositionBlocked(dotX,dotY,isH,playerColor) {
+  if(gameVariant!=='bomb' || !blockedBombWallPlacements.length) return false;
+  const owner=[1,2,3,4].find(n=>getPlayerByNumber(n).color===playerColor) || turn;
+  const signature=getProposedSegments(dotX,dotY,isH).map(seg=>seg.type+':'+seg.key).sort().join('|');
+  return blockedBombWallPlacements.some(x=>x.owner===owner && x.signature===signature);
+}
+
+function advanceBombWallRestrictions(playerNumber) {
+  blockedBombWallPlacements=blockedBombWallPlacements
+    .map(x=>x.owner===playerNumber?{...x,remainingTurns:x.remainingTurns-1}:x)
+    .filter(x=>x.remainingTurns>0);
+}
+
 function removeWallFromBoard(wallId) {
   const index=placedWalls.findIndex(w=>String(w.id)===String(wallId));
   if(index<0) return;
@@ -5301,8 +5323,10 @@ function applyBombResolution(data) {
     defender.bombs--;
     displayToast(defender.name,'Wall protected — both bombs consumed.');
   } else {
+    const hitWall=getWallById(attack.wallId);
+    if(hitWall) addBombWallRestriction(attack.defender,hitWall.segments);
     removeWallFromBoard(attack.wallId);
-    displayToast('Bomb hit','The wall was removed and returned to its owner.');
+    displayToast('Bomb hit','Wall returned to inventory. Its exact position is locked for the defender’s next 2 turns.');
   }
   pendingBombAttack=null;
   closeBombDecisionModal();
@@ -5400,6 +5424,7 @@ function resetRoundBoard() {
   segH.clear();
   segV.clear();
   placedWalls=[];
+  blockedBombWallPlacements=[];
   nextWallId=1;
   pendingBombAttack=null;
   closeBombDecisionModal();
@@ -5551,6 +5576,12 @@ function getProposedSegments(dotX, dotY, isH) {
 
 function tryPlaceWall(dotX, dotY, isH, playerColor) {
   const proposed = getProposedSegments(dotX, dotY, isH);
+  if(isBombWallPositionBlocked(dotX,dotY,isH,playerColor)) {
+    if((!isOnline || myRole===turn) && (gameMode!=='ai' || turn===1)) {
+      displayToast('Position temporarily locked','This exact wall position is unavailable for 2 turns after a bomb hit.');
+    }
+    return null;
+  }
   const newlyAdded = [];
   for (let s of proposed) {
     if (s.type === 'H') {
@@ -5821,6 +5852,8 @@ function showFinalTournamentWin() {
 }
 
 function switchTurn(localTriggered = false) {
+  // A restriction lasts until the affected player has completed two of their turns.
+  advanceBombWallRestrictions(turn);
   if (gameMode === '4p') {
     turn = (turn % 4) + 1;
   } else if (gameMode === '3p') {
