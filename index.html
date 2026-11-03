@@ -1391,7 +1391,38 @@
   .wb-control-btn.active { background: linear-gradient(105deg,#5865f2,#167fb7); border-color: #52e0d2; }
   .modal-overlay { background: rgba(4,7,17,.82); backdrop-filter: blur(12px); }
   .modal-box { border-radius: 24px; padding: 25px 20px; }
-  .toast-bubble { background: rgba(20,29,51,.98); border-color: var(--wb-cyan); }
+  /* Unified premium glass treatment for every in-app toast notification. */
+  .toast-bubble {
+    width: max-content;
+    max-width: min(calc(100vw - 28px), 440px);
+    min-height: 46px;
+    box-sizing: border-box;
+    bottom: calc(76px + env(safe-area-inset-bottom, 0px));
+    padding: 11px 17px;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+    border: 1px solid rgba(111, 220, 211, .48);
+    border-radius: 16px;
+    background: linear-gradient(135deg, rgba(20, 29, 42, .84), rgba(12, 18, 28, .76));
+    -webkit-backdrop-filter: blur(18px) saturate(145%);
+    backdrop-filter: blur(18px) saturate(145%);
+    box-shadow: 0 12px 34px rgba(0,0,0,.34), inset 0 1px 0 rgba(255,255,255,.09);
+    color: #f7f8fa;
+    font-size: .8rem;
+    line-height: 1.4;
+    font-weight: 650;
+    text-align: center;
+    overflow-wrap: anywhere;
+    transition: opacity .24s ease, transform .32s cubic-bezier(.2,.8,.2,1), visibility .24s ease;
+  }
+  .toast-bubble.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+  #toastUser { color: #75e1d2 !important; font-weight: 900; letter-spacing: .15px; }
+  #toastMsg { color: rgba(248,250,252,.94) !important; font-weight: 650; }
+  @media (max-width: 380px) {
+    .toast-bubble { max-width: calc(100vw - 22px); padding: 10px 13px; font-size: .76rem; border-radius: 14px; }
+  }
+  @media (prefers-reduced-motion: reduce) { .toast-bubble { transition: opacity .01ms; } }
   .chat-sheet { background: #111a2e; border-color: rgba(147,166,211,.2); }
   .msg-chip { background: #1a2540; border-color: #2a3655; }
   button, [role="button"], .action-deck-card, .daily-card, .learning-card {
