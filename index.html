@@ -5910,6 +5910,12 @@ function showFinalTournamentWin() {
   players.sort((a, b) => b.finalScore - a.finalScore);
 
   const champion = players[0];
+  const myPlayerObj = (myRole === 1) ? p1 : ((myRole === 2) ? p2 : ((myRole === 3) ? p3 : p4));
+  const isUserWinner = (champion === myPlayerObj);
+  // AI and online matches have a player-specific display. Local multiplayer shares one screen,
+  // so celebration is disabled there to avoid showing it to players who lost.
+  const hasPlayerSpecificDisplay = isOnline || gameMode === 'ai';
+  const shouldCelebrate = hasPlayerSpecificDisplay && isUserWinner;
   const medals = ["🥇 Champion", "🥈 Runner-Up", "🥉 3rd Place", "4th Place"];
   players.forEach((p, idx) => {
     const item = document.createElement('div');
@@ -5922,11 +5928,17 @@ function showFinalTournamentWin() {
   });
 
   const sub = document.getElementById('finalTourneySub');
-  if (sub) sub.innerText = `${champion.name} won the match!`;
+  const title = document.getElementById('winModalTitle');
+  if(title) title.innerText = hasPlayerSpecificDisplay ? (isUserWinner ? 'MATCH WON' : 'MATCH LOST') : 'MATCH RESULTS';
+  if(sub) sub.innerText = hasPlayerSpecificDisplay
+    ? (isUserWinner ? 'Congratulations! You won the match!' : `${champion.name} won the match. Better luck next time!`)
+    : `${champion.name} won the match!`;
+  modal.classList.toggle('celebration-enabled',shouldCelebrate);
+  modal.classList.toggle('match-lost',hasPlayerSpecificDisplay && !isUserWinner);
   const confettiLayer=document.getElementById('winConfettiLayer');
   if(confettiLayer){
     confettiLayer.innerHTML='';
-    for(let i=0;i<36;i++){
+    if(shouldCelebrate) for(let i=0;i<36;i++){
       const piece=document.createElement('span');
       piece.className='win-confetti';
       piece.style.left=(Math.random()*100)+'%';
@@ -5941,9 +5953,6 @@ function showFinalTournamentWin() {
   modal.classList.remove('hidden');
 
   // --- RECORD REAL MATCH RESULT TO PROFILE ---
-  const myPlayerObj = (myRole === 1) ? p1 : ((myRole === 2) ? p2 : ((myRole === 3) ? p3 : p4));
-  const isUserWinner = (champion === myPlayerObj);
-
   // Identify opponent name(s)
   const opponents = players.filter(p => p !== myPlayerObj).map(p => p.name);
   const oppString = opponents.length === 1 ? opponents[0] : (opponents.length === 2 ? `${opponents[0]} & ${opponents[1]}` : `${opponents[0]} +${opponents.length - 1}`);
@@ -6719,7 +6728,10 @@ function closeAchievementsModal(){const m=document.getElementById('achievementsM
   #winModal .win-podium-score{flex-shrink:0;color:#b8c4d6;font-weight:850;white-space:nowrap}
   #winModal .win-return-btn{display:flex;align-items:center;justify-content:center;gap:10px;min-height:50px;margin-top:16px;border-radius:15px;background:linear-gradient(110deg,#ffd16b,#e9a934);color:#17130a;font-weight:900;box-shadow:0 8px 22px rgba(233,169,52,.20)}
   #winModal .win-return-btn:active{transform:scale(.985)}
-  #winModal .win-confetti-layer{position:absolute;inset:0;z-index:0;overflow:hidden;pointer-events:none}
+  #winModal .win-confetti-layer{position:absolute;inset:0;z-index:0;overflow:hidden;pointer-events:none;display:none}
+  #winModal.celebration-enabled .win-confetti-layer{display:block}
+  #winModal.match-lost .win-trophy{animation:none;filter:none}
+  #winModal.match-lost .win-modal-glow{opacity:.35}
   #winModal .win-modal-box{z-index:1}
   #winModal .win-confetti{position:absolute;top:-14px;width:7px;height:12px;border-radius:2px;opacity:0;animation:winConfettiFall var(--fall-time,2.7s) var(--fall-delay,0s) ease-in forwards}
   @keyframes winModalEnter{from{opacity:0;transform:translateY(18px) scale(.94)}to{opacity:1;transform:translateY(0) scale(1)}}
