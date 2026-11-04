@@ -1391,36 +1391,54 @@
   .wb-control-btn.active { background: linear-gradient(105deg,#5865f2,#167fb7); border-color: #52e0d2; }
   .modal-overlay { background: rgba(4,7,17,.82); backdrop-filter: blur(12px); }
   .modal-box { border-radius: 24px; padding: 25px 20px; }
-  /* Unified premium glass treatment for every in-app toast notification. */
+  /* Unified premium gold-glass notification design across the entire app. */
   .toast-bubble {
-    width: max-content;
-    max-width: min(calc(100vw - 28px), 440px);
-    min-height: 46px;
+    width: min( calc(100vw - 28px), 430px );
+    min-height: 58px;
     box-sizing: border-box;
-    bottom: calc(76px + env(safe-area-inset-bottom, 0px));
-    padding: 11px 17px;
-    gap: 8px;
-    flex-wrap: wrap;
-    justify-content: center;
-    border: 1px solid rgba(111, 220, 211, .48);
-    border-radius: 16px;
-    background: linear-gradient(135deg, rgba(20, 29, 42, .84), rgba(12, 18, 28, .76));
-    -webkit-backdrop-filter: blur(18px) saturate(145%);
-    backdrop-filter: blur(18px) saturate(145%);
-    box-shadow: 0 12px 34px rgba(0,0,0,.34), inset 0 1px 0 rgba(255,255,255,.09);
+    bottom: calc(78px + env(safe-area-inset-bottom, 0px));
+    left: 50%;
+    padding: 12px 16px 12px 13px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    flex-wrap: nowrap;
+    gap: 12px;
+    border: 1px solid rgba(245, 196, 91, .48);
+    border-radius: 17px;
+    background: linear-gradient(135deg, rgba(30, 29, 27, .94), rgba(13, 18, 27, .91));
+    -webkit-backdrop-filter: blur(16px) saturate(135%);
+    backdrop-filter: blur(16px) saturate(135%);
+    box-shadow: 0 12px 32px rgba(0,0,0,.42), 0 0 20px rgba(245,196,91,.08), inset 0 1px 0 rgba(255,255,255,.08);
     color: #f7f8fa;
     font-size: .8rem;
     line-height: 1.4;
     font-weight: 650;
-    text-align: center;
+    text-align: left;
     overflow-wrap: anywhere;
     transition: opacity .24s ease, transform .32s cubic-bezier(.2,.8,.2,1), visibility .24s ease;
   }
+  .toast-bubble::before {
+    content: "✦";
+    flex: 0 0 34px;
+    width: 34px;
+    height: 34px;
+    display: grid;
+    place-items: center;
+    border: 1px solid rgba(245,196,91,.38);
+    border-radius: 11px;
+    background: linear-gradient(145deg, rgba(245,196,91,.2), rgba(196,137,44,.1));
+    color: #ffd36d;
+    font-size: 1.08rem;
+    text-shadow: 0 0 12px rgba(245,196,91,.25);
+  }
   .toast-bubble.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-  #toastUser { color: #75e1d2 !important; font-weight: 900; letter-spacing: .15px; }
-  #toastMsg { color: rgba(248,250,252,.94) !important; font-weight: 650; }
+  #toastUser { display: block; flex: 0 0 auto; max-width: 42%; color: #ffd16a !important; font-weight: 900; letter-spacing: .12px; }
+  #toastMsg { display: block; flex: 1 1 auto; min-width: 0; color: rgba(248,250,252,.96) !important; font-weight: 650; }
   @media (max-width: 380px) {
-    .toast-bubble { max-width: calc(100vw - 22px); padding: 10px 13px; font-size: .76rem; border-radius: 14px; }
+    .toast-bubble { width: calc(100vw - 22px); min-height: 54px; padding: 10px 12px; gap: 9px; font-size: .75rem; border-radius: 15px; }
+    .toast-bubble::before { flex-basis: 30px; width: 30px; height: 30px; }
+    #toastUser { max-width: 38%; }
   }
   @media (prefers-reduced-motion: reduce) { .toast-bubble { transition: opacity .01ms; } }
   .chat-sheet { background: #111a2e; border-color: rgba(147,166,211,.2); }
@@ -3678,10 +3696,10 @@
   </div>
 </div>
 
-<!-- Toast Notification -->
-<div class="toast-bubble" id="chatToast">
-  <span id="toastUser" style="color:var(--wb-cyan);">Player</span>:
-  <span id="toastMsg" style="color:#ffffff;">Nice move!</span>
+<!-- Unified App Notification -->
+<div class="toast-bubble" id="chatToast" role="status" aria-live="polite">
+  <span id="toastUser">Player</span>
+  <span id="toastMsg">Nice move!</span>
 </div>
 
 <!-- Fixed Quick Reactions Sheet (Hidden by default) -->
