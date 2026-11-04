@@ -1839,7 +1839,7 @@
   #hostJoinChoiceView .host-join-choice-intro h2 { color: var(--wb-text); }
   #hostJoinChoiceView .host-join-choice-intro p { color: var(--wb-text-sub); }
 
-  /* Host / Join choice cards use the shared WayBlock navy-and-gold palette. */
+  /* Host / Join choice cards use the shared GRIDX navy-and-gold palette. */
   .host-choice { border-color: rgba(251,191,36,.28); }
   .host-choice .host-join-choice-icon {
     background: rgba(251,191,36,.09);
@@ -1855,7 +1855,7 @@
   @media (prefers-reduced-motion: reduce) { .host-join-choice-card { transition: none; } }
 
 
-  /* Home quest cards: matching the existing navy / neon Way Block theme */
+  /* Home quest cards: matching the existing navy / neon GRIDX theme */
   .home-goals-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:12px; margin-top:12px; margin-bottom:18px; }
   .home-goal-card { min-width:0; padding:12px 12px 11px; border-radius:21px; border:1px solid rgba(73,105,179,.48); background:radial-gradient(ellipse at 100% 0%,rgba(31,75,139,.19),transparent 48%),linear-gradient(145deg,#101a31,#0b1327 76%); box-shadow:0 8px 22px rgba(0,0,0,.18),inset 0 1px 0 rgba(255,255,255,.035); overflow:hidden; position:relative; }
   .home-goal-card::before { content:"";position:absolute;width:135px;height:135px;right:-54px;top:-76px;border:1px solid rgba(80,122,226,.13);border-radius:50%;box-shadow:0 0 0 15px rgba(80,122,226,.035),0 0 0 31px rgba(80,122,226,.025);pointer-events:none; }
@@ -1894,7 +1894,7 @@
   @media(prefers-reduced-motion:reduce){.goal-progress-fill{transition:none}}
 
 
-  /* WAYBLOCK branded header — harmonized with the existing Play Online card */
+  /* GRIDX branded header — harmonized with the existing Play Online card */
   .wb-brand-shell{margin:0 0 26px;border:1px solid rgba(148,163,184,.25);border-radius:24px;overflow:hidden;background:radial-gradient(ellipse at 92% 100%,rgba(116,160,157,.13),transparent 45%),linear-gradient(135deg,#20282f 0%,#171e25 55%,#29383b 100%);box-shadow:0 8px 24px rgba(0,0,0,.24),inset 0 1px 0 rgba(255,255,255,.045)}
   .wb-brand-row{min-height:72px;padding:12px 14px 11px 17px;display:flex;align-items:center;justify-content:space-between;gap:8px;border-bottom:1px solid rgba(190,210,214,.13)}
   .wb-brand-lockup{display:flex;align-items:center;flex:0 0 auto;min-width:0}
@@ -2031,7 +2031,7 @@
   }
 
 
-  /* Local Match: use WayBlock's standard midnight-navy and gold palette. */
+  /* Local Match: use GRIDX's standard midnight-navy and gold palette. */
   #localSetupView {
     color: var(--wb-text);
     background:
@@ -2732,7 +2732,7 @@
 </style>
 
 <style id="create-room-charcoal-gold-theme">
-/* Create Room modal — align with WayBlock's charcoal-and-gold theme */
+/* Create Room modal — align with GRIDX's charcoal-and-gold theme */
 .create-room-overlay{background:rgba(3,5,8,.86)!important}
 .create-room-window{border-color:#403722!important;background:linear-gradient(180deg,#191c1f 0%,#101316 100%)!important;box-shadow:0 28px 90px rgba(0,0,0,.72),0 0 0 1px rgba(245,196,91,.04)!important}
 .create-room-header{background:radial-gradient(ellipse at 85% 0%,rgba(245,196,91,.12),transparent 58%),linear-gradient(135deg,rgba(245,196,91,.055),transparent)!important;border-bottom-color:rgba(245,196,91,.14)!important}
@@ -3515,7 +3515,7 @@
 <div class="view-container hidden host-search-view" id="hostLobbyView">
   <div class="top-bar host-search-topbar">
     <div class="icon-circle-btn" onclick="cancelNetworkSession()" aria-label="Cancel room">←</div>
-    <div class="host-search-brand"><span class="host-search-brand-dot"></span> WAYBLOCK <span>DUEL LOBBY</span></div>
+    <div class="host-search-brand"><span class="host-search-brand-dot"></span> GRIDX <span>DUEL LOBBY</span></div>
     <span class="host-share-mini host-direct-join-label">OPEN ROOM · 1V1</span>
   </div>
   <section class="host-search-hero">
@@ -4074,7 +4074,7 @@ function renderGameHistory() {
     details.style.cssText = 'min-width:0;';
     const title = document.createElement('div');
     title.style.cssText = 'font-size:.95rem;font-weight:900;color:#fff;';
-    title.textContent = match.gameName || 'WayBlock';
+    title.textContent = match.gameName || 'GRIDX';
     const modeLine = document.createElement('div');
     modeLine.style.cssText = 'font-size:.75rem;color:var(--wb-text-sub);margin-top:5px;';
     modeLine.textContent = match.modeLabel || 'Game mode not recorded';
