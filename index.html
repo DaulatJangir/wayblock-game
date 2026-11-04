@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>Way Block - Quoridor Game</title>
+<title>GRIDX - Strategy Game</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/peerjs/1.5.4/peerjs.min.js"></script>
 <style>
   :root {
@@ -2108,9 +2108,11 @@
   /* Simple default home header */
   .home-simple-header{margin:0 0 24px;padding:0;background:transparent;border:0;border-radius:0;box-shadow:none;overflow:visible}
   .home-simple-top-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:0 0 16px}
-  .home-simple-wordmark{display:flex;align-items:center;gap:5px;font-size:1.35rem;font-weight:950;letter-spacing:1px;line-height:1}
-  .home-simple-wordmark span:first-child{color:var(--wb-text)}
-  .home-simple-wordmark span:last-child{color:var(--wb-gold);text-shadow:0 0 14px rgba(255,209,102,.22)}
+  .home-simple-wordmark{display:flex;align-items:center;gap:1px;font-size:1.35rem;font-weight:950;letter-spacing:1.15px;line-height:1}
+  .home-simple-wordmark .gridx-word{color:#f7f8fb}
+  .home-simple-wordmark .gridx-x{width:27px;height:27px;margin-left:1px;overflow:visible;filter:drop-shadow(0 0 7px rgba(245,196,91,.22))}
+  .home-simple-wordmark .bomb-mode-indicator{margin-left:5px}
+  @media(max-width:430px){.home-simple-wordmark .gridx-x{width:25px;height:25px}}
   .home-simple-settings{width:42px!important;height:42px!important;min-width:42px!important;min-height:42px!important;border-radius:14px;background:var(--wb-card);border:1px solid var(--wb-border);box-shadow:none}
   .home-simple-profile-row{padding:0;min-height:0;background:transparent;border:0;display:flex;align-items:center;justify-content:space-between;gap:10px}
   .home-simple-profile-row .home-user-card{margin:0;min-width:0;flex:1}
@@ -2815,7 +2817,16 @@
 <div class="view-container" id="homeView">
   <div class="home-simple-header">
     <div class="home-simple-top-row">
-      <div class="home-simple-wordmark"><span>WAY</span><span>BLOCK</span><span class="bomb-mode-indicator" aria-label="Tactical Mode">💣</span></div>
+      <div class="home-simple-wordmark" aria-label="GRIDX">
+          <span class="gridx-word">GRID</span>
+          <svg class="gridx-x" viewBox="0 0 32 32" role="img" aria-label="Geometric X logo">
+            <defs><linearGradient id="gridxGold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFE6A3"/><stop offset=".52" stop-color="#F5C45B"/><stop offset="1" stop-color="#D9942F"/></linearGradient></defs>
+            <path d="M4 3H12L28 29H20Z" fill="url(#gridxGold)"/>
+            <path d="M20 3H28L12 29H4Z" fill="url(#gridxGold)"/>
+            <path d="M13.1 13.2L18.9 18.8L16 23.5L10.2 17.9Z" fill="#FFF0C8" opacity=".72"/>
+          </svg>
+          <span class="bomb-mode-indicator" aria-label="Tactical Mode">💣</span>
+        </div>
       <div class="icon-circle-btn home-simple-settings" onclick="openFullSettingsPage()" title="Settings" aria-label="Settings">⚙️</div>
     </div>
     <div class="home-simple-profile-row">
@@ -3318,7 +3329,7 @@
   </div>
   <div class="howto-page">
     <section class="howto-hero">
-      <div class="howto-eyebrow"><i class="fa-solid fa-graduation-cap"></i> WAYBLOCK FIELD GUIDE</div>
+      <div class="howto-eyebrow"><i class="fa-solid fa-graduation-cap"></i> GRIDX FIELD GUIDE</div>
       <h1>Think ahead.<br><span>Find your way.</span></h1>
       <p>Learn the moves, master the walls, and outsmart your opponent. Your next winning strategy starts here.</p>
       <div class="howto-hero-stats"><div><strong>01</strong><span>Move smart</span></div><div><strong>02</strong><span>Place walls</span></div><div><strong>03</strong><span>Reach the goal</span></div></div>
@@ -3455,7 +3466,7 @@
 <div class="create-room-overlay hidden" id="createRoomModal" role="dialog" aria-modal="true" aria-labelledby="createRoomHeading" onclick="if(event.target===this)closeCreateRoomModal()">
   <div class="create-room-window">
     <div class="create-room-header">
-      <div class="create-room-kicker">WAYBLOCK MULTIPLAYER</div>
+      <div class="create-room-kicker">GRIDX MULTIPLAYER</div>
       <div class="create-room-heading" id="createRoomHeading">Create your room</div>
       <p>Set the pace, then invite one opponent to a head-to-head match.</p>
       <button class="create-room-close" type="button" onclick="closeCreateRoomModal()" aria-label="Close">×</button>
@@ -3646,7 +3657,7 @@
     <div class="icon-circle-btn lobby-profile-icon" aria-label="Top players"><i class="fa-solid fa-trophy" aria-hidden="true"></i></div>
   </div>
   <section class="leaderboard-hero">
-    <div class="leaderboard-kicker"><i class="fa-solid fa-earth-americas" aria-hidden="true"></i> WAYBLOCK GLOBAL RANKING</div>
+    <div class="leaderboard-kicker"><i class="fa-solid fa-earth-americas" aria-hidden="true"></i> GRIDX GLOBAL RANKING</div>
     <div class="leaderboard-hero-title">Top players</div>
     <div class="leaderboard-hero-sub">See how the community stacks up. Rankings refresh from this demo leaderboard.</div>
     <div class="leaderboard-summary">
@@ -3828,7 +3839,7 @@ const LEVEL_TIERS = [
   { level: 3, name: "Corridor Master", sub: "Control the board", minWins: 7, maxWins: 12, badge: "Stage 3 Badge" },
   { level: 4, name: "Labyrinth Architect", sub: "Defend & counter", minWins: 13, maxWins: 20, badge: "Stage 4 Badge" },
   { level: 5, name: "Grand Strategist", sub: "Master advanced plays", minWins: 21, maxWins: 30, badge: "Stage 5 Badge" },
-  { level: 6, name: "WayBlock Immortal", sub: "Legendary status", minWins: 31, maxWins: 9999, badge: "Immortal Crown" }
+  { level: 6, name: "GRIDX Immortal", sub: "Legendary status", minWins: 31, maxWins: 9999, badge: "Immortal Crown" }
 ];
 
 function getLevelData(wins) {
@@ -3886,7 +3897,7 @@ function updateLevelUI() {
       rewardDesc.innerText = `Unlocks at ${data.nextTier.minWins} Wins`;
     } else {
       rewardNext.innerText = "Max Level Achieved";
-      rewardDesc.innerText = "Legendary WayBlocker";
+      rewardDesc.innerText = "Legendary GRIDX player";
     }
   }
 
@@ -5989,7 +6000,7 @@ function showFinalTournamentWin() {
     timestamp: Date.now(),
     startedAt: currentGameStartedAt || Date.now(),
     durationMs: currentGameStartedAt ? Math.max(0, Date.now() - currentGameStartedAt) : 0,
-    gameName: 'WayBlock',
+    gameName: 'GRIDX',
     modeLabel: modeText,
     scoreDiff: isUserWinner ? (10 + Math.floor(Math.random() * 5)) : (6 + Math.floor(Math.random() * 4))
   });
@@ -6492,7 +6503,7 @@ html body #leaderboardView .leaderboard-search:focus {
 
 <div class="create-room-overlay hidden" id="roomHostPreviewModal" role="dialog" aria-modal="true" aria-labelledby="roomPreviewHeading">
   <div class="create-room-window room-preview-window">
-    <div class="create-room-header"><div class="create-room-kicker">WAYBLOCK PLAYER PROFILE</div><div class="create-room-heading" id="roomPreviewHeading">Meet your opponent</div><p>Review the host's match record before starting the duel.</p></div>
+    <div class="create-room-header"><div class="create-room-kicker">GRIDX PLAYER PROFILE</div><div class="create-room-heading" id="roomPreviewHeading">Meet your opponent</div><p>Review the host's match record before starting the duel.</p></div>
     <div class="create-room-body">
       <div class="room-preview-player"><div class="room-preview-avatar">♟</div><strong id="roomPreviewName">Room host</strong></div>
       <div class="room-preview-stats">
@@ -6519,7 +6530,7 @@ html body #leaderboardView .leaderboard-search:focus {
 <div class="create-room-overlay hidden" id="achievementsModal" role="dialog" aria-modal="true" aria-labelledby="achievementsModalTitle" onclick="if(event.target===this)closeAchievementsModal()">
   <div class="create-room-window achievements-window">
     <div class="create-room-header">
-      <div class="create-room-kicker">WAYBLOCK REWARDS</div>
+      <div class="create-room-kicker">GRIDX REWARDS</div>
       <div class="create-room-heading" id="achievementsModalTitle">All Achievements</div>
       <p id="achievementsProgress">Track your progress and unlock every badge.</p>
       <button type="button" class="achievements-close" onclick="closeAchievementsModal()" aria-label="Close achievements">×</button>
@@ -6766,7 +6777,7 @@ function closeAchievementsModal(){const m=document.getElementById('achievementsM
  <div class="cr-soon-panel">
   <button class="cr-soon-close" type="button" onclick="closeCreateRoomComingSoon()" aria-label="Close">×</button>
   <div class="cr-soon-mark" aria-hidden="true">♟</div>
-  <div class="cr-soon-tag">WAYBLOCK FEATURE</div>
+  <div class="cr-soon-tag">GRIDX FEATURE</div>
   <h2 id="createRoomComingSoonTitle">Coming Soon...</h2>
   <p>Create Room is getting ready. This feature will be available in a future update.</p>
  </div>
