@@ -2103,6 +2103,28 @@
     border-color: var(--wb-border);
     background: rgba(255, 255, 255, .025);
   }
+  /* Keep player color badges inside their cards on narrow mobile screens. */
+  #localSetupView .local-profile-card {
+    width:100%;min-width:0;box-sizing:border-box;
+  }
+  #localSetupView .local-profile-input {
+    min-width:0;width:0;flex:1 1 auto;
+  }
+  #localSetupView .local-color-indicator {
+    flex:0 0 auto;max-width:46%;min-width:0;box-sizing:border-box;
+    padding:5px 7px;gap:5px;font-size:.7rem;
+  }
+  #localSetupView .local-color-indicator .color-dot-badge {
+    flex:0 0 8px;width:8px;height:8px;
+  }
+  #localSetupView .local-color-indicator span:last-child {
+    min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+  }
+  @media(max-width:380px) {
+    #localSetupView .local-profile-card { flex-wrap:wrap;gap:8px;padding:10px 11px; }
+    #localSetupView .local-profile-input { flex:1 1 100%;width:100%; }
+    #localSetupView .local-color-indicator { align-self:flex-end;max-width:100%; }
+  }
   #localSetupView .primary-action-btn {
     color: #17130a;
     border-color: rgba(255, 221, 139, .45);
