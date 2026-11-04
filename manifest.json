@@ -1,0 +1,19 @@
+{
+  "name": "GRIDX",
+  "short_name": "GRIDX",
+  "description": "A competitive strategy board game",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#070d19",
+  "theme_color": "#070d19",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "./gridx-logo.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

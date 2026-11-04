@@ -3,7 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>GRIDX - Strategy Game</title>
+<title>GRIDX</title>
+<meta name="application-name" content="GRIDX">
+<meta name="apple-mobile-web-app-title" content="GRIDX">
+<meta name="theme-color" content="#070d19">
+<link rel="manifest" href="./manifest.json">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/peerjs/1.5.4/peerjs.min.js"></script>
 <style>
   :root {
@@ -2108,11 +2112,9 @@
   /* Simple default home header */
   .home-simple-header{margin:0 0 24px;padding:0;background:transparent;border:0;border-radius:0;box-shadow:none;overflow:visible}
   .home-simple-top-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:0 0 16px}
-  .home-simple-wordmark{display:flex;align-items:center;gap:1px;font-size:1.35rem;font-weight:950;letter-spacing:1.15px;line-height:1}
-  .home-simple-wordmark .gridx-word{color:#f7f8fb}
-  .home-simple-wordmark .gridx-x{width:27px;height:27px;margin-left:1px;overflow:visible;filter:drop-shadow(0 0 7px rgba(245,196,91,.22))}
-  .home-simple-wordmark .bomb-mode-indicator{margin-left:5px}
-  @media(max-width:430px){.home-simple-wordmark .gridx-x{width:25px;height:25px}}
+  .home-simple-wordmark{display:flex;align-items:center;justify-content:flex-start;width:54px;height:46px;line-height:1}
+  .home-simple-wordmark .gridx-logo-image{display:block;width:52px;height:44px;object-fit:contain;filter:drop-shadow(0 0 6px rgba(245,196,91,.16))}
+  @media(max-width:430px){.home-simple-wordmark{width:50px;height:44px}.home-simple-wordmark .gridx-logo-image{width:48px;height:42px}}
   .home-simple-settings{width:42px!important;height:42px!important;min-width:42px!important;min-height:42px!important;border-radius:14px;background:var(--wb-card);border:1px solid var(--wb-border);box-shadow:none}
   .home-simple-profile-row{padding:0;min-height:0;background:transparent;border:0;display:flex;align-items:center;justify-content:space-between;gap:10px}
   .home-simple-profile-row .home-user-card{margin:0;min-width:0;flex:1}
@@ -2817,16 +2819,9 @@
 <div class="view-container" id="homeView">
   <div class="home-simple-header">
     <div class="home-simple-top-row">
-      <div class="home-simple-wordmark" aria-label="GRIDX">
-          <span class="gridx-word">GRID</span>
-          <svg class="gridx-x" viewBox="0 0 32 32" role="img" aria-label="Geometric X logo">
-            <defs><linearGradient id="gridxGold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#FFE6A3"/><stop offset=".52" stop-color="#F5C45B"/><stop offset="1" stop-color="#D9942F"/></linearGradient></defs>
-            <path d="M4 3H12L28 29H20Z" fill="url(#gridxGold)"/>
-            <path d="M20 3H28L12 29H4Z" fill="url(#gridxGold)"/>
-            <path d="M13.1 13.2L18.9 18.8L16 23.5L10.2 17.9Z" fill="#FFF0C8" opacity=".72"/>
-          </svg>
-          <span class="bomb-mode-indicator" aria-label="Tactical Mode">💣</span>
-        </div>
+      <div class="home-simple-wordmark" aria-label="GRIDX logo">
+        <img class="gridx-logo-image" src="./gridx-logo.svg" alt="GRIDX gold X logo">
+      </div>
       <div class="icon-circle-btn home-simple-settings" onclick="openFullSettingsPage()" title="Settings" aria-label="Settings">⚙️</div>
     </div>
     <div class="home-simple-profile-row">
